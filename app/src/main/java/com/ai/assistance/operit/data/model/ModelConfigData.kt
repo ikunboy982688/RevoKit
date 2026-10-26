@@ -60,7 +60,8 @@ enum class ApiProviderType {
 object ModelConfigDefaults {
         const val DEFAULT_CONTEXT_LENGTH = 64.0f
         const val DEFAULT_MAX_CONTEXT_LENGTH = 200.0f
-        const val DEFAULT_ENABLE_MAX_CONTEXT_MODE = false
+        // 2026-10-26 按用户要求改成 true：装好就是 max 模式，不用每次手动开。
+        const val DEFAULT_ENABLE_MAX_CONTEXT_MODE = true
         const val DEFAULT_ENABLE_TOOL_CALL = true
         const val DEFAULT_SUMMARY_TOKEN_THRESHOLD = 0.70f
         const val DEFAULT_ENABLE_SUMMARY = true

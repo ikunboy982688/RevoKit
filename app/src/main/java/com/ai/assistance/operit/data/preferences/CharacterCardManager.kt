@@ -42,10 +42,24 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * 角色卡（Preferences）库的结构版本号。
+ *
+ * 之所以抽成一个常量，是因为踩过一次线上崩溃：
+ * test26 把 `currentVersion` 从 15 改成 16，却忘了在 [CharacterCardSchemaMigration.migrate]
+ * 里补 `15 ->` 分支 —— 已经装过 v15 的设备一启动就抛
+ * `MissingPreferencesSchemaMigrationException: Missing preferences migration from version 15 to 16`，
+ * App 直接打不开。
+ *
+ * 现在版本号只有这一处，迁移分支用 `in 2 until CHARACTER_CARD_SCHEMA_VERSION` 表达，
+ * 两边不会再各写各的。**以后要升版本，只改这一个数字。**
+ */
+private const val CHARACTER_CARD_SCHEMA_VERSION = 17
+
 private val Context.characterCardDataStore by
     versionedPreferencesDataStore(
         name = "character_cards",
-        currentVersion = 1,
+        currentVersion = CHARACTER_CARD_SCHEMA_VERSION,
     ) { appContext ->
         CharacterCardSchemaMigration(appContext)
     }
@@ -64,6 +78,13 @@ private class CharacterCardSchemaMigration(
         when (version) {
             0 -> versionZeroResult =
                 CharacterCardManager.migratePreferencesFromVersionZero(context, preferences)
+            1 -> CharacterCardManager.migrateRebrandedDefaultCharacter(context, preferences)
+            // 2 及以上都是「把工具调用协议整段换成当前版本」。
+            // 这一步靠 SOP_MARKER 幂等，重复跑不会叠两份，所以用区间表达就够了 ——
+            // 以前是 2..14 一条条手写，升到 16 时漏了一行就是启动崩溃，
+            // 现在端点直接跟 CHARACTER_CARD_SCHEMA_VERSION 绑定，漏不了。
+            in 2 until CHARACTER_CARD_SCHEMA_VERSION ->
+                CharacterCardManager.migrateAppendRevokitSop(context, preferences)
             else -> missingPreferencesSchemaMigration(version)
         }
     }
@@ -95,7 +116,7 @@ class CharacterCardManager private constructor(private val context: Context) {
         // 默认角色卡ID
         const val DEFAULT_CHARACTER_CARD_ID = "default_character"
 
-        const val DEFAULT_CHARACTER_NAME = "Operit"
+        const val DEFAULT_CHARACTER_NAME = "逆向工坊"
         
         @Volatile
         private var INSTANCE: CharacterCardManager? = null
@@ -161,12 +182,96 @@ class CharacterCardManager private constructor(private val context: Context) {
             }
         }
 
+        /**
+         * 把仍是原厂默认人设的默认角色卡升级成逆向工程师人设。
+         *
+         * 迁移判据故意做得很严：名字必须还是旧的 "Operit"，且角色设定必须**逐字**
+         * 等于旧默认文案（中英各一份）。只要用户动过其中任何一个字，就整体跳过，
+         * 绝不覆盖用户自己写的人设。
+         */
+        internal fun migrateRebrandedDefaultCharacter(
+            context: Context,
+            preferences: MutablePreferences,
+        ) {
+            val id = DEFAULT_CHARACTER_CARD_ID
+            val nameKey = stringPreferencesKey("character_card_${id}_name")
+            val descriptionKey = stringPreferencesKey("character_card_${id}_description")
+            val settingKey = stringPreferencesKey("character_card_${id}_character_setting")
+            val otherContentChatKey = stringPreferencesKey("character_card_${id}_other_content_chat")
+            val otherContentVoiceKey = stringPreferencesKey("character_card_${id}_other_content_voice")
+            val updatedAtKey = longPreferencesKey("character_card_${id}_updated_at")
+
+            val currentName = preferences[nameKey] ?: return
+            if (currentName != CharacterCardBilingualData.LEGACY_DEFAULT_CHARACTER_NAME) return
+
+            val currentSetting = preferences[settingKey] ?: return
+            val untouched =
+                currentSetting == CharacterCardBilingualData.LEGACY_DEFAULT_CHARACTER_SETTING_CN ||
+                    currentSetting == CharacterCardBilingualData.LEGACY_DEFAULT_CHARACTER_SETTING_EN
+            if (!untouched) return
+
+            preferences[nameKey] = DEFAULT_CHARACTER_NAME
+            preferences[descriptionKey] = CharacterCardBilingualData.getDefaultDescription(context)
+            preferences[settingKey] = CharacterCardBilingualData.getDefaultCharacterSetting(context)
+            preferences[otherContentChatKey] =
+                CharacterCardBilingualData.getDefaultOtherContentChat(context)
+            preferences[otherContentVoiceKey] =
+                CharacterCardBilingualData.getDefaultOtherContentVoice(context)
+            preferences[updatedAtKey] = System.currentTimeMillis()
+        }
+
+        /**
+         * 把「工具调用协议」追加进默认角色卡的人设。
+         *
+         * 与 [migrateRebrandedDefaultCharacter] 的区别：那边是整段替换（要求用户完全没动过），
+         * 这边是**纯追加**，因为协议本身跟人设正交 —— 即使用户改过语气和身份，也仍然需要这套
+         * 「识别到 APK 就调工具」的规则，否则就会退化成要用户手动喊工具。
+         *
+         * 幂等：靠 SOP_MARKER 判断，已经追加过就整体跳过，重复升级不会追加两份。
+         */
+        internal fun migrateAppendRevokitSop(
+            context: Context,
+            preferences: MutablePreferences,
+        ) {
+            val id = DEFAULT_CHARACTER_CARD_ID
+            val settingKey = stringPreferencesKey("character_card_${id}_character_setting")
+            val updatedAtKey = longPreferencesKey("character_card_${id}_updated_at")
+
+            val current = preferences[settingKey] ?: return
+            if (current.contains(CharacterCardBilingualData.SOP_MARKER)) return
+
+            // 老版本留下的协议可能是 v1（test12）、v2（test13）……v6（test18）。
+            // 从最早出现的旧标记处截断，再换成本版协议 —— 不能简单追加，否则同一份协议会出现两次。
+            val cutAt = listOf(
+                CharacterCardBilingualData.SOP_MARKER_LEGACY,
+                CharacterCardBilingualData.SOP_MARKER_V2,
+                CharacterCardBilingualData.SOP_MARKER_V3,
+                CharacterCardBilingualData.SOP_MARKER_V4,
+                CharacterCardBilingualData.SOP_MARKER_V5,
+                CharacterCardBilingualData.SOP_MARKER_V6,
+                CharacterCardBilingualData.SOP_MARKER_V7,
+                CharacterCardBilingualData.SOP_MARKER_V8,
+                CharacterCardBilingualData.SOP_MARKER_V9,
+                CharacterCardBilingualData.SOP_MARKER_V10,
+                CharacterCardBilingualData.SOP_MARKER_V11,
+                CharacterCardBilingualData.SOP_MARKER_V12,
+                CharacterCardBilingualData.SOP_MARKER_V13,
+                CharacterCardBilingualData.SOP_MARKER_V14,
+            ).map { current.indexOf(it) }.filter { it >= 0 }.minOrNull() ?: -1
+
+            val base =
+                if (cutAt >= 0) current.substring(0, cutAt).trimEnd()
+                else current.trimEnd()
+
+            preferences[settingKey] = base + "\n\n" + CharacterCardBilingualData.getRevokitSop(context)
+            preferences[updatedAtKey] = System.currentTimeMillis()
+        }
+
         internal fun setupDefaultCharacterCard(
             context: Context,
             preferences: MutablePreferences,
             id: String,
-        ) {
-            val nameKey = stringPreferencesKey("character_card_${id}_name")
+        ) {            val nameKey = stringPreferencesKey("character_card_${id}_name")
             val descriptionKey = stringPreferencesKey("character_card_${id}_description")
             val characterSettingKey = stringPreferencesKey("character_card_${id}_character_setting")
             val openingStatementKey = stringPreferencesKey("character_card_${id}_opening_statement")

@@ -394,7 +394,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ai.assistance.operit"
+        // RevoKit: 逆向工坊独立包名，可与原版 Operit 共存
+        applicationId = "com.revokit.app"
         minSdk = 26
         targetSdk = 34
         versionCode = 51
@@ -435,7 +436,7 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
-            resValue("string", "app_name", "Operit Debug")
+            resValue("string", "app_name", "逆向工坊")
         }
         create("clone") {
             initWith(getByName("debug"))

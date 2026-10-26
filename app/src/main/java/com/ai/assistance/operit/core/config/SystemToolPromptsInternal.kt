@@ -112,6 +112,13 @@ object SystemToolPromptsInternal {
                                         default = "default"
                                     ),
                                     ToolParameterSchema(
+                                        name = "environment",
+                                        type = "string",
+                                        description = "optional, execution environment. \"linux\" (default) = proot Ubuntu container (has python3/apt, but CANNOT see /system or /data/adb, so pm/am/monkey/su are unavailable) | \"android\" = Android system shell (can call pm/am/monkey/su and read /data/adb, but has no python3). Use android for any Android-side probe or action.",
+                                        required = false,
+                                        default = "linux"
+                                    ),
+                                    ToolParameterSchema(
                                         name = "timeout_ms",
                                         type = "integer",
                                         description = "optional, command timeout in milliseconds",
@@ -3109,6 +3116,13 @@ object SystemToolPromptsInternal {
                                         description = "可选，超时时间（毫秒）",
                                         required = false,
                                         default = "120000"
+                                    ),
+                                    ToolParameterSchema(
+                                        name = "environment",
+                                        type = "string",
+                                        description = "可选，执行环境。\"linux\"（默认）= proot Ubuntu 容器（有 python3/apt，但看不到 /system 和 /data/adb，调不到 pm/am/monkey/su）| \"android\" = Android 系统 shell（能调 pm/am/monkey/su、能读 /data/adb，但没有 python3）。凡是 Android 侧探测或动作，都要用 android。",
+                                        required = false,
+                                        default = "linux"
                                     )
                                 )
                         ),

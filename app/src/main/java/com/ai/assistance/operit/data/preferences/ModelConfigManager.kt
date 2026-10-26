@@ -36,7 +36,7 @@ import org.json.JSONObject
 private val Context.modelConfigDataStore: DataStore<Preferences> by
         versionedPreferencesDataStore(
                 name = "model_configs",
-                currentVersion = 4,
+                currentVersion = 5,
         ) { appContext ->
             preferenceSchemaMigration { version, preferences ->
                 when (version) {
@@ -44,6 +44,7 @@ private val Context.modelConfigDataStore: DataStore<Preferences> by
                     1 -> ModelConfigManager.migratePreferencesFromVersionOne(preferences)
                     2 -> ModelConfigManager.migratePreferencesFromVersionTwo(preferences)
                     3 -> ModelConfigManager.migratePreferencesFromVersionThree(preferences)
+                    4 -> ModelConfigManager.migratePreferencesFromVersionFour(preferences)
                     else -> missingPreferencesSchemaMigration(version)
                 }
             }
@@ -315,9 +316,37 @@ class ModelConfigManager(
             }
         }
 
+        /**
+         * v4 -> v5：把「最大上下文模式」的默认值从 false 翻成 true。
+         *
+         * 背景（2026-10-26）：用户要求「软件打开就是 max 模式」。
+         * 光改 [ModelConfigDefaults.DEFAULT_ENABLE_MAX_CONTEXT_MODE] 是不够的 ——
+         * 每条已保存的模型配置里把 enableMaxContextMode 写死成了布尔值，
+         * 老配置读出来还是 false，改常量对已经用过软件的人等于没改。
+         * 所以这里把存量配置一次性翻成 true。
+         *
+         * 只跑这一次（版本号到 5 之后不会再执行），用户以后自己关掉就一直关着，
+         * 不会被这里反复顶回来。
+         */
+        internal fun migratePreferencesFromVersionFour(preferences: MutablePreferences) {
+            val configIds = preferences[CONFIG_LIST_KEY]?.let { json.decodeFromString<List<String>>(it) }
+                    ?: emptyList()
+
+            configIds.forEach { configId ->
+                val configKey = stringPreferencesKey("config_${configId}")
+                val configJson = preferences[configKey] ?: return@forEach
+                val config = json.decodeFromString<ModelConfigData>(configJson)
+                if (config.enableMaxContextMode) {
+                    return@forEach
+                }
+
+                preferences[configKey] =
+                        json.encodeToString(config.copy(enableMaxContextMode = true))
+            }
+        }
+
         private fun isDeepSeekProvider(providerTypeId: String): Boolean =
                 providerTypeId.equals(ApiProviderType.DEEPSEEK.name, ignoreCase = true)
-
         private fun isDeepSeekResponsesEndpoint(apiEndpoint: String): Boolean =
                 apiEndpoint.trim()
                         .substringBefore('?')

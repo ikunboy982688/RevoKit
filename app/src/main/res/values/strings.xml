@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Operit AI</string>
+    <string name="app_name">逆向工坊</string>
     <string name="accessibility_service_description">用于获取UI层次结构，为AI助手提供更快速的界面分析能力，不会收集或存储任何个人信息。</string>
     
     <!-- 模型选择器相关 -->
@@ -2262,6 +2262,14 @@
     <string name="tool_speech_recognition_desc">将语音转换为文本，支持多种引擎和语言</string>
     <string name="tool_permission_manager">应用权限管理</string>
     <string name="tool_permission_manager_desc">管理手机各个应用的权限，保护隐私安全</string>
+    <string name="tool_packer_identify">加固识别</string>
+    <string name="tool_packer_identify_desc">静态识别 APK 是否加壳、属于哪家加固、对应脱壳切入点</string>
+    <string name="tool_apk_browser">APK 拆包</string>
+    <string name="tool_apk_browser_desc">浏览 APK 内的 dex / so / assets，并把需要的文件抽到磁盘</string>
+    <string name="tool_shell_workbench">脱壳工作台</string>
+    <string name="tool_shell_workbench_desc">dex 修头与回填、root 内存 dump、Flutter 结构体检</string>
+    <string name="tool_cleanup">一键清理</string>
+    <string name="tool_cleanup_desc">扫出逆向留下的解包目录/脱壳dex/临时目录，勾选后一键删掉</string>
     <string name="tool_user_agreement">用户协议</string>
     <string name="tool_user_agreement_desc">查看应用的用户协议与隐私政策</string>
     <string name="tool_default_assistant_guide">默认助手设置</string>

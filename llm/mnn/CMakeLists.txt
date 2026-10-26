@@ -59,6 +59,25 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     )
 endif()
 
+if(CMAKE_HOST_WIN32)
+    # Windows hosts have no guaranteed MSVC install. Allow the MSYS2/MinGW gcc toolchain to
+    # build the host-only flatc generator so a local build does not require Visual Studio.
+    find_program(OPERIT_MNN_HOST_C_COMPILER NAMES gcc NO_CMAKE_FIND_ROOT_PATH)
+    find_program(OPERIT_MNN_HOST_CXX_COMPILER NAMES g++ NO_CMAKE_FIND_ROOT_PATH)
+    find_program(OPERIT_MNN_HOST_MAKE_PROGRAM NAMES mingw32-make NO_CMAKE_FIND_ROOT_PATH)
+    if(NOT OPERIT_MNN_HOST_C_COMPILER OR NOT OPERIT_MNN_HOST_CXX_COMPILER)
+        message(FATAL_ERROR "MNN schema generation requires host gcc and g++ on Windows. Install MSYS2 mingw64 or Visual Studio Build Tools.")
+    endif()
+    list(APPEND OPERIT_MNN_FLATC_CMAKE_ARGS
+        "-G" "MinGW Makefiles"
+        "-DCMAKE_C_COMPILER=${OPERIT_MNN_HOST_C_COMPILER}"
+        "-DCMAKE_CXX_COMPILER=${OPERIT_MNN_HOST_CXX_COMPILER}"
+    )
+    if(OPERIT_MNN_HOST_MAKE_PROGRAM)
+        list(APPEND OPERIT_MNN_FLATC_CMAKE_ARGS "-DCMAKE_MAKE_PROGRAM=${OPERIT_MNN_HOST_MAKE_PROGRAM}")
+    endif()
+endif()
+
 if(NOT CMAKE_HOST_WIN32)
     # MNN's bundled FlatBuffers enables -Werror for Clang despite known warnings.
     # The schema compiler is a host-only generator, so retain diagnostics without

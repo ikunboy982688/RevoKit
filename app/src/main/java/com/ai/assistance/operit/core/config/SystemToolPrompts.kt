@@ -60,6 +60,18 @@ object SystemToolPrompts {
                         required = true
                     )
                 )
+            ),
+            ToolPrompt(
+                name = "apk_packer_identify",
+                description = "Native APK hardening detection, milliseconds, fully offline, never executes the APK. Reads the ZIP directory + dex strings + the manifest application class, then scores them against the built-in database of 49 packers. Returns whether it is packed, which packer, vendor, confidence, repair hints, dex/so counts and signature schemes (v1/v2/v3). Call this instead of grepping the APK yourself.",
+                parametersStructured = listOf(
+                    ToolParameterSchema(
+                        name = "apk_path",
+                        type = "string",
+                        description = "absolute path of the APK file",
+                        required = true
+                    )
+                )
             )
         )
     )
@@ -79,6 +91,13 @@ object SystemToolPrompts {
                 description = "在当前会话中激活包。",
                 parametersStructured = listOf(
                     ToolParameterSchema(name = "package_name", type = "string", description = "要激活的包名", required = true)
+                )
+            ),
+            ToolPrompt(
+                name = "apk_packer_identify",
+                description = "原生加固识别：毫秒级、纯本地、不执行目标 APK。读 ZIP 目录 + dex 字符串 + Manifest 入口类，跟内置的 49 家加固特征库打分匹配。返回是否加壳、哪家壳、厂商、置信度、脱壳建议、dex/so 数量、签名方案（v1/v2/v3）。要判壳就调这个，不要自己去 grep 包里的 so 名。",
+                parametersStructured = listOf(
+                    ToolParameterSchema(name = "apk_path", type = "string", description = "APK 文件绝对路径", required = true)
                 )
             )
         )

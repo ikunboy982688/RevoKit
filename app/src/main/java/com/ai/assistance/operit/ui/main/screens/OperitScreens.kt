@@ -26,7 +26,6 @@ import androidx.navigation.NavController
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.ui.common.NavItem
 import com.ai.assistance.operit.ui.features.about.screens.AboutScreen
-import com.ai.assistance.operit.ui.features.assistant.screens.AssistantConfigScreen
 import com.ai.assistance.operit.ui.features.chat.screens.AIChatScreen
 import com.ai.assistance.operit.ui.features.demo.screens.ShizukuDemoScreen
 import com.ai.assistance.operit.ui.features.help.screens.HelpScreen
@@ -34,6 +33,10 @@ import com.ai.assistance.operit.ui.features.memory.screens.MemoryScreen
 import com.ai.assistance.operit.ui.features.packages.screens.MarketHomeTab
 import com.ai.assistance.operit.ui.features.packages.screens.PackageManagerScreen
 import com.ai.assistance.operit.ui.features.packages.screens.ArtifactPublishScreen
+import com.ai.assistance.operit.ui.features.revokit.PackerIdentifyScreen
+import com.ai.assistance.operit.ui.features.revokit.ApkBrowserScreen
+import com.ai.assistance.operit.ui.features.revokit.CleanupScreen
+import com.ai.assistance.operit.ui.features.revokit.ShellWorkbenchScreen
 import com.ai.assistance.operit.ui.features.packages.screens.RepoMarketPublishScreen
 import com.ai.assistance.operit.ui.features.packages.screens.UnifiedMarketManageScreen
 import com.ai.assistance.operit.ui.features.packages.screens.UnifiedMarketCategoryScreen
@@ -183,6 +186,74 @@ sealed class Screen(
                 onGestureConsumed: (Boolean) -> Unit
         ) {
             MemoryScreen()
+        }
+    }
+
+    /**
+     * RevoKit 加固识别页。
+     * 新增 Screen 无需手工注册路由 —— ScreenRouteRegistry 通过反射自动发现子类，
+     * 只需在 hostEntryDefinitions 里加一条导航条目即可。
+     */
+    data object PackerIdentify : Screen(titleRes = R.string.tool_packer_identify) {
+        @Composable
+        override fun Content(
+                navController: NavController,
+                navigateTo: ScreenNavigationHandler,
+                onGoBack: () -> Unit,
+                hasBackgroundImage: Boolean,
+                onLoading: (Boolean) -> Unit,
+                onError: (String) -> Unit,
+                onGestureConsumed: (Boolean) -> Unit
+        ) {
+            PackerIdentifyScreen(onGoBack = onGoBack)
+        }
+    }
+
+    /** RevoKit APK 拆包浏览：列 dex / so / assets 并导出 */
+    data object ApkBrowser : Screen(titleRes = R.string.tool_apk_browser) {
+        @Composable
+        override fun Content(
+                navController: NavController,
+                navigateTo: ScreenNavigationHandler,
+                onGoBack: () -> Unit,
+                hasBackgroundImage: Boolean,
+                onLoading: (Boolean) -> Unit,
+                onError: (String) -> Unit,
+                onGestureConsumed: (Boolean) -> Unit
+        ) {
+            ApkBrowserScreen(onGoBack = onGoBack)
+        }
+    }
+
+    /** RevoKit 脱壳工作台：dex 修复 / 内存 dump / Flutter 体检 */
+    data object ShellWorkbench : Screen(titleRes = R.string.tool_shell_workbench) {
+        @Composable
+        override fun Content(
+                navController: NavController,
+                navigateTo: ScreenNavigationHandler,
+                onGoBack: () -> Unit,
+                hasBackgroundImage: Boolean,
+                onLoading: (Boolean) -> Unit,
+                onError: (String) -> Unit,
+                onGestureConsumed: (Boolean) -> Unit
+        ) {
+            ShellWorkbenchScreen(onGoBack = onGoBack)
+        }
+    }
+
+    /** RevoKit 一键清理：扫逆向垃圾、勾选、删 */
+    data object Cleanup : Screen(titleRes = R.string.tool_cleanup) {
+        @Composable
+        override fun Content(
+                navController: NavController,
+                navigateTo: ScreenNavigationHandler,
+                onGoBack: () -> Unit,
+                hasBackgroundImage: Boolean,
+                onLoading: (Boolean) -> Unit,
+                onError: (String) -> Unit,
+                onGestureConsumed: (Boolean) -> Unit
+        ) {
+            CleanupScreen(onGoBack = onGoBack)
         }
     }
 
@@ -705,25 +776,6 @@ sealed class Screen(
             onGestureConsumed: (Boolean) -> Unit
         ) {
             UpdateScreen(onNavigateToThemeSettings = { navigateTo(ThemeSettings) })
-        }
-    }
-
-    data object AssistantConfig :
-            Screen(
-                    navItem = NavItem.AssistantConfig,
-                    participatesInCrossfadeTransition = false
-            ) {
-        @Composable
-        override fun Content(
-                navController: NavController,
-                navigateTo: ScreenNavigationHandler,
-                onGoBack: () -> Unit,
-                hasBackgroundImage: Boolean,
-                onLoading: (Boolean) -> Unit,
-                onError: (String) -> Unit,
-                onGestureConsumed: (Boolean) -> Unit
-        ) {
-            AssistantConfigScreen()
         }
     }
 

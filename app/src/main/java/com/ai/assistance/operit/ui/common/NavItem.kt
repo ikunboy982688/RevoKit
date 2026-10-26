@@ -24,8 +24,6 @@ sealed class NavItem(val route: String, val titleResId: Int, val icon: ImageVect
         object AiChat : NavItem("ai_chat", R.string.nav_ai_chat, Icons.Default.Email)
         object ShizukuCommands :
                 NavItem("shizuku_commands", R.string.shizuku_commands, Icons.Default.Build)
-        object AssistantConfig :
-                NavItem("assistant_config", R.string.nav_assistant_config, Icons.Default.Tune)
         object Settings : NavItem("settings", R.string.nav_settings, Icons.Default.Settings)
         object ToolPermissions :
                 NavItem("tool_permissions", R.string.tool_permissions, Icons.Default.Security)

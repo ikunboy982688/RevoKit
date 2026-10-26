@@ -6,6 +6,7 @@ import com.ai.assistance.operit.api.chat.enhance.ToolExecutionManager
 import com.ai.assistance.operit.core.tools.climode.CliToolModeSupport
 import com.ai.assistance.operit.core.tools.climode.ToolExposureMode
 import com.ai.assistance.operit.core.tools.defaultTool.ToolGetter
+import com.ai.assistance.operit.core.revokit.PackerIdentifier
 import com.ai.assistance.operit.data.model.AITool
 import com.ai.assistance.operit.data.model.ToolParameter
 import com.ai.assistance.operit.data.model.ToolResult
@@ -2742,4 +2743,111 @@ fun registerAllTools(handler: AIToolHandler, context: Context) {
                 ffmpegConvertTool.invoke(tool)
             }
     )
+
+    // RevoKit 原生加固识别：直接跑 Kotlin 侧的 PackerIdentifier（49 家特征库 + 证据打分），
+    // 不经过 JS/python，毫秒级。AI 应该调这个，而不是自己 grep 包里的 so 名。
+    handler.registerTool(
+            name = "apk_packer_identify",
+            executor = { tool ->
+                val apkPath = tool.parameters.find { it.name == "apk_path" }?.value ?: ""
+                try {
+                    if (apkPath.isBlank()) throw IllegalArgumentException("缺少 apk_path")
+                    val apk = java.io.File(apkPath)
+                    if (!apk.exists() || !apk.isFile) {
+                        throw IllegalArgumentException("APK 不存在：$apkPath")
+                    }
+                    val json =
+                            runBlocking(Dispatchers.IO) {
+                                val report = PackerIdentifier.identify(context, apk)
+                                packerReportToJson(report)
+                            }
+                    ToolResult(
+                            toolName = tool.name,
+                            success = true,
+                            result = StringResultData(json)
+                    )
+                } catch (t: Throwable) {
+                    ToolResult(
+                            toolName = tool.name,
+                            success = false,
+                            result = StringResultData(""),
+                            error = t.message ?: "识别失败"
+                    )
+                }
+            }
+    )
+}
+
+/**
+ * 把原生识别结果压成精简 JSON 给模型看。
+ *
+ * 刻意只给结论 + 前三条证据 + 建议，不回传全部 allPaths（几万条会把上下文撑爆）。
+ */
+private fun packerReportToJson(
+        report: com.ai.assistance.operit.core.revokit.IdentifyReport
+): String {
+    val root = JSONObject()
+    val profile = report.profile
+    root.put("apk", profile.path)
+    root.put("fileName", profile.fileName)
+    root.put("sizeBytes", profile.fileSize)
+    root.put("packageName", profile.packageName ?: "")
+    root.put("versionName", profile.versionName ?: "")
+    root.put("applicationClass", profile.applicationClass ?: "")
+    root.put("minSdk", profile.minSdk)
+    root.put("targetSdk", profile.targetSdk)
+    root.put(
+            "signatureSchemes",
+            JSONArray().apply { profile.signatureSchemes.forEach { put(it) } }
+    )
+    root.put("md5", profile.md5)
+    root.put("sha256", profile.sha256)
+    root.put("dexCount", profile.dexCount)
+    root.put("dexBytes", profile.dexBytes)
+    root.put("soCount", profile.soFiles.size)
+    root.put("elapsedMs", report.elapsedMs)
+
+    val primary = report.primary
+    root.put("packed", primary != null)
+    if (primary != null) {
+        root.put("packer", primary.rule.displayName)
+        root.put("vendor", primary.rule.vendor)
+        root.put("category", primary.rule.category)
+        root.put("confidence", primary.confidence)
+        root.put("confidencePercent", primary.confidencePercent)
+        root.put("dumpHints", JSONArray().apply { primary.rule.dumpHints.forEach { put(it) } })
+    } else {
+        root.put("note", "未命中已知加固特征。自研壳/改名的壳也会这样，不等于没加固")
+    }
+    root.put(
+            "matches",
+            JSONArray().apply {
+                report.matches.take(3).forEach { m ->
+                    put(
+                            JSONObject().apply {
+                                put("packer", m.rule.displayName)
+                                put("score", m.score)
+                                put("confidence", m.confidence)
+                                put(
+                                        "evidences",
+                                        JSONArray().apply {
+                                            m.evidences.take(3).forEach { e ->
+                                                put("${e.kind.label}: ${e.detail}")
+                                            }
+                                        }
+                                )
+                            }
+                    )
+                }
+            }
+    )
+    root.put(
+            "stack",
+            JSONArray().apply { report.stack.take(6).forEach { put("${it.name}: ${it.detail}") } }
+    )
+    root.put(
+            "notes",
+            JSONArray().apply { report.structuralNotes.take(6).forEach { put(it) } }
+    )
+    return root.toString()
 }

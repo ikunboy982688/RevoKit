@@ -64,7 +64,7 @@ fun GlobalDisplaySettingsScreen(
     val enableEnterToSend by displayPreferencesManager.enableEnterToSend.collectAsState(initial = false)
     val enableNavigationAnimation by displayPreferencesManager.enableNavigationAnimation.collectAsState(initial = true)
     val startWithNewChat by displayPreferencesManager.startWithNewChat.collectAsState(initial = false)
-    val enableBackgroundKeepAlive by displayPreferencesManager.enableBackgroundKeepAlive.collectAsState(initial = false)
+    val enableBackgroundKeepAlive by displayPreferencesManager.enableBackgroundKeepAlive.collectAsState(initial = true)
     val enableExperimentalVirtualDisplay by displayPreferencesManager.enableExperimentalVirtualDisplay.collectAsState(initial = true)
     val hideRuntimeTaskView by displayPreferencesManager.hideRuntimeTaskView.collectAsState(initial = false)
     val globalUserName by displayPreferencesManager.globalUserName.collectAsState(initial = null)

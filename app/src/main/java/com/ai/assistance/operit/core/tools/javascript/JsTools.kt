@@ -836,6 +836,11 @@ fun getJsToolsDefinition(): String {
                             if (options.timeoutMs !== undefined && options.timeoutMs !== null) {
                                 params.timeout_ms = String(options.timeoutMs);
                             }
+                            // "android" = Android 系统 shell（pm/am/monkey/su、/data/adb 可见）
+                            // "linux"   = proot Ubuntu（python3/apt，看不到 /system）
+                            if (options.environment !== undefined && options.environment !== null) {
+                                params.environment = String(options.environment);
+                            }
                         }
                         return toolCall("execute_hidden_terminal_command", params);
                     },

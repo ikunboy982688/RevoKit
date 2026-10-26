@@ -365,13 +365,24 @@ class StandardTerminalCommandExecutor(private val context: Context) {
                         ?.value
                         ?.toLongOrNull()
                         ?: 120000L
+                // android = Android 系统 shell（能调 pm/am/monkey/su，能看 /data/adb）；
+                // linux = proot Ubuntu（有 python3/apt，但看不到 /system 和 /data/adb）。
+                // 默认沿用 linux，保证既有行为不变。
+                val environment =
+                    tool.parameters
+                        .find { it.name == "environment" }
+                        ?.value
+                        ?.trim()
+                        ?.ifEmpty { "linux" }
+                        ?: "linux"
 
                 val terminal = Terminal.getInstance(context)
                 val hiddenResult =
                     terminal.executeHiddenCommand(
                         command = command,
                         executorKey = executorKey,
-                        timeoutMs = timeoutMs
+                        timeoutMs = timeoutMs,
+                        environment = environment
                     )
                 val output = extractHiddenExecOutput(hiddenResult)
                 val didTimeout = hiddenResult.state == HiddenExecResult.State.TIMEOUT

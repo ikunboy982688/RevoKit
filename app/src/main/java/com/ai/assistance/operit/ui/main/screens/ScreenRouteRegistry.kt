@@ -7,9 +7,11 @@ import androidx.compose.material.icons.filled.AutoMode
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DataObject
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.DeviceHub
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Html
+import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Policy
@@ -118,14 +120,6 @@ object ScreenRouteRegistry {
                 order = 10
             ),
             hostEntryDefinition(
-                entryId = "main.assistant_config",
-                screen = Screen.AssistantConfig,
-                surface = NavigationSurface.MAIN_SIDEBAR_AI,
-                launchNavItem = NavItem.AssistantConfig,
-                icon = NavItem.AssistantConfig.icon,
-                order = 20
-            ),
-            hostEntryDefinition(
                 entryId = "main.memory_base",
                 screen = Screen.MemoryBase,
                 surface = NavigationSurface.MAIN_SIDEBAR_AI,
@@ -180,6 +174,43 @@ object ScreenRouteRegistry {
                 launchNavItem = NavItem.About,
                 icon = NavItem.About.icon,
                 order = 30
+            ),
+            // RevoKit 逆向工具（order 从 1 起，排在原生工具之前）
+            hostEntryDefinition(
+                entryId = "toolbox.packer_identify",
+                screen = Screen.PackerIdentify,
+                surface = NavigationSurface.TOOLBOX,
+                titleResId = R.string.tool_packer_identify,
+                descriptionResId = R.string.tool_packer_identify_desc,
+                icon = Icons.Default.Security,
+                order = 1
+            ),
+            hostEntryDefinition(
+                entryId = "toolbox.apk_browser",
+                screen = Screen.ApkBrowser,
+                surface = NavigationSurface.TOOLBOX,
+                titleResId = R.string.tool_apk_browser,
+                descriptionResId = R.string.tool_apk_browser_desc,
+                icon = Icons.Default.Inventory2,
+                order = 2
+            ),
+            hostEntryDefinition(
+                entryId = "toolbox.shell_workbench",
+                screen = Screen.ShellWorkbench,
+                surface = NavigationSurface.TOOLBOX,
+                titleResId = R.string.tool_shell_workbench,
+                descriptionResId = R.string.tool_shell_workbench_desc,
+                icon = Icons.Default.Build,
+                order = 3
+            ),
+            hostEntryDefinition(
+                entryId = "toolbox.cleanup",
+                screen = Screen.Cleanup,
+                surface = NavigationSurface.TOOLBOX,
+                titleResId = R.string.tool_cleanup,
+                descriptionResId = R.string.tool_cleanup_desc,
+                icon = Icons.Default.DeleteSweep,
+                order = 4
             ),
             hostEntryDefinition(
                 entryId = "toolbox.tool_tester",

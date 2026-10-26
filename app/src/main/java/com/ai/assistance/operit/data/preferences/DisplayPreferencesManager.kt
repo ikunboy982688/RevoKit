@@ -154,9 +154,12 @@ class DisplayPreferencesManager private constructor(private val context: Context
             preferences[KEY_GLOBAL_USER_NAME]
         }
 
+    // 2026-10-26 按用户要求把默认值翻成 true：装好就是保活开着。
+    // 这里不用做数据迁移 —— 用户从没碰过这个开关时 key 根本不存在，走的就是这个默认值；
+    // 他要是自己手动关过，存的是 false，那就尊重他的选择（存值优先于默认值）。
     val enableBackgroundKeepAlive: Flow<Boolean> =
         context.displayPreferencesDataStore.data.map { preferences ->
-            preferences[KEY_ENABLE_BACKGROUND_KEEP_ALIVE] ?: false
+            preferences[KEY_ENABLE_BACKGROUND_KEEP_ALIVE] ?: true
         }
 
     val enableExperimentalVirtualDisplay: Flow<Boolean> =
