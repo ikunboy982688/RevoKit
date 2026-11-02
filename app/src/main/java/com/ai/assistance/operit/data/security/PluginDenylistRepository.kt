@@ -211,6 +211,7 @@ class PluginDenylistRepository(
         private const val ACTION = "reject_import"
         private val SHA256_PATTERN = Regex("[0-9a-f]{64}")
 
-        const val DEFAULT_POINTER_URL = "https://operit.app/plugin-denylist/latest.json"
+        const val DEFAULT_POINTER_URL =
+            "https://raw.githubusercontent.com/ikunboy982688/RevoKit/main/plugin-denylist/latest.json"
     }
 }
