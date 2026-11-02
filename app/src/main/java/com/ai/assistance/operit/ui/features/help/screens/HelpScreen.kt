@@ -24,7 +24,7 @@ import com.ai.assistance.operit.ui.features.token.webview.WebViewConfig
 fun HelpScreen(onBackPressed: () -> Unit = {}) {
     val context = LocalContext.current
     var isLoading by remember { mutableStateOf(true) }
-    val helpUrl = "https://operit.app"
+    val helpUrl = "https://github.com/ikunboy982688/RevoKit#readme"
     val focusRequester = remember { FocusRequester() }
 
     // 创建WebView实例
