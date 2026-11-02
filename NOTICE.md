@@ -31,7 +31,7 @@
 
 | 类别 | 修改内容 |
 |---|---|
-| 应用标识 | `applicationId` 由 `com.ai.assistance.operit` 改为 **`com.ggongfang.app`**；应用名改为「GG工坊」/「GOOG」；启动图标改为自绘矢量图标 |
+| 应用标识 | `applicationId` 由 `com.ai.assistance.operit` 改为 **`com.ggongfang.app`**；应用名改为「GG工坊」/「GOOG」；启动图标换为自有设计（荧光绿双 G 字标 + 深色底，前景位图 5 档密度，替代上游的蓝色矢量图标） |
 | Kotlin 包名（namespace） | **未修改**，仍为 `com.ai.assistance.operit` |
 | 新增原生代码 | 新增包 `core/revokit/`：`DexRepair`、`DexDumper`、`ApkRepacker`、`ShellCleaner`、`PackerIdentifier`、`PackerSignatures`、`FlutterProbe`、`ApkBrowser`、`DiskCleaner` |
 | 新增界面 | 新增包 `ui/features/revokit/`：加固识别页、APK 拆包页、脱壳工作台（五页签）、一键清理页 |
