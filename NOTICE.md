@@ -1,9 +1,12 @@
 # NOTICE
 
-**逆向工坊（RevoKit）**
+**GG工坊（GOOG）**
+
+> 应用显示名：中文「GG工坊」，其他语言「GOOG」。
+> GitHub 仓库名沿用 `RevoKit`（内部代号，与显示名不一致属正常）。
 
 本文件说明本项目的来源、修改内容、所包含的第三方组件及其许可条件。
-最后更新：2026-10-27
+最后更新：2026-11-02
 
 ---
 
@@ -17,10 +20,10 @@
 | 上游仓库 | https://github.com/AAswordman/Operit |
 | 上游版本 | v1.12.2 |
 | 上游许可 | **GNU Lesser General Public License v3.0**（全文见仓库根目录 `LICENSE`） |
-| 本项目仓库 | `<待填：GitHub 仓库地址>` |
+| 本项目仓库 | https://github.com/ikunboy982688/RevoKit |
 | 本项目许可 | 同样以 **LGPL-3.0** 发布（与上游一致，未变更许可） |
 | 修改起始日期 | 2026-10-21 |
-| 修改持续至 | 2026-10-27（及之后） |
+| 修改持续至 | 2026-11-02（及之后） |
 
 ### 1.1 修改声明（LGPL-3.0 第 5 条要求）
 
@@ -28,7 +31,7 @@
 
 | 类别 | 修改内容 |
 |---|---|
-| 应用标识 | `applicationId` 由 `com.ai.assistance.operit` 改为 **`com.revokit.app`**；应用名改为「逆向工坊」；启动图标改为自绘矢量图标 |
+| 应用标识 | `applicationId` 由 `com.ai.assistance.operit` 改为 **`com.ggongfang.app`**；应用名改为「GG工坊」/「GOOG」；启动图标改为自绘矢量图标 |
 | Kotlin 包名（namespace） | **未修改**，仍为 `com.ai.assistance.operit` |
 | 新增原生代码 | 新增包 `core/revokit/`：`DexRepair`、`DexDumper`、`ApkRepacker`、`ShellCleaner`、`PackerIdentifier`、`PackerSignatures`、`FlutterProbe`、`ApkBrowser`、`DiskCleaner` |
 | 新增界面 | 新增包 `ui/features/revokit/`：加固识别页、APK 拆包页、脱壳工作台（五页签）、一键清理页 |

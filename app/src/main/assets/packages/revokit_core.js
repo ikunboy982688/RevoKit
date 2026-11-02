@@ -1,7 +1,7 @@
 /* METADATA
 {
   "name": "revokit_core",
-  "display_name": { "zh": "逆向工坊调度", "en": "RevoKit Router" },
+  "display_name": { "zh": "GG工坊调度", "en": "GOOG Router" },
   "description": "脱壳修复总入口。一次调用完成：扫 APK → 判壳型与代次 → 告诉你该调哪个技能包、下一步什么参数。不认识任何壳的细节，也不代替技能包干活。",
   "category": "ReverseEngineering",
   "enabledByDefault": true,
@@ -23,7 +23,7 @@
 }
 */
 // ============================================================
-// 逆向工坊调度层
+// GG工坊调度层
 //
 // 【硬约束，别再踩】ToolPkg 脚本里**不能**用 toolCall 调别的包的工具 ——
 // 实测返回空对象 {} 且不抛错（2026-10-24 test13 真机日志）。

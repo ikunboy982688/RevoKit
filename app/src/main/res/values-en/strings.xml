@@ -1,5 +1,5 @@
  <resources>
-    <string name="app_name">RevoKit</string>
+    <string name="app_name">GOOG</string>
     <string name="accessibility_service_description">Used to obtain the UI hierarchy, providing faster interface analysis capabilities for AI assistants, and does not collect or store any personal information.</string>
     
     <!-- Model selector related -->
@@ -582,9 +582,9 @@
     <string name="termux_setup_guide">Termux Setup Guide</string>
     
     <!-- About Screen -->
-    <string name="about_title">About RevoKit</string>
+    <string name="about_title">About GOOG</string>
     <string name="about_version">Version: %1$s</string>
-    <string name="about_description">RevoKit is an intelligent assistant application that helps users use their devices more efficiently, providing interface analysis, chat conversations, and more.</string>
+    <string name="about_description">GOOG is an intelligent assistant application that helps users use their devices more efficiently, providing interface analysis, chat conversations, and more.</string>
     <string name="about_developer">Developer: &lt;a href="https://github.com/ikunboy982688"&gt;ikunboy982688&lt;/a&gt;</string>
     <string name="about_contact">Contact Us: https://github.com/ikunboy982688/RevoKit/issues</string>
     <string name="about_website">&lt;a href="https://github.com/ikunboy982688/RevoKit"&gt;GitHub: https://github.com/ikunboy982688/RevoKit&lt;/a&gt;</string>
@@ -610,7 +610,7 @@
     <string name="network_status_label">Network Status</string>
 
     <!-- Configuration Screen -->
-    <string name="config_title">RevoKit Assistant</string>
+    <string name="config_title">GOOG Assistant</string>
     <string name="config_description">Use a DeepSeek API Key or configure another model service</string>
     <string name="config_api_key_label">API Key</string>
     <string name="config_api_key_placeholder">DeepSeek API Key</string>
@@ -5078,7 +5078,7 @@
     <string name="default_assistant_guide_step1_title">Open System Settings</string>
     <string name="default_assistant_guide_step1_desc">First, you need to enter the Android system settings interface</string>
     <string name="default_assistant_guide_step1_detail1">• Open System Settings → Apps → Default apps → Digital assistant app</string>
-    <string name="default_assistant_guide_step1_detail2">• Find and select "RevoKit" in the assistant app list</string>
+    <string name="default_assistant_guide_step1_detail2">• Find and select "GOOG" in the assistant app list</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: Settings → Apps → Default apps → Digital assistant app → Default digital assistant app</string>
     <string name="default_assistant_guide_open_settings">Open Settings</string>
     
@@ -5094,8 +5094,8 @@
     
     <!-- Step 3 -->
     <string name="default_assistant_guide_step3_title">Select Operit</string>
-    <string name="default_assistant_guide_step3_desc">Choose RevoKit from the assistant app list</string>
-    <string name="default_assistant_guide_step3_detail1">• Find \"RevoKit\" in the available assistant apps list</string>
+    <string name="default_assistant_guide_step3_desc">Choose GOOG from the assistant app list</string>
+    <string name="default_assistant_guide_step3_detail1">• Find \"GOOG\" in the available assistant apps list</string>
     <string name="default_assistant_guide_step3_detail2">• Tap to select, and the system will set Operit as the default assistant</string>
     <string name="default_assistant_guide_step3_detail3">• You can try speaking or typing to interact with the assistant</string>
     
@@ -5110,7 +5110,7 @@
     <string name="default_assistant_guide_troubleshooting_content">If you can\'t find Operit in the list, please ensure:\n\n• The app is properly installed and not disabled\n• Necessary permissions have been granted (microphone, overlay, etc.)\n• Try restarting the device and setting it up again\n\nSome custom systems may restrict third-party apps from being set as default assistants. If you encounter this situation, you can still use Operit through the in-app floating window feature.</string>
 
     <!-- Voice Interaction Service -->
-    <string name="voice_interaction_service_name">RevoKit Assistant</string>
+    <string name="voice_interaction_service_name">GOOG Assistant</string>
     <string name="voice_interaction_service_summary">Intelligent voice assistant service</string>
 
     <!-- Tool Permission Settings -->
@@ -5388,7 +5388,7 @@
     <string name="start_with_new_chat_description">When enabled, each app launch opens a new blank chat instead of reopening the previous conversation.</string>
     <string name="software_identity_title">Software Identity</string>
     <string name="software_identity_description">Change the software identity shown at the top of the sidebar.</string>
-    <string name="software_identity_option_operit">RevoKit</string>
+    <string name="software_identity_option_operit">GOOG</string>
     <string name="software_identity_option_lingshu">Lingshu AI</string>
     <string name="reset_all_display_settings">Reset All Display Settings</string>
     
@@ -7231,7 +7231,7 @@
     <string name="html_export_updated">Updated</string>
     <string name="html_export_group">Group</string>
     <string name="html_export_message_count">Message Count</string>
-    <string name="html_export_footer">Exported from RevoKit Assistant</string>
+    <string name="html_export_footer">Exported from GOOG Assistant</string>
 
     <!-- MnnModelDownloadManager -->
     <string name="mnn_no_cache_data">No cache data</string>

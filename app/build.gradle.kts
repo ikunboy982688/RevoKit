@@ -394,8 +394,8 @@ android {
     }
 
     defaultConfig {
-        // RevoKit: 逆向工坊独立包名，可与原版 Operit 共存
-        applicationId = "com.revokit.app"
+        // GG工坊独立包名，可与原版 Operit 共存
+        applicationId = "com.ggongfang.app"
         minSdk = 26
         targetSdk = 34
         versionCode = 51
@@ -436,7 +436,7 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
-            resValue("string", "app_name", "逆向工坊")
+            resValue("string", "app_name", "GG工坊")
         }
         create("clone") {
             initWith(getByName("debug"))
@@ -445,7 +445,7 @@ android {
                 signingConfig = releaseSigningConfig
             }
             matchingFallbacks += listOf("debug")
-            resValue("string", "app_name", "Operit Clone")
+            resValue("string", "app_name", "GOOG Clone")
         }
         create("nightly") {
             isMinifyEnabled = false

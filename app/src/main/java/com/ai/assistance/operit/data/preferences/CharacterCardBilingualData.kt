@@ -80,7 +80,7 @@ object CharacterCardBilingualData {
     val REVOKIT_SOP_CN: String =
         """
         $SOP_MARKER
-        你运行在「逆向工坊」内，装有一套分层的逆向工具包。遵守以下协议。
+        你运行在「GG工坊」内，装有一套分层的逆向工具包。遵守以下协议。
 
         一、识别即行动，不要反问「需要我做什么」
         用户消息里出现下列任一情况，就视为已经有逆向任务，直接调工具，不要先问一遍：
@@ -506,7 +506,7 @@ object CharacterCardBilingualData {
         return if (isChineseLocale(context)) {
             """
             1. 身份
-            你是逆向工坊的语音助手，本职是 Android 逆向工程师。用户手上正在操作设备，你负责口述步骤。
+            你是GG工坊的语音助手，本职是 Android 逆向工程师。用户手上正在操作设备，你负责口述步骤。
 
             2. 语音专项要求
             句子短：每句尽量控制在 20 字以内。

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">RevoKit</string>
+    <string name="app_name">GOOG</string>
     <string name="accessibility_service_description">Digunakan untuk mendapatkan hierarki UI, menyediakan keupayaan analisis antara muka yang lebih pantas untuk pembantu AI, tidak akan mengumpul atau menyimpan sebarang maklumat peribadi.</string>
     <string name="model_selector_title">Pilih Konfigurasi Model</string>
     <string name="model_selector_toggle">Tunjukkan Pemilih Model</string>
@@ -539,9 +539,9 @@
     <string name="install_termux_failed">Pemasangan Termux gagal</string>
     <string name="open_termux">Buka Termux</string>
     <string name="termux_setup_guide">Panduan penyediaan Termux</string>
-    <string name="about_title">Perihal RevoKit</string>
+    <string name="about_title">Perihal GOOG</string>
     <string name="about_version">Versi: %1$s</string>
-    <string name="about_description">RevoKit ialah aplikasi pembantu pintar yang membantu pengguna menggunakan peranti dengan lebih cekap, menyediakan analisis antara muka, perbualan sembang dan fungsi lain.</string>
+    <string name="about_description">GOOG ialah aplikasi pembantu pintar yang membantu pengguna menggunakan peranti dengan lebih cekap, menyediakan analisis antara muka, perbualan sembang dan fungsi lain.</string>
     <string name="about_developer">Pembangun: &lt;a href="https://github.com/ikunboy982688"&gt;ikunboy982688&lt;/a&gt;</string>
     <string name="about_contact">Hubungi kami: https://github.com/ikunboy982688/RevoKit/issues</string>
     <string name="about_website">&lt;a href="https://github.com/ikunboy982688/RevoKit"&gt;GitHub: https://github.com/ikunboy982688/RevoKit&lt;/a&gt;</string>
@@ -560,7 +560,7 @@
     <string name="network_unavailable">Sambungan rangkaian tidak tersedia, sila semak tetapan rangkaian anda</string>
     <string name="network_status">Status rangkaian: %1$s</string>
     <string name="network_status_label">Status rangkaian</string>
-    <string name="config_title">Pembantu RevoKit</string>
+    <string name="config_title">Pembantu GOOG</string>
     <string name="config_description">Gunakan Kunci API DeepSeek atau konfigurasikan perkhidmatan model lain</string>
     <string name="config_api_key_label">Kunci API</string>
     <string name="config_api_key_placeholder">Kunci API DeepSeek</string>
@@ -4530,7 +4530,7 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="default_assistant_guide_step1_title">Tetapkan sebagai Pembantu Lalai</string>
     <string name="default_assistant_guide_step1_desc">Tetapkan Operit sebagai aplikasi pembantu digital lalai sistem</string>
     <string name="default_assistant_guide_step1_detail1">• Buka Tetapan Sistem → Aplikasi → Aplikasi Lalai → Aplikasi Pembantu Digital</string>
-    <string name="default_assistant_guide_step1_detail2">• Cari dan pilih "RevoKit" dalam senarai aplikasi pembantu</string>
+    <string name="default_assistant_guide_step1_detail2">• Cari dan pilih "GOOG" dalam senarai aplikasi pembantu</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: Tetapan → Aplikasi → Aplikasi Lalai → Aplikasi Pembantu Digital → Aplikasi Pembantu Digital Lalai</string>
     <string name="default_assistant_guide_open_settings">Buka Tetapan Pembantu</string>
     <string name="default_assistant_guide_open_gesture_settings">Buka Tetapan Isyarat</string>
@@ -6160,7 +6160,7 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="html_export_updated">Dikemas kini</string>
     <string name="html_export_group">Kumpulan</string>
     <string name="html_export_message_count">Bilangan Mesej</string>
-    <string name="html_export_footer">Dieksport dari RevoKit Assistant</string>
+    <string name="html_export_footer">Dieksport dari GOOG Assistant</string>
     <string name="mnn_no_cache_data">Tiada data cache</string>
     <string name="mnn_response_empty">Badan respons kosong</string>
     <string name="mnn_fetch_repo_files_failed">Gagal mendapatkan senarai fail repositori: %1$s</string>
@@ -6926,7 +6926,7 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="chat_message_token_speed_compact">%1$s t/s</string>
     <string name="software_identity_title">Identiti Perisian</string>
     <string name="software_identity_description">Tukar identiti perisian yang dipaparkan di bahagian atas bar sisi.</string>
-    <string name="software_identity_option_operit">RevoKit</string>
+    <string name="software_identity_option_operit">GOOG</string>
     <string name="software_identity_option_lingshu">Lingshu AI</string>
     <string name="chat_auto_update_memory_failed">Gagal mengemas kini memori secara automatik: %1$s</string>
 

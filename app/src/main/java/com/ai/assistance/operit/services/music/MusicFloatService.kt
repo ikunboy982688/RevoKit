@@ -129,12 +129,12 @@ class MusicFloatService : Service() {
         private const val PANEL_WIDTH_DP = 302
         private const val LYRICS_MARGIN_DP = 14
 
-        const val ACTION_TOGGLE_PLAY_PAUSE = "com.revokit.app.music.TOGGLE_PLAY_PAUSE"
-        const val ACTION_NEXT = "com.revokit.app.music.NEXT"
-        const val ACTION_PREVIOUS = "com.revokit.app.music.PREVIOUS"
-        const val ACTION_STOP = "com.revokit.app.music.STOP"
-        const val ACTION_SET_LYRICS_BAR = "com.revokit.app.music.SET_LYRICS_BAR"
-        const val ACTION_SUPPRESS_LYRICS_BAR = "com.revokit.app.music.SUPPRESS_LYRICS_BAR"
+        const val ACTION_TOGGLE_PLAY_PAUSE = "com.ggongfang.app.music.TOGGLE_PLAY_PAUSE"
+        const val ACTION_NEXT = "com.ggongfang.app.music.NEXT"
+        const val ACTION_PREVIOUS = "com.ggongfang.app.music.PREVIOUS"
+        const val ACTION_STOP = "com.ggongfang.app.music.STOP"
+        const val ACTION_SET_LYRICS_BAR = "com.ggongfang.app.music.SET_LYRICS_BAR"
+        const val ACTION_SUPPRESS_LYRICS_BAR = "com.ggongfang.app.music.SUPPRESS_LYRICS_BAR"
 
         private const val EXTRA_LYRICS_BAR_ENABLED = "enabled"
         private const val EXTRA_SUPPRESS = "suppress"
