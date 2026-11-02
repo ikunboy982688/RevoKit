@@ -1,11 +1,8 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
-  - name: 用户指南 / User guide
-    url: https://aaswordman.github.io/OperitWeb
-    about: 先查看使用文档和常见操作说明
-  - name: QQ 群 / QQ group
-    url: https://qm.qq.com/q/Sa4fKEH7sO
-    about: 加入社区交流和使用讨论
-  - name: Discord
-    url: https://discord.gg/YnV9MWurRF
-    about: 加入 Discord 社区讨论
+  - name: 使用说明 / Documentation
+    url: https://github.com/ikunboy982688/RevoKit#readme
+    about: 安装、构建要求与已知限制，先看 README
+  - name: 上游项目 Operit AI
+    url: https://github.com/AAswordman/Operit
+    about: 本项目的上游，原版功能与实现请到上游仓库查阅

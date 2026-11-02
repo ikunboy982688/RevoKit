@@ -38,7 +38,7 @@
 | 新增 ToolPkg 脚本 | `assets/packages/` 下新增 `local_unpack.js`、`revokit_core.js`、`pack_360.js`、`revokit_net.js`、`packer_signatures.js`、`logfox_toolkit.js`、`tuoke_cloud.js`、`revokit_ws.js`，以及打包后的 `apktool.toolpkg` |
 | 修改上游构建产物 | 重新构建了 `apktool-runtime-android.jar` 与 `jadx-runtime-android.jar`：前者修改 `brut/androlib/res/AaptManager.java`、`brut/androlib/res/decoder/ResNinePatchStreamDecoder.java`；后者修改 `jadx/core/dex/visitors/SaveCode.java`、`jadx/zip/parser/ZipDeflate.java`。**修改后的源码随仓库保存在 `examples/apktool/runtime_patch_src/`** |
 | 默认人设与提示词 | 修改 `data/preferences/CharacterCard*`，当前人设协议版本 v15 |
-| 功能删减 | 移除部分上游功能，清单见仓库 `功能删减清单.md` |
+| 功能删减 | 部分上游功能入口已在界面侧收敛/隐藏（**代码与资源仍保留在仓库内，未物理删除**）；资源层面的裁剪仍在规划中 |
 
 ### 1.2 获取源代码（LGPL-3.0 第 4、6 条要求）
 
