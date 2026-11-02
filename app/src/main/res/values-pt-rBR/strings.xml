@@ -527,12 +527,12 @@
     <string name="install_termux_failed">A instalação do Termux falhou</string>
     <string name="open_termux">Abra o Termux</string>
     <string name="termux_setup_guide">Assistente de configuração Termux</string>
-    <string name="about_title">Sobre a Operit AI</string>
+    <string name="about_title">Sobre a RevoKit</string>
     <string name="about_version">Versão: %1$s</string>
-    <string name="about_description">Operit AI é um aplicativo assistente inteligente que pode ajudar os usuários a usar os dispositivos com mais eficiência, fornecendo análise de interface, diálogo de chat e outras funções.</string>
-    <string name="about_developer">Desenvolvedor: &lt;a href="https://github.com/AAswordman"&gt;AAswordman&lt;/a&gt;</string>
-    <string name="about_contact">Contate-nos: aaswordsman@foxmail.com</string>
-    <string name="about_website">&lt;a href="https://github.com/AAswordman/Operit"&gt;GitHub: https://github.com/AAswordman/Operit&lt;/a&gt;</string>
+    <string name="about_description">RevoKit é um aplicativo assistente inteligente que pode ajudar os usuários a usar os dispositivos com mais eficiência, fornecendo análise de interface, diálogo de chat e outras funções.</string>
+    <string name="about_developer">Desenvolvedor: &lt;a href="https://github.com/ikunboy982688"&gt;ikunboy982688&lt;/a&gt;</string>
+    <string name="about_contact">Contate-nos: https://github.com/ikunboy982688/RevoKit/issues</string>
+    <string name="about_website">&lt;a href="https://github.com/ikunboy982688/RevoKit"&gt;GitHub: https://github.com/ikunboy982688/RevoKit&lt;/a&gt;</string>
     <string name="about_copyright">© 2025 - 2026 Operit. Todos os direitos reservados.</string>
     <string name="star_on_github">Clique em uma estrela no GitHub</string>
     <string name="update_log">Registro de alterações</string>
@@ -4173,7 +4173,7 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="default_assistant_guide_step1_title">Definir como assistente padrão</string>
     <string name="default_assistant_guide_step1_desc">Defina o Operit como o aplicativo de assistente digital padrão do seu sistema</string>
     <string name="default_assistant_guide_step1_detail1">• Abra Configurações do sistema → Aplicativos → Aplicativos padrão → Aplicativo Assistente Digital</string>
-    <string name="default_assistant_guide_step1_detail2">• Encontre e selecione "Operit AI" na lista de aplicativos assistentes</string>
+    <string name="default_assistant_guide_step1_detail2">• Encontre e selecione "RevoKit" na lista de aplicativos assistentes</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: Configurações → Aplicativos → Aplicativos padrão → Aplicativo Digital Assistant → Aplicativo Digital Assistant padrão</string>
     <string name="default_assistant_guide_open_settings">Abra as configurações do assistente</string>
     <string name="default_assistant_guide_open_gesture_settings">Abrir configurações de gestos</string>
@@ -6076,7 +6076,7 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="html_export_updated">renovar</string>
     <string name="html_export_group">Grupo</string>
     <string name="html_export_message_count">Número de mensagens</string>
-    <string name="html_export_footer">Exportado do Operit AI Assistant</string>
+    <string name="html_export_footer">Exportado do RevoKit Assistant</string>
     <string name="mnn_no_cache_data">Nenhum dado em cache</string>
     <string name="mnn_response_empty">O corpo da resposta está vazio</string>
     <string name="mnn_fetch_repo_files_failed">Falha ao obter a lista de arquivos do warehouse: %1$s</string>
@@ -6761,7 +6761,7 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="chat_message_token_speed_compact">%1$s t/s</string>
     <string name="software_identity_title">Identidade do software</string>
     <string name="software_identity_description">Altera a identidade do software exibida no topo da barra lateral.</string>
-    <string name="software_identity_option_operit">Operit AI</string>
+    <string name="software_identity_option_operit">RevoKit</string>
     <string name="software_identity_option_lingshu">Lingshu AI</string>
     <string name="hide_runtime_task_view">Ocultar visualização de tarefa em execução</string>
     <string name="hide_runtime_task_view_description">Quando a IA está processando mensagens ou executando ferramentas, oculta o cartão de tarefa do aplicativo da lista de tarefas recentes do sistema, evitando que seja fechado acidentalmente ao deslizar.</string>
