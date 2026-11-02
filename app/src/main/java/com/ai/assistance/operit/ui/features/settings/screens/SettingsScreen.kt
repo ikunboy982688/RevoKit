@@ -75,13 +75,19 @@ fun SettingsScreen(
                 }
         }
 
-        val hasBackgroundImage = LocalThemePreferenceSnapshot.current.useBackgroundImage
-        
-        val cardContainerColor = if (hasBackgroundImage) {
-                MaterialTheme.colorScheme.surface
-        } else {
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-        }
+        val themeSnapshot = LocalThemePreferenceSnapshot.current
+        val hasBackgroundImage = themeSnapshot.useBackgroundImage
+        // 只要铺了背景图就统一走扁平：分组不再画不透明白卡，标题和条目一起浮在雾面上。
+        // 之前「有图 → 白卡」和「扁平 → 透明」两档混着用，一页里同时出现照片底和白卡，
+        // 观感是割裂的 —— 现在有图就全透明，没有图才用淡色卡片。
+        val flatSections = hasBackgroundImage || themeSnapshot.flatSettingsSections
+
+        val cardContainerColor =
+                if (flatSections) {
+                        Color.Transparent
+                } else {
+                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                }
 
         Column(
                 modifier = Modifier.fillMaxSize()
@@ -358,6 +364,10 @@ fun SettingsScreen(
                 )
         }
 }
+// 扁平模式标记：条目要知道自己是不是浮在背景图上，好决定底部要不要画分割线。
+// 用 CompositionLocal 传，省得给二十几个调用点各加一个参数。
+private val LocalFlatSettingsSections = staticCompositionLocalOf { false }
+
 @Composable
 private fun SettingsSection(
         title: String,
@@ -387,16 +397,24 @@ private fun SettingsSection(
                 }
                 
                 // 内容区域
+                val transparent = containerColor.alpha == 0f
                 Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
                                 containerColor = containerColor
-                        )
+                        ),
+                        // 透明底还带阴影会显得脏，扁平模式下一并去掉
+                        elevation = CardDefaults.cardElevation(defaultElevation = if (transparent) 0.dp else 1.dp)
                 ) {
                         Column(
-                                modifier = Modifier.padding(12.dp),
-                                content = content
-                        )
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = if (transparent) 4.dp else 12.dp)
+                        ) {
+                                // 扁平模式下没有卡片边界，靠条目的分割线兜住「这是一组」的感觉
+                                CompositionLocalProvider(
+                                        LocalFlatSettingsSections provides transparent,
+                                        content = { content() }
+                                )
+                        }
                 }
         }
 }
@@ -408,45 +426,56 @@ private fun CompactSettingsItem(
         icon: ImageVector,
         onClick: () -> Unit
 ) {
-        Row(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(6.dp))
-                        .clickable { onClick() }
-                        .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-        ) {
-                Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
-                )
-                
-                Spacer(modifier = Modifier.width(12.dp))
-                
-                Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                                text = title,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+        val flat = LocalFlatSettingsSections.current
+        Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(6.dp))
+                                .clickable { onClick() }
+                                .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                ) {
+                        Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
                         )
-                        Text(
-                                text = subtitle,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                        
+                        Spacer(modifier = Modifier.width(12.dp))
+                        
+                        Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                        text = title,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Medium,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                        text = subtitle,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                )
+                        }
+                        
+                        Icon(
+                                imageVector = Icons.Default.ChevronRight,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(16.dp)
                         )
                 }
-                
-                Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(16.dp)
-                )
+                // 扁平模式下卡片底没了，用一条从图标右侧起的分割线维持「一组条目」的秩序感
+                if (flat) {
+                        HorizontalDivider(
+                                modifier = Modifier.padding(start = 40.dp),
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+                        )
+                }
         }
 }

@@ -384,7 +384,7 @@ class MainActivity : ComponentActivity() {
         pluginLoadingState.show()
 
         // 启动超时检测（30秒）
-        pluginLoadingState.startTimeoutCheck(30000L, lifecycleScope)
+        pluginLoadingState.startTimeoutCheck(8000L, lifecycleScope)
 
         // 初始化MCP服务器并启动插件
         // 轻微延迟让首帧 Compose 完成，避免启动阶段后台重任务立刻抢占导致掉帧

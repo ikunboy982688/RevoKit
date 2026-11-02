@@ -154,6 +154,36 @@
       ]
     },
     {
+      "name": "lu_splash_fix",
+      "description": "★启动页接回补丁：专治「删掉/回填 onCreate 后界面卡在启动页不动」。适用于父类的 onCreate 只做半套（只设横竖屏、状态栏颜色，一次业务方法调用都没有，就是不跳转）的情况 —— 360 只抽走生命周期那个方法，它内部调的私有入口方法（checkAndShowXxx / continueXxxJump / toMainPage 这类）全都还在。本工具自动判定哪些类属于这种情况，列出候选入口，并在子类 onCreate 里补一句调用把流程接回去。dry_run 默认 true。",
+      "parameters": [
+        {
+          "name": "decoded_dir",
+          "description": "apktool 解包目录",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "dry_run",
+          "description": "true=只报告不修改（默认），false=实际写入",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "entry",
+          "description": "手动指定入口方法名（自动选的不对时用，例如 checkAndShowMubuTerm）",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "only_class",
+          "description": "只处理某个类（类名片段或路径片段）",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "lu_stub_clean",
       "description": "删掉 StubApp/DtcLoader 等壳桩类在入口里的调用。",
       "parameters": [
@@ -276,6 +306,96 @@
           "description": "dex 文件路径，或包含 dex 的目录（目录时递归处理…",
           "type": "string",
           "required": true
+        }
+      ]
+    },
+    {
+      "name": "lu_v9_patch",
+      "description": "dex 层删掉 360 抽走的方法定义（native 且 code_off=0），让子类继承父类真实实现；用非最短 uleb128 填回差额，保证 class_data_item 等长、偏移全不变、不碰 map_list。不依赖 smali，专治手机端「把 dump 的 dex 直接塞进解包目录、业务类根本没反编译成 smali」导致 lu_fill_oncreate/lu_splash_fix 覆盖不到的情况。症状是主界面能进，一点某些页面就 UnsatisfiedLinkError: No implementation found for ...onCreate。",
+      "parameters": [
+        {
+          "name": "dex_dir",
+          "description": "dex 所在目录（递归取 *.dex），也可以填单个 .dex 文件路径。一般填 apktool 解包目录（里面 classes2.dex/classes3.dex 就是塞进去的业务 dex）。",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "prefix",
+          "description": "主程序包名前缀，填 dex 描述符形式，如 Lxyz/daofeng/ 或 Lcom/juyingfun/mqjz/；多个用逗号分隔。留空则按「排除框架和三方库」兜底过滤。强烈建议显式填，避免误删三方库的真 JNI。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "sigs",
+          "description": "要删的方法签名（逗号分隔，shorty 形式）。默认只删 onCreate(Landroid/os/Bundle;)V 和 onRequestPermissionsResult(I[Ljava/lang/String;[I)V。要扩就传，例如 onResume()V,onStart()V,onDestroy()V。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "dry_run",
+          "description": "默认 true（只预演、不落盘，列出将删哪些）。确认无误后设 false 真正改写。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "in_place",
+          "description": "默认 true：原地覆盖 dex。设 false 且不填 output_dir 时写成同名 .v9 文件。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "output_dir",
+          "description": "指定输出目录时，改完的 dex 写到该目录（原 dex 不动）。填了它 in_place 无效。",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "lu_code_patch",
+      "description": "dex 层「启动页接回」：把被 360 抽走入口的 Activity 用等长方法体原地改写接回真实业务入口。症状是 lu_v9_patch 之后不崩了，但永远卡在启动页/闪屏进不去 —— 根因是父类实现只做了一半（幕布 BaseSplashActivity.onCreate 只有 37 条指令、设横竖屏和状态栏、一次虚分派都没有），真正的跳转全在被抽走的子类 onCreate 里，而同类里那个业务入口方法还活着、只是没人调。本工具找一个必定会被框架调用的存活方法（onResume 优先）做「搭载」，原地改写成 invoke-super 父类同名方法 + 调用业务入口 + return-void。等长（新指令不超过原 unit 数就整段覆盖、余下填 nop）→ 偏移不变 → 不碰 map_list。★必须在 lu_v9_patch 之前跑：v9 删掉 onCreate 定义后，本工具就失去「哪个类被抽过」的证据了。",
+      "parameters": [
+        {
+          "name": "dex_dir",
+          "description": "dex 所在目录（取 *.dex），也可以填单个 .dex 文件路径。先不填 cls 跑一次看分析结果，再带 cls 正式改。",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "prefix",
+          "description": "主程序包名前缀（dex 描述符形式，如 Lcom/mubu/），多个逗号分隔。留空则扫全部类（慢，且会混进三方库）。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "cls",
+          "description": "要改的类描述符，如 Lcom/mubu/app/splash/MubuSplashActivity;。留空=只分析列出所有被抽过的类和入口候选打分，不写盘。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "method",
+          "description": "搭载方法（含签名），默认自动挑 onResume()V / onStart()V / onRestart()V / onPostResume()V 里第一个有真实方法体的。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "entry",
+          "description": "业务入口方法名（不含签名）。留空则用自动打分的第一名（判据：关键词 + 「同类里没有任何地方调用它」+30 + private+5）。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "dry_run",
+          "description": "默认 true（只分析打分、不写盘）。确认首选入口就是真正的业务入口后设 false 才真正改写。",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "output_dir",
+          "description": "输出目录。填了它原 dex 不动、改完的写到该目录；不填则原地覆盖。",
+          "type": "string",
+          "required": false
         }
       ]
     },
@@ -1884,6 +2004,341 @@ print("LURESULT:" + json.dumps(res, ensure_ascii=False))
         return runPy(py, q(dir) + ' ' + (dry ? '1' : '0') + (only ? ' ' + q(only) : ''), 600000);
     }
 
+    // ---------- 启动页接回补丁：父类只做半套 ----------
+    // 背景（2026-10-27 幕布 com.mubu.app 实测）：
+    //   lu_fill_oncreate 把被抽空的 onCreate 换成「invoke-super + return-void」，
+    //   前提是「父类那份 onCreate 够用」。但幕布不行 —— 父类 BaseSplashActivity.onCreate
+    //   只有 37 条指令、只设横竖屏和状态栏颜色，一次业务方法调用都没有，它就是不跳转。
+    //   真正的跳转在被抽走的那段里，但同类里的私有入口方法（checkAndShowMubuTerm /
+    //   continueMubuJump / toMubuJump）**全都还在**，只是没人调。
+    //   所以这里在 onCreate 里补一句调用那个还活着的入口方法，把流程接回去。
+    //
+    //   判定「半套」的启发式：祖先 onCreate 里既没有指向自身类族的方法调用，
+    //   也没有任何非框架类的方法调用 —— 即没有任何虚分派钩子。
+    function lu_splash_fix(params) {
+        var dir = params.decoded_dir;
+        if (!dir) throw new Error('缺少 decoded_dir');
+        var dry = !(params.dry_run === 'false' || params.dry_run === false);
+        var only = params.only_class || '';
+        var entry = params.entry || '';
+
+        var py = String.raw`
+import sys, os, re, json
+root = sys.argv[1]
+dry = sys.argv[2] == '1'
+only = sys.argv[3] if len(sys.argv) > 3 else ''
+entry = sys.argv[4] if len(sys.argv) > 4 else ''
+
+METHOD_RE = re.compile(r'^\s*\.method\s+(.*)$')
+END_RE    = re.compile(r'^\s*\.end\s+method\s*$')
+SUPER_RE  = re.compile(r'^\s*\.super\s+(L[^;]+;)\s*$')
+CLASS_RE  = re.compile(r'^\s*\.class\s+(.*)$')
+DIRECTIVE_RE = re.compile(r'^\s*\.(locals|registers|prologue|line|param|annotation|end|catch|catchall|packed-switch|sparse-switch|array-data)')
+LABEL_RE  = re.compile(r'^\s*:')
+SHELL_PATS = ['Lcom/stub/StubApp', 'Lcom/qihoo/', 'Lcom/frezrik/', 'Lcom/secneo/']
+TRIVIAL_RE = re.compile(r'^\s*(return-void|return\b|return-object|return-wide|nop|const/4|const/16|const|move-result|move-result-object|move-result-wide)\b')
+FRAMEWORK_RE = re.compile(r'->L(android/|androidx/|java/|javax/|kotlin/|kotlinx/|dalvik/|org/|com/google/)')
+CALL_RE = re.compile(r'^\s*invoke-(virtual|direct|interface|super|static)(?:/range)?\s+\{[^}]*\},\s*(.+)$')
+
+# 这些是标准生命周期/工具名，不能当「入口」
+LIFECYCLE = set(['onCreate','onStart','onResume','onPause','onStop','onDestroy','onRestart',
+                 'onActivityResult','onRequestPermissionsResult','onBackPressed','onNewIntent',
+                 'onSaveInstanceState','onRestoreInstanceState','onConfigurationChanged',
+                 'onWindowFocusChanged','onAttachedToWindow','onDetachedFromWindow','onDestroyView',
+                 'onCreateView','setContentView','findViewById','finish','dispatchTouchEvent'])
+
+# 入口方法名的加权词
+KEYWORDS = ['jump','Jump','toMain','toLogin','toHome','toWelcome','checkAndShow','check',
+            'continue','goMain','enter','welcome','Welcome','splash','Splash','next','launch',
+            'Launch','start','init','toRN','show','term','Term']
+
+def insns_of(lines, i, j):
+    out = []
+    for b in lines[i+1:j]:
+        s = b.strip()
+        if not s: continue
+        if DIRECTIVE_RE.match(b): continue
+        if LABEL_RE.match(b): continue
+        out.append(b)
+    return out
+
+def split_method(header):
+    tok = header.split()
+    if not tok: return '', '', ''
+    last = tok[-1]
+    mods = ' '.join(tok[:-1])
+    if '(' in last:
+        k = last.index('(')
+        return mods, last[:k], last[k:]
+    return mods, last, ''
+
+def methods_of(lines):
+    out = []
+    n = len(lines)
+    i = 0
+    while i < n:
+        m = METHOD_RE.match(lines[i])
+        if not m:
+            i += 1
+            continue
+        j = i + 1
+        while j < n and not END_RE.match(lines[j]):
+            j += 1
+        out.append((i, j, m.group(1).strip()))
+        i = j + 1
+    return out
+
+def is_orphan(insns):
+    """判断这个 onCreate 是不是「没有自己的业务代码」"""
+    if len(insns) == 0:
+        return True
+    shell_hits = [x for x in insns if any(p in x for p in SHELL_PATS)]
+    other = [x for x in insns if not any(p in x for p in SHELL_PATS)]
+    if shell_hits and all(TRIVIAL_RE.match(x) for x in other):
+        return True
+    if all(TRIVIAL_RE.match(x) for x in insns):
+        return True
+    # lu_fill_oncreate 已经回填过的标准空实现：只剩一句 invoke-super onCreate
+    real = [x for x in insns if not TRIVIAL_RE.match(x)]
+    if len(real) == 1 and 'invoke-super' in real[0] and '->onCreate(' in real[0]:
+        return True
+    return False
+
+# ---------- 建类索引 ----------
+files = []
+for dirpath, dirnames, filenames in os.walk(root):
+    for fn in filenames:
+        if fn.endswith('.smali'):
+            files.append(os.path.join(dirpath, fn))
+
+cidx = {}
+for p in files:
+    try:
+        with open(p, 'r', encoding='utf-8', errors='replace') as f:
+            L = f.read().splitlines()
+    except Exception:
+        continue
+    desc = None
+    for l in L:
+        if l.strip().startswith('.method'):
+            break
+        m = CLASS_RE.match(l)
+        if m:
+            tok = m.group(1).split()
+            if tok:
+                desc = tok[-1]
+                break
+    if desc:
+        cidx[desc] = p
+
+_cache = {}
+def load(desc):
+    if desc in _cache:
+        return _cache[desc]
+    p = cidx.get(desc)
+    if not p:
+        _cache[desc] = None
+        return None
+    try:
+        with open(p, 'r', encoding='utf-8', errors='replace') as f:
+            L = f.read().splitlines()
+    except Exception:
+        _cache[desc] = None
+        return None
+    _cache[desc] = (p, L)
+    return _cache[desc]
+
+def super_of(L):
+    for l in L:
+        m = SUPER_RE.match(l)
+        if m:
+            return m.group(1)
+    return None
+
+# ---------- 主扫描 ----------
+targets = []
+for desc in sorted(cidx.keys()):
+    p = cidx[desc]
+    if only and only not in p:
+        continue
+    got = load(desc)
+    if not got:
+        continue
+    fp, L = got
+    sup = super_of(L)
+    if not sup:
+        continue
+
+    for (i, j, header) in methods_of(L):
+        mods, name, proto = split_method(header)
+        if name != 'onCreate' or proto != '(Landroid/os/Bundle;)V':
+            continue
+        insns = insns_of(L, i, j)
+        if not is_orphan(insns):
+            continue
+
+        # 沿父类链找第一个有 onCreate 的祖先
+        chain = []
+        anc = sup
+        seen = set()
+        anc_info = None
+        while anc and anc not in seen and len(chain) < 8:
+            seen.add(anc)
+            chain.append(anc)
+            g = load(anc)
+            if not g:
+                break
+            aL = g[1]
+            hit = None
+            for (ai, aj, ah) in methods_of(aL):
+                am, an, ap = split_method(ah)
+                if an == 'onCreate' and ap == '(Landroid/os/Bundle;)V':
+                    hit = (ai, aj, ah)
+                    break
+            if hit:
+                anc_info = (anc, hit)
+                break
+            anc = super_of(aL)
+
+        if not anc_info:
+            targets.append({
+                '类': desc, '父类链': chain[:4],
+                '判定': '父类链上找不到 onCreate（本工具救不了，得靠云端或手补）',
+                '候选入口': []
+            })
+            continue
+
+        anc_desc, (ai, aj, ah) = anc_info
+        aL = load(anc_desc)[1]
+        ains = insns_of(aL, ai, aj)
+
+        # 半套判定（关键，别用「父类有没有调业务方法」这么粗的判据）：
+        # 幕布的 BaseSplashActivity.onCreate 确实调了 getDefaultStatusBarColor()，
+        # 目标是它自己类 —— 光看「有没有业务调用」会误判成「够用」。
+        # 真正要问的是：**父类调的那些方法里，有没有一个被子类重写了**。
+        #   有  → 继承父类时会虚分派到子类自己的实现（mqjz 的 initView 就是这样），够了
+        #   没有 → 继承父类等于什么都不发生，必须接回
+        hook_calls = set()
+        for x in ains:
+            m = CALL_RE.match(x)
+            if not m:
+                continue
+            tgt = m.group(2).strip()
+            mm = re.match(r'(L[^;]+;)->([^(]+)(\(.*)$', tgt)
+            if not mm:
+                continue
+            owner, mname, mproto = mm.group(1), mm.group(2), mm.group(3)
+            if owner != anc_desc and owner not in chain:
+                continue          # 不是调用自己类族里的方法，谈不上虚分派钩子
+            hook_calls.add(mname + mproto)
+
+        cdefs = set()
+        for (ci, cj, ch) in methods_of(L):
+            cm, cn, cp = split_method(ch)
+            cdefs.add(cn + cp)
+        hooks = sorted([h for h in hook_calls if h in cdefs])
+
+        if hooks:
+            # 父类调的方法里有子类重写的 → 虚分派能走到子类实现，继承它就够
+            continue
+
+        # 找候选入口：同类里无参、返回 void、有真实方法体、非生命周期
+        # 关键加分项：**同类里没有任何地方调用它**。
+        # 真正的入口只由那个被抽走的 onCreate 调，所以它在本类里是「没人调」的；
+        # 而 continueMubuJump / toMubuJump 这种是被别的私有方法调的，属下一层。
+        # 幕布实测：checkAndShowMubuTerm 没人调（+25），continueMubuJump 被 toMubuJump 调（0），
+        # 靠这一项就能把正确答案顶到第一。
+        called = set()
+        for l in L:
+            mm = re.search(r'->([A-Za-z0-9_$<>]+)(\([^)]*\)[A-Za-z\[;]+)', l)
+            if mm:
+                called.add(mm.group(1) + mm.group(2))
+
+        cands = []
+        for (ci, cj, ch) in methods_of(L):
+            cm, cn, cp = split_method(ch)
+            if cn in LIFECYCLE: continue
+            if cn.startswith('access$') or cn.startswith('lambda$'): continue
+            if 'static' in cm: continue
+            if cp != '()V': continue
+            cins = insns_of(L, ci, cj)
+            if len(cins) < 3: continue
+            score = min(len(cins), 80)
+            for k in KEYWORDS:
+                if k in cn:
+                    score += 15
+            uncalled = (cn + cp) not in called
+            if uncalled:
+                score += 25
+            cands.append({'方法': cn, '修饰符': cm, '指令数': len(cins),
+                          '未被同类调用': uncalled, '分': score})
+        cands.sort(key=lambda x: -x['分'])
+
+        targets.append({
+            '类': desc,
+            '父类': anc_desc,
+            '父类onCreate指令数': len(ains),
+            '父类调用了这些方法': sorted(hook_calls)[:10],
+            '其中子类重写的': hooks,
+            '判定': '父类只做半套 —— 它调的方法子类一个都没重写，继承它不会走到子类代码，必须接回入口',
+            '候选入口': cands[:6]
+        })
+
+# ---------- 写入 ----------
+written = []
+for t in targets:
+    if not t.get('候选入口'):
+        continue
+    desc = t['类']
+    got = load(desc)
+    fp, L = got
+    sup = super_of(L)
+    name = entry if entry else t['候选入口'][0]['方法']
+    mods = ''
+    for c in t['候选入口']:
+        if c['方法'] == name:
+            mods = c['修饰符']
+    if entry and not mods:
+        mods = 'private'
+    kind = 'invoke-direct' if ('private' in mods or 'constructor' in mods) else 'invoke-virtual'
+    for (i, j, header) in methods_of(L):
+        m2, n2, p2 = split_method(header)
+        if n2 == 'onCreate' and p2 == '(Landroid/os/Bundle;)V':
+            newbody = [
+                '    .locals 1',
+                '    invoke-super {p0, p1}, ' + sup + '->onCreate(Landroid/os/Bundle;)V',
+                '    ' + kind + ' {p0}, ' + desc + '->' + name + '()V',
+                '    return-void'
+            ]
+            L[i+1:j] = newbody
+            written.append({'类': desc, '接回的入口方法': name, '调用方式': kind})
+            break
+    if not dry:
+        try:
+            with open(fp, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(L) + '\n')
+        except Exception as e:
+            written.append({'类': desc, 'error': str(e)})
+
+res = {
+    '解包目录': root,
+    '模式': ('只报告(dry_run)' if dry else '已写入'),
+    '扫到的 dex 类文件数': len(cidx),
+    '需要接回的类数': len(targets),
+    '已写入': (0 if dry else len(written)),
+    '预演将改动': (len(written) if dry else 0),
+    '明细': targets[:40],
+    '写入明细': written[:40],
+    '原理': '父类 onCreate 里一次业务方法调用都没有（没有虚分派钩子），继承它等于什么都不做。'
+            '本工具在子类 onCreate 里补一句调用「同类里还活着的入口方法」，把启动流程接回去。',
+    '用法': '先 dry_run=true 看候选入口对不对；不对就用 entry 参数指定正确的方法名，再 dry_run=false 写入。',
+    '下一步': ('确认候选入口无误后把 dry_run 设为 false' if dry else '接着 lu_stub_clean → lu_manifest_fix → lu_rebuild 重打包')
+}
+print("LURESULT:" + json.dumps(res, ensure_ascii=False))
+`;
+        return runPy(py, q(dir) + ' ' + (dry ? '1' : '0') + ' ' + q(only) + ' ' + q(entry), 600000);
+    }
+
     // ---------- 壳特征清理 ----------
     function lu_stub_clean(params) {
         var dir = params.decoded_dir;
@@ -2212,6 +2667,1008 @@ print("LURESULT:" + json.dumps(res, ensure_ascii=False))
         return runPy(py, q(path), 600000);
     }
 
+    // ============================================================
+    // dex 层 v9 修复（lu_v9_patch）—— 删掉 360 抽走的方法定义
+    //
+    // 存在的理由（岛风真机实测踩出来的）：
+    //   手机端链路是「apktool 解包原包 + 把 dump 出来的业务 dex 直接塞进解包目录」。
+    //   但 apktool 只反编译得动**壳 dex** —— 岛风那次解包目录里业务包的 smali 数 = 0，
+    //   全目录只有 1 个 com/stub/StubApp.smali。于是走 smali 路线的 lu_fill_oncreate /
+    //   lu_splash_fix 一个业务类都覆盖不到，出包后主界面能进、一点「立即登录」就崩：
+    //     UnsatisfiedLinkError: No implementation found for
+    //     void xyz.daofeng.ui.mine.activity.LoginActivity.onCreate(android.os.Bundle)
+    //   本工具直接在 dex 字节上动手，**不依赖 smali**，专治这种「塞 dex 不修复」的缺口。
+    //
+    // 原理（PC 端妙钱记账 / 幕布 / 岛风 三样本实测跑通）：
+    //   360 抽取 = 方法体抽走 + 声明改成 ACC_NATIVE(0x100) + code_off=0，运行时由
+    //   libjiagu 回填。重打包后壳没了 → 永久 UnsatisfiedLinkError。
+    //   把这条定义**删掉**，子类就继承父类的真实实现（父类 onCreate 有真实方法体，
+    //   靠虚分派回调子类）。删定义会让 class_data_item 变短 → 用非最短 uleb128 把
+    //   省下的字节摊回 4 个 size 字段，长度分毫不差 → 所有偏移不变 → 不碰 map_list。
+    //
+    // 千万别扩大范围：native 无体方法里绝大多数是**真 JNI**（sqlcipher / 百度 OCR /
+    // 有道翻译 / OcrEngine —— 岛风 138 个里 132 个是真的），删了反而崩。
+    // 所以默认只删两个生命周期签名，其余全部列出来供人工二次判断。
+    // ============================================================
+    function lu_v9_patch(params) {
+        var dir = params.dex_dir || params.path;
+        if (!dir) throw new Error('缺少 dex_dir（dex 所在目录，也可以填单个 .dex 文件）');
+        var prefix = params.prefix || '-';
+        var sigs = params.sigs || '-';
+        var dry = !(params.dry_run === 'false' || params.dry_run === false);
+        var inplace = !(params.in_place === 'false' || params.in_place === false);
+        var outDir = params.output_dir || '-';
+
+        var py = String.raw`
+import sys, os, glob, zlib, shutil, struct, hashlib, json
+
+ACC_NATIVE = 0x100
+NO_IDX = 0xFFFFFFFF
+# 默认只删这两个：生命周期方法，父类几乎必然有真实实现。
+# 想扩就用 sigs 参数传，例如 onResume()V,onStart()V,onDestroy()V
+DEFAULT_SIGS = 'onCreate(Landroid/os/Bundle;)V,onRequestPermissionsResult(I[Ljava/lang/String;[I)V'
+# prefix 留空时的兜底过滤：这些是框架/三方库，删它们的定义纯属自找麻烦
+FRAMEWORK = ('Landroid', 'Landroidx', 'Lcom/android', 'Lcom/google', 'Ljava',
+             'Ljavax', 'Lkotlin', 'Lkotlinx', 'Lorg/', 'Lcom/facebook',
+             'Lcom/tencent', 'Lcom/alibaba', 'Lcom/baidu', 'Lcom/squareup',
+             'Lokhttp', 'Lretrofit2', 'Lio/reactivex', 'Lcom/airbnb',
+             'Lcom/github', 'Lcom/qq', 'Lcom/sina', 'Lcom/umeng')
+
+
+def u16(b, o):
+    return struct.unpack_from('<H', b, o)[0]
+
+
+def u32(b, o):
+    return struct.unpack_from('<I', b, o)[0]
+
+
+def uleb(b, o):
+    r = s = 0
+    while True:
+        x = b[o]
+        o += 1
+        r |= (x & 0x7F) << s
+        if x < 0x80:
+            return r, o
+        s += 7
+
+
+def uleb_len(v):
+    n = 1
+    v >>= 7
+    while v:
+        n += 1
+        v >>= 7
+    return n
+
+
+def put_uleb(v, minlen=1):
+    """序列化成 uleb128，可强制最小长度（非最短编码）。
+    非最短是合法的：前 n-1 个字节高位置 1，最后一个字节 < 0x80。
+    例：1 写成 2 字节 = 81 00；写成 3 字节 = 81 80 00。
+    """
+    out = bytearray()
+    while True:
+        x = v & 0x7F
+        v >>= 7
+        if v:
+            out.append(x | 0x80)
+        else:
+            out.append(x)
+            break
+    if len(out) < minlen:
+        out[-1] |= 0x80
+        for _ in range(minlen - len(out) - 1):
+            out.append(0x80)
+        out.append(0x00)
+    return bytes(out)
+
+
+class Dex:
+    def __init__(self, path):
+        self.path = path
+        self.name = os.path.basename(path)
+        self.b = bytearray(open(path, 'rb').read())
+        b = self.b
+        self.off_str = u32(b, 60)
+        self.n_str = u32(b, 56)
+        self.off_type = u32(b, 68)
+        self.n_type = u32(b, 64)
+        self.off_proto = u32(b, 76)
+        self.off_meth = u32(b, 92)
+        self.n_meth = u32(b, 88)
+        self.off_cls = u32(b, 100)
+        self.n_cls = u32(b, 96)
+        self.data_off = u32(b, 108)
+        self.types = [u32(b, self.off_type + 4 * i) for i in range(self.n_type)]
+        self._sc = {}
+
+    def string(self, i):
+        v = self._sc.get(i)
+        if v is not None:
+            return v
+        p = u32(self.b, self.off_str + 4 * i)
+        while self.b[p] & 0x80:
+            p += 1
+        p += 1
+        st = p
+        while self.b[p] != 0:
+            p += 1
+        s = self.b[st:p].decode('utf-8', 'replace')
+        self._sc[i] = s
+        return s
+
+    def tn(self, i):
+        return self.string(self.types[i]) if i < self.n_type else '?'
+
+    def proto_str(self, i):
+        o = self.off_proto + 12 * i
+        rt = u16(self.b, o + 4)
+        po = u32(self.b, o + 8)
+        out = '('
+        if po:
+            n = u32(self.b, po)
+            p = po + 4
+            for k in range(n):
+                out += self.tn(u16(self.b, p + 2 * k))
+        return out + ')' + self.tn(rt)
+
+    def meth_sig(self, i):
+        o = self.off_meth + 8 * i
+        return (self.tn(u16(self.b, o)) + '->' +
+                self.string(u32(self.b, o + 4)) +
+                self.proto_str(u16(self.b, o + 2)))
+
+
+def parse_class(d, i):
+    """返回 (类名, 父类下标, 父类名, class_data_off)"""
+    o = d.off_cls + 32 * i
+    cn = d.tn(u32(d.b, o))
+    sup = u32(d.b, o + 8)
+    cdo = u32(d.b, o + 24)
+    return cn, sup, (d.tn(sup) if sup != NO_IDX and sup < d.n_type else None), cdo
+
+
+def read_all(d, cdo):
+    """读出一个 class_data_item 的全部内容，返回 (fields, directs, virtuals, 原长度)"""
+    b = d.b
+    sf, p = uleb(b, cdo)
+    inf, p = uleb(b, p)
+    dm, p = uleb(b, p)
+    vm, p = uleb(b, p)
+    fields = []
+    # encoded_field = idx_diff + access_flags（2 个 uleb）
+    for _ in range(sf + inf):
+        a, p = uleb(b, p)
+        c, p = uleb(b, p)
+        fields.append((a, c))
+
+    def read_meths(cnt, p):
+        ms = []
+        idx = 0
+        for _ in range(cnt):
+            df, p = uleb(b, p)
+            acc, p = uleb(b, p)
+            co, p = uleb(b, p)
+            idx += df
+            sig = d.meth_sig(idx).split('->', 1)[1] if idx < d.n_meth else '?'
+            ms.append({'abs': idx, 'acc': acc, 'code': co, 'sig': sig})
+        return ms, p
+
+    # 注意：direct 与 virtual 两个列表的 method_idx_diff 各自从 0 累加，
+    # 不是跨列表连续累加。写成连续累加会让第二个列表的索引整体翻倍/越界，
+    # 方法名于是全部错乱 —— 曾经误判成「dump 数据残缺」就是这个原因。
+    directs, p = read_meths(dm, p)
+    virtuals, p = read_meths(vm, p)
+    return (sf, inf), fields, directs, virtuals, (p - cdo)
+
+
+def patch_dex(path, prefixes, sigs, apply):
+    d = Dex(path)
+    b = d.b
+    changed = []
+    problems = []
+    natives = []
+
+    def in_scope(cn):
+        if prefixes:
+            return cn.startswith(prefixes)
+        return not cn.startswith(FRAMEWORK)
+
+    for ci in range(d.n_cls):
+        cn, sup_idx, sup, cdo = parse_class(d, ci)
+        if not cdo:
+            continue
+        sizes, fields, directs, virtuals, orig_len = read_all(d, cdo)
+
+        for m in directs + virtuals:
+            if (m['acc'] & ACC_NATIVE) and m['code'] == 0:
+                natives.append((cn, m['sig'], sup))
+
+        if not in_scope(cn):
+            continue
+
+        def keep(m):
+            return not (m['sig'] in sigs and (m['acc'] & ACC_NATIVE) and m['code'] == 0)
+
+        nd = [m for m in directs if keep(m)]
+        nv = [m for m in virtuals if keep(m)]
+        dropped = [m for m in directs + virtuals if not keep(m)]
+        if not dropped:
+            continue
+
+        # 删定义的前提是「父类有真实实现可继承」。没有父类（java.lang.Object 除外）
+        # 或父类下标是 NO_IDX 时，删了就是真没了 —— 宁可不删。
+        if sup_idx == NO_IDX:
+            problems.append({'类': cn, '问题': '无父类', '详情': '删掉定义后没有任何实现可继承，已跳过'})
+            continue
+
+        def rebuild(lst):
+            out = bytearray()
+            prev = 0
+            for m in lst:
+                out += put_uleb(m['abs'] - prev)
+                out += put_uleb(m['acc'])
+                out += put_uleb(m['code'])
+                prev = m['abs']
+            return out
+
+        body = bytearray()
+        for a, c in fields:
+            body += put_uleb(a) + put_uleb(c)
+        body += rebuild(nd) + rebuild(nv)
+
+        vals = [sizes[0], sizes[1], len(nd), len(nv)]
+        minimal = bytearray()
+        for v in vals:
+            minimal += put_uleb(v)
+        need = orig_len - len(minimal) - len(body)
+        if need < 0:
+            problems.append({'类': cn, '问题': 'SHRINK_IMPOSSIBLE',
+                             '详情': '原长 %d，最短也要 %d' % (orig_len, len(minimal) + len(body))})
+            continue
+
+        # 把需要多出来的字节摊到 4 个 size 字段上（每个 uleb 最多 5 字节）
+        cap = [5 - uleb_len(v) for v in vals]
+        extra = [0, 0, 0, 0]
+        left = need
+        for k in range(4):
+            if left <= 0:
+                break
+            add = min(cap[k], left)
+            extra[k] = add
+            left -= add
+        if left > 0:
+            problems.append({'类': cn, '问题': 'PAD_INSUFFICIENT',
+                             '详情': '还要 %d 字节但 4 个 size 字段只剩 %d 可摊' % (need, sum(cap))})
+            continue
+
+        head = bytearray()
+        for k in range(4):
+            head += put_uleb(vals[k], uleb_len(vals[k]) + extra[k])
+        newbytes = head + body
+        if len(newbytes) != orig_len:
+            problems.append({'类': cn, '问题': 'LEN_MISMATCH',
+                             '详情': '%d != %d' % (len(newbytes), orig_len)})
+            continue
+
+        if apply:
+            b[cdo:cdo + orig_len] = newbytes
+        changed.append({'类': cn, '父类': sup, '删掉的方法': [m['sig'] for m in dropped]})
+
+    data = None
+    if apply and changed:
+        new_size = len(b)
+        struct.pack_into('<I', b, 32, new_size)               # file_size
+        struct.pack_into('<I', b, 104, new_size - d.data_off) # data_size
+        b[12:32] = hashlib.sha1(bytes(b[32:])).digest()
+        struct.pack_into('<I', b, 8, zlib.adler32(bytes(b[12:])) & 0xFFFFFFFF)
+        data = bytes(b)
+    return d, data, changed, problems, natives
+
+
+target = sys.argv[1]
+prefixArg = sys.argv[2] if len(sys.argv) > 2 else '-'
+sigArg = sys.argv[3] if len(sys.argv) > 3 else '-'
+dry = (sys.argv[4] if len(sys.argv) > 4 else '1') == '1'
+inplace = (sys.argv[5] if len(sys.argv) > 5 else '1') == '1'
+outDir = sys.argv[6] if len(sys.argv) > 6 and sys.argv[6] != '-' else ''
+
+prefixes = tuple(x.strip() for x in prefixArg.split(',') if x.strip()) if prefixArg != '-' else ()
+sigs = set(x.strip() for x in sigArg.split(',') if x.strip()) if sigArg != '-' else set(DEFAULT_SIGS.split(','))
+
+if os.path.isdir(target):
+    files = sorted(glob.glob(os.path.join(target, '*.dex')))
+else:
+    files = [target]
+files = [f for f in files if os.path.isfile(f)]
+
+if not files:
+    print('LURESULT:' + json.dumps({'ok': False, '错误': '目录下没有找到任何 .dex：' + target}, ensure_ascii=False))
+    sys.exit(0)
+
+apply = not dry
+if apply and outDir:
+    if os.path.isdir(outDir):
+        shutil.rmtree(outDir)
+    os.makedirs(outDir)
+
+per_file = []
+all_changed = []
+all_problems = []
+all_natives = []
+for f in files:
+    d, data, changed, problems, natives = patch_dex(f, prefixes, sigs, apply)
+    for c in changed:
+        c['dex'] = d.name
+        all_changed.append(c)
+    for p in problems:
+        p['dex'] = d.name
+        all_problems.append(p)
+    for cn, sig, sup in natives:
+        all_natives.append({'dex': d.name, '类': cn, '签名': sig, '父类': sup})
+    per_file.append({'dex': d.name, '改类数': len(changed)})
+    # 输出到目录时**必须全量复制**，包括没改动的 dex。早先只在 changed 时才写，
+    # 结果输出目录少了一半 dex（岛风那次 classes2.dex 直接不见），拿去组装就缺类。
+    if apply and outDir:
+        open(os.path.join(outDir, d.name), 'wb').write(data if changed else open(f, 'rb').read())
+    elif apply and changed:
+        open(f if inplace else (f + '.v9'), 'wb').write(data)
+
+dropped_sigs = sorted(set(s for c in all_changed for s in c['删掉的方法']))
+other_natives = [n for n in all_natives if n['签名'] not in set(dropped_sigs)]
+
+res = {
+    'ok': True,
+    '目标': target,
+    'dex数': len(files),
+    '包前缀': list(prefixes) if prefixes else '(留空=排除框架/三方库)',
+    '要删的签名': sorted(sigs),
+    '模式': ('预演（没动盘，dry_run=false 才落盘）' if dry else ('已落盘' + ('（原地覆盖）' if inplace and not outDir else ('（输出到 ' + outDir + '）')))),
+    'native无体方法总数': len(all_natives),
+    '实际删掉的方法数': sum(len(c['删掉的方法']) for c in all_changed),
+    '改类数': len(all_changed),
+    '改动明细': all_changed[:100],
+    '其它native无体（没动，人工二次确认）': other_natives[:200],
+    '异常': all_problems[:50],
+    '逐dex': per_file,
+}
+if dry:
+    res['下一步'] = '核对「改动明细」里的类名是不是主程序自己的类。确认后把 dry_run 设为 false 再跑一次。'
+    res['提醒'] = ('「其它native无体」里绝大多数是真 JNI（sqlcipher / 百度OCR / 有道翻译 / OcrEngine），'
+                   '删掉反而崩。只有主程序自己类的生命周期方法才该删，'
+                   '要扩范围就把签名用 sigs 参数传进来。')
+else:
+    res['下一步'] = '修完的 dex 已经就位，接下来直接 lu_rebuild 回编译出包。'
+print('LURESULT:' + json.dumps(res, ensure_ascii=False))
+`;
+        return runPy(py, q(dir) + ' ' + q(prefix) + ' ' + q(sigs) + ' '
+            + (dry ? '1' : '0') + ' ' + (inplace ? '1' : '0') + ' ' + q(outDir), 600000)
+            .then(function (r) {
+                if (!r || r.raw) return r;
+                r['一句话'] = (dry ? '预演：' : '已修复：') + '扫到 native 无体方法 '
+                    + (r['native无体方法总数'] || 0) + ' 个，删掉 '
+                    + (r['实际删掉的方法数'] || 0) + ' 个（涉及 '
+                    + (r['改类数'] || 0) + ' 个类）。';
+                return r;
+            });
+    }
+
+    // ============================================================
+    // dex 层「启动页接回」补丁（lu_code_patch）—— 等长方法体原地改写
+    //
+    // 存在的理由（幕布 com.mubu.app 实测踩出来的）：
+    //   lu_v9_patch 删掉被抽走的 onCreate 定义后，子类继承父类实现 —— 但父类
+    //   往往「只做了一半」。幕布的 BaseSplashActivity.onCreate 只有 37 条指令，
+    //   设了个横竖屏和状态栏颜色，**一次虚分派都没有**；真正的跳转全在被抽走的
+    //   MubuSplashActivity.onCreate 里。于是：不崩了，但永远卡在启动页。
+    //
+    //   好消息是 360 通常只抽生命周期那一个，同类里真正的业务入口还活着、只是
+    //   没人调用（幕布是 checkAndShowMubuTerm）。所以找一个必定会被框架调用的存活
+    //   方法（onResume 优先）做「搭载」，原地改写成：
+    //       invoke-super 父类->onResume(); 本类->入口(); return-void
+    //
+    // 为什么必须「等长」：code_item 的 insns 区定长。往 dex 尾部追加 code_item
+    //   会破坏 map_list，ART 会整体拒绝加载整个 dex（历史已证，别再试）。原地覆盖
+    //   + 余下填 nop → 长度不变 → 偏移不变 → 不碰 map_list。
+    //
+    // ★顺序要求：必须跑在 lu_v9_patch **之前**。v9 删掉 onCreate 定义后，
+    //   本工具就没有「哪个类被抽过」的证据了（只能靠手动传 cls 兜底）。
+    // ============================================================
+    function lu_code_patch(params) {
+        var dir = params.dex_dir || params.path;
+        if (!dir) throw new Error('缺少 dex_dir（dex 所在目录，也可以填单个 .dex 文件）');
+        var prefix = params.prefix || '';
+        var cls = params.cls || '';
+        var method = params.method || '';
+        var entry = params.entry || '';
+        var dry = !(params.dry_run === 'false' || params.dry_run === false);
+        var outDir = params.output_dir || '';
+        var py = String.raw`
+# -*- coding: utf-8 -*-
+"""dex 层「启动页接回」补丁：自动定位入口 + 等长方法体原地改写。
+
+为什么需要（幕布 com.mubu.app 实测踩出来的）：
+  360 抽走的生命周期方法（onCreate 等）被 patch_v9 / lu_v9_patch **删掉定义**后，
+  子类会继承父类实现。但父类往往「只做了一半」——幕布的
+  BaseSplashActivity.onCreate 只有 37 条指令、设了个横竖屏和状态栏颜色，
+  **一次虚分派都没有**，真正的跳转逻辑全在被抽走的 MubuSplashActivity.onCreate 里。
+  结果：不崩了，但永远卡在启动页。
+
+  好消息是 360 通常只抽生命周期那一个，同一类里真正的业务入口（幕布是
+  checkAndShowMubuTerm）**还活着，只是没人调用**。所以只要把另一个必然会被
+  框架调用的生命周期方法（onResume）原地改写成
+      invoke-super 父类->onResume(); 本类->入口(); return-void
+  就能把流程接回去。
+
+为什么必须「等长」：
+  code_item 的 insns 区是定长的。往 dex 尾部追加 code_item 会破坏 map_list，
+  ART 会整体拒绝加载整个 dex（历史已证，别再试）。原地覆盖 + 余下填 nop
+  → 长度不变 → 所有偏移不变 → 不碰 map_list → 绝对安全。
+
+用法：
+  python patch_entry.py <dex目录或单个dex> [--prefix Lcom/xxx/] \
+      [--cls Lcom/x/Y;] [--method onResume()V] [--entry someMethod] \
+      [--dry] [--out 输出目录]
+
+  默认只演练（分析 + 打分 + 列出入口候选），加 --apply 才真正写盘。
+  最后一行输出 RKRESULT: + JSON。
+"""
+import os
+import re
+import sys
+import glob
+import zlib
+import shutil
+import struct
+import hashlib
+import json
+
+ACC_STATIC = 0x8
+ACC_PRIVATE = 0x2
+ACC_NATIVE = 0x100
+
+OP_INVOKE_VIRTUAL = 0x6e
+OP_INVOKE_SUPER = 0x6f
+OP_INVOKE_DIRECT = 0x70
+OP_INVOKE_STATIC = 0x71
+OP_INVOKE_INTERFACE = 0x72
+
+# 360 抽取几乎只打这几种生命周期回调
+LIFECYCLE = ('onCreate', 'onStart', 'onResume', 'onRestart',
+             'onPostCreate', 'onPostResume', 'onRequestPermissionsResult',
+             'onActivityResult', 'onNewIntent', 'onConfigurationChanged')
+
+# 这些绝不可能是「业务入口」：构造函数 / 销毁与返回回调 / 框架重写点。
+# 幕布第一版没排掉 <init>，它被「同类无人调用+30 + 关键词 init+10」顶到 40 分，
+# 在多个 Activity 里排到了真实入口前面 —— 把构造函数塞进 onResume 必炸。
+NOT_ENTRY = ('<init>', '<clinit>', 'onDestroy', 'onBackPressed', 'onStop',
+             'onPause', 'onSaveInstanceState', 'onRestoreInstanceState',
+             'onLowMemory', 'onTrimMemory', 'onAttachedToWindow',
+             'onDetachedFromWindow', 'onUserLeaveHint', 'onWindowFocusChanged',
+             'recreate', 'finish', 'finishActivity', 'finishAffinity',
+             'overridePendingTransitionEnter', 'overridePendingTransitionExit',
+             'onSupportNavigateUp', 'onNavigateUp', 'onOptionsItemSelected',
+             'onKeyDown', 'onKeyUp', 'onTouchEvent', 'dispatchTouchEvent')
+
+# 用来「搭载」新逻辑的方法：必须框架保证会调用，且自己有真实方法体
+CARRIER = ('onResume()V', 'onStart()V', 'onRestart()V', 'onPostResume()V')
+
+# 直接父类没在 method_ids 里时，按这个顺序找真实祖先（幕布命中 FragmentActivity）
+ANCESTOR_FALLBACK = (
+    'Landroidx/appcompat/app/AppCompatActivity;',
+    'Landroidx/fragment/app/FragmentActivity;',
+    'Landroidx/core/app/ComponentActivity;',
+    'Landroid/app/Activity;',
+)
+
+ENTRY_KW = (('jump', 25), ('term', 25), ('continue', 20), ('launch', 15),
+            ('check', 15), ('enter', 10), ('init', 10), ('main', 10),
+            ('start', 8), ('load', 5), ('open', 5), ('show', 5),
+            ('to', 5), ('go', 5))
+
+# 指令长度表（16-bit unit）。只列真实会出现的，缺省按 1 处理并停止该段扫描。
+INSN_LEN = {}
+
+
+def _build_len():
+    for op in range(0x00, 0x0e):
+        INSN_LEN[op] = 1          # nop / move* / move-result* / move-exception
+    for op in range(0x0e, 0x12):
+        INSN_LEN[op] = 1          # return*
+    INSN_LEN[0x12] = 1            # const/4
+    INSN_LEN[0x13] = 2            # const/16
+    INSN_LEN[0x14] = 3            # const
+    INSN_LEN[0x15] = 2            # const/high16
+    INSN_LEN[0x16] = 2
+    INSN_LEN[0x17] = 3
+    INSN_LEN[0x18] = 5
+    INSN_LEN[0x19] = 2
+    INSN_LEN[0x1a] = 2            # const-string
+    INSN_LEN[0x1b] = 3            # const-string/jumbo
+    INSN_LEN[0x1c] = 2            # const-class
+    INSN_LEN[0x1d] = 1
+    INSN_LEN[0x1e] = 1
+    INSN_LEN[0x1f] = 2            # check-cast
+    INSN_LEN[0x20] = 2            # instance-of
+    INSN_LEN[0x21] = 1            # array-length
+    INSN_LEN[0x22] = 2            # new-instance
+    INSN_LEN[0x23] = 2            # new-array
+    INSN_LEN[0x24] = 3            # filled-new-array
+    INSN_LEN[0x25] = 3            # filled-new-array/range
+    INSN_LEN[0x26] = 3            # fill-array-data
+    INSN_LEN[0x27] = 1            # throw
+    INSN_LEN[0x28] = 1            # goto
+    INSN_LEN[0x29] = 2            # goto/16
+    INSN_LEN[0x2a] = 3            # goto/32
+    INSN_LEN[0x2b] = 3            # packed-switch
+    INSN_LEN[0x2c] = 3            # sparse-switch
+    for op in range(0x2d, 0x32):
+        INSN_LEN[op] = 2          # cmpl/cmpl-float/cmpg...
+    for op in range(0x32, 0x3e):
+        INSN_LEN[op] = 2          # if-* / if-*z
+    for op in range(0x44, 0x52):
+        INSN_LEN[op] = 2          # aget* / aput*
+    for op in range(0x52, 0x6e):
+        INSN_LEN[op] = 2          # iget* / iput* / sget* / sput*
+    for op in range(0x6e, 0x73):
+        INSN_LEN[op] = 3          # invoke-* (35c)
+    for op in range(0x74, 0x79):
+        INSN_LEN[op] = 3          # invoke-*/range (3rc)
+    for op in range(0x7c, 0x90):
+        INSN_LEN[op] = 1          # unop
+    for op in range(0x90, 0xb0):
+        INSN_LEN[op] = 2          # binop
+    for op in range(0xb0, 0xd0):
+        INSN_LEN[op] = 1          # binop/2addr
+    for op in range(0xd0, 0xe0):
+        INSN_LEN[op] = 2          # binop/lit16
+    for op in range(0xe0, 0x100):
+        INSN_LEN[op] = 2          # binop/lit8
+
+
+_build_len()
+
+
+def u16(b, o):
+    return struct.unpack_from('<H', b, o)[0]
+
+
+def u32(b, o):
+    return struct.unpack_from('<I', b, o)[0]
+
+
+def uleb(b, o):
+    r = s = 0
+    while True:
+        x = b[o]
+        o += 1
+        r |= (x & 0x7F) << s
+        if x < 0x80:
+            return r, o
+        s += 7
+
+
+class Dex:
+    def __init__(self, path):
+        self.path = path
+        self.name = os.path.basename(path)
+        self.b = bytearray(open(path, 'rb').read())
+        b = self.b
+        self.off_str = u32(b, 60)
+        self.off_type = u32(b, 68)
+        self.n_type = u32(b, 64)
+        self.off_proto = u32(b, 76)
+        self.off_meth = u32(b, 92)
+        self.n_meth = u32(b, 88)
+        self.off_cls = u32(b, 100)
+        self.n_cls = u32(b, 96)
+        self.data_off = u32(b, 108)
+        self.types = [u32(b, self.off_type + 4 * i) for i in range(self.n_type)]
+        self._sc = {}
+
+    def string(self, i):
+        v = self._sc.get(i)
+        if v is not None:
+            return v
+        p = u32(self.b, self.off_str + 4 * i)
+        while self.b[p] & 0x80:
+            p += 1
+        p += 1
+        st = p
+        while self.b[p] != 0:
+            p += 1
+        s = self.b[st:p].decode('utf-8', 'replace')
+        self._sc[i] = s
+        return s
+
+    def tn(self, i):
+        return self.string(self.types[i])
+
+    def proto_str(self, i):
+        o = self.off_proto + 12 * i
+        rt = u16(self.b, o + 4)
+        po = u32(self.b, o + 8)
+        out = '('
+        if po:
+            n = u32(self.b, po)
+            for k in range(n):
+                out += self.tn(u16(self.b, po + 4 + 2 * k))
+        return out + ')' + self.tn(rt)
+
+    def meth_id(self, i):
+        o = self.off_meth + 8 * i
+        return (self.tn(u16(self.b, o)),
+                self.string(u32(self.b, o + 4)),
+                self.proto_str(u16(self.b, o + 2)))
+
+    def meth_sig(self, i):
+        c, n, p = self.meth_id(i)
+        return c + '->' + n + p
+
+    def find_method(self, sig):
+        for i in range(self.n_meth):
+            if self.meth_sig(i) == sig:
+                return i
+        return None
+
+    def classes(self):
+        """yield (class_desc, super_desc, class_data_off)"""
+        for i in range(self.n_cls):
+            o = self.off_cls + 32 * i
+            yield self.tn(u32(self.b, o)), self.tn(u32(self.b, o + 8)), u32(self.b, o + 24)
+
+    def methods(self, cdo):
+        """返回 [(sig_without_class, acc, code_off)]"""
+        if not cdo:
+            return []
+        b = self.b
+        sf, p = uleb(b, cdo)
+        inf, p = uleb(b, p)
+        dm, p = uleb(b, p)
+        vm, p = uleb(b, p)
+        for _ in range(sf):
+            _, p = uleb(b, p)
+            _, p = uleb(b, p)
+        for _ in range(inf):
+            _, p = uleb(b, p)
+            _, p = uleb(b, p)
+        out = []
+        for cnt in (dm, vm):          # 两个列表各自从 0 起算（历史 bug，别改）
+            idx = 0
+            for _ in range(cnt):
+                df, p = uleb(b, p)
+                acc, p = uleb(b, p)
+                co, p = uleb(b, p)
+                idx += df
+                ms = self.meth_sig(idx)
+                out.append((ms.split('->', 1)[1], acc, co))
+        return out
+
+    # ---- 指令扫描：找出某个方法体里 invoke 了哪些 method_idx ----
+    def insns_of(self, co):
+        if not co:
+            return b'', 0
+        n = u32(self.b, co + 12)
+        return bytes(self.b[co + 16:co + 16 + n * 2]), n
+
+    def invoked_methods(self, co):
+        """粗略但够用：按长度表走一遍，收集所有 invoke-* 引用的 method_idx"""
+        ins, n = self.insns_of(co)
+        out = set()
+        i = 0
+        while i < n:
+            op = ins[i * 2]
+            ln = INSN_LEN.get(op)
+            if not ln:
+                break                      # 数据/未知指令，别再往下猜
+            if 0x6e <= op <= 0x72:
+                out.add(u16(ins, i * 2 + 2))
+            elif 0x74 <= op <= 0x78:
+                out.add(u16(ins, i * 2 + 2))
+            i += ln
+        return out
+
+
+def insn35c(op, regs, midx):
+    n = len(regs)
+    assert 0 < n <= 5, '寄存器个数必须是 1..5'
+    r = list(regs) + [0] * (5 - n)
+    for v in r[:n]:
+        assert 0 <= v < 16, '寄存器编号必须 <16'
+    c, d, e, f, g = r[0], r[1], r[2], r[3], r[4]
+    u0 = op | (g << 8) | (n << 12)
+    u2 = c | (d << 4) | (e << 8) | (f << 12)
+    return struct.pack('<HHH', u0, midx, u2)
+
+
+def kw_score(name):
+    low = name.lower()
+    return sum(w for k, w in ENTRY_KW if k in low)
+
+
+def is_synthetic(name):
+    return name.startswith('access$') or name.startswith('lambda$') or name.startswith('$')
+
+
+def analyze(d, prefix, want_cls):
+    """返回 [{'cls','super','extracted',[sig],'carrier','ancestor','entries':[(name,score,reason)]}]"""
+    res = []
+    for cls, sup, cdo in d.classes():
+        if want_cls and cls != want_cls:
+            continue
+        if not want_cls and prefix and not cls.startswith(prefix):
+            continue
+        ms = d.methods(cdo)
+        extracted = [s for s, a, c in ms
+                     if (a & ACC_NATIVE) and c == 0 and s.split('(')[0] in LIFECYCLE]
+        if not extracted and not want_cls:
+            continue
+        # 搭载方法：有真实体、在 CARRIER 列表里
+        carrier = None
+        for cand in CARRIER:
+            hit = [m for m in ms if m[0] == cand and m[2] and not (m[1] & ACC_NATIVE)]
+            if hit:
+                carrier = cand
+                break
+        if not carrier:
+            continue
+        name_only = carrier.split('(')[0]
+        # invoke-super 的祖先：直接父类优先，没有就按框架基类兜底
+        ancestor = None
+        for cand in (sup,) + ANCESTOR_FALLBACK:
+            if d.find_method(cand + '->' + carrier) is not None:
+                ancestor = cand
+                break
+        # 入口候选：同类、有体、()V、非静态、非合成、非生命周期
+        called = set()
+        for s, a, c in ms:
+            if not c or (a & ACC_NATIVE):
+                continue
+            midx = d.find_method(cls + '->' + s)
+            if midx is None:
+                continue
+            for s2, a2, c2 in ms:
+                if not c2 or (a2 & ACC_NATIVE) or s2 == s:
+                    continue
+                if midx in d.invoked_methods(c2):
+                    called.add(s)
+                    break
+        entries = []
+        for s, a, c in ms:
+            if not c or (a & ACC_NATIVE):
+                continue
+            nm = s.split('(')[0]
+            if not s.endswith('()V'):
+                continue
+
+            if a & ACC_STATIC or is_synthetic(nm) or nm in LIFECYCLE or nm == name_only:
+                continue
+            if nm in NOT_ENTRY:
+                continue
+            score = kw_score(nm)
+            why = []
+            if score:
+                why.append('关键词+%d' % score)
+            if s not in called:
+                score += 30
+                why.append('同类无人调用+30')
+            if a & ACC_PRIVATE:
+                score += 5
+                why.append('private+5')
+            entries.append((nm, score, '；'.join(why) or '无特征'))
+        entries.sort(key=lambda x: (-x[1], x[0]))
+        res.append({'cls': cls, 'super': sup, 'extracted': extracted,
+                    'carrier': carrier, 'ancestor': ancestor,
+                    'entries': entries[:6]})
+    return res
+
+
+def patch(d, cls, carrier, entry_name, ancestor):
+    """等长改写 cls->carrier 的方法体。返回 dict（含 notes）或抛 ValueError"""
+    sup_sig = None
+    if ancestor:
+        sup_sig = ancestor + '->' + carrier
+    entry_sig = cls + '->' + entry_name + '()V'
+    midx_super = d.find_method(sup_sig) if sup_sig else None
+    midx_entry = d.find_method(entry_sig)
+    if midx_entry is None:
+        raise ValueError('dex 里找不到入口方法：%s' % entry_sig)
+
+    hit = None
+    entry_acc = None
+    for c, sup, cdo in d.classes():
+        if c != cls:
+            continue
+        ms = d.methods(cdo)
+        for s, a, co in ms:
+            if s == carrier:
+                hit = (a, co)
+            if s == entry_name + '()V':
+                entry_acc = a
+        break
+    if hit is None:
+        raise ValueError('找不到类或方法：%s->%s' % (cls, carrier))
+    if entry_acc is None:
+        raise ValueError('入口方法不在本类的 class_data 里：%s' % entry_name)
+    acc, co = hit
+    if acc & ACC_NATIVE or co == 0:
+        raise ValueError('搭载方法是 native/无体的，改不了：%s' % carrier)
+
+    b = d.b
+    regs = u16(b, co)
+    ins = u16(b, co + 2)
+    outs = u16(b, co + 4)
+    tries = u16(b, co + 6)
+    n_units = u32(b, co + 12)
+    base = co + 16
+    this = regs - ins
+    if this < 0 or this >= 16:
+        raise ValueError('this 寄存器算不出来：regs=%d ins=%d' % (regs, ins))
+    if outs < 1:
+        raise ValueError('outs_size=%d，不足以发起调用' % outs)
+    if tries:
+        raise ValueError('该方法带 try/catch（tries=%d），等长改写不安全，跳过' % tries)
+
+    code = bytearray()
+    notes = []
+    if midx_super is not None:
+        code += insn35c(OP_INVOKE_SUPER, [this], midx_super)
+        notes.append('invoke-super {v%d}, %s' % (this, sup_sig))
+    else:
+        notes.append('!! 父类 %s 的 method_id 不存在，已省略 invoke-super' % carrier.split('(')[0])
+    # 调用种类看的是**入口方法**自己的访问标志，不是搭载方法的。
+    # 幕布 checkAndShowMubuTerm 是 private，必须用 invoke-direct；
+    # 用 invoke-virtual 调 private 会 NoSuchMethodError（private 不在虚表里）。
+    private_entry = bool(entry_acc & ACC_PRIVATE)
+    entry_op = OP_INVOKE_DIRECT if private_entry else OP_INVOKE_VIRTUAL
+    code += insn35c(entry_op, [this], midx_entry)
+    notes.append('%s {v%d}, %s' % ('invoke-direct' if private_entry else 'invoke-virtual',
+                                   this, entry_sig))
+    code += struct.pack('<H', 0x000e)
+    notes.append('return-void')
+
+    need = len(code) // 2
+    if need > n_units:
+        raise ValueError('空间不够：%s 只有 %d 单元，需要 %d' % (carrier, n_units, need))
+    if max(this, 0) >= regs:
+        raise ValueError('用到的寄存器 v%d 超出 registers_size=%d' % (this, regs))
+
+    new = bytes(code) + b'\x00\x00' * (n_units - need)
+    b[base:base + n_units * 2] = new
+    struct.pack_into('<I', b, co + 8, 0)      # debug_info_off=0：旧行号表别指向已改写地址
+    return {'code_off': co, 'units': n_units, 'need': need,
+            'regs': regs, 'ins': ins, 'outs': outs, 'notes': notes}
+
+
+def finalize(d):
+    b = d.b
+    n = len(b)
+    struct.pack_into('<I', b, 32, n)                       # file_size
+    struct.pack_into('<I', b, 104, n - d.data_off)         # data_size
+    b[12:32] = hashlib.sha1(bytes(b[32:])).digest()        # signature
+    struct.pack_into('<I', b, 8, zlib.adler32(bytes(b[12:])) & 0xFFFFFFFF)  # checksum
+    return bytes(b)
+
+def main():
+    a = sys.argv[1:]
+    src = a[0] if len(a) > 0 else ''
+    prefix = a[1] if len(a) > 1 else ''
+    want_cls = a[2] if len(a) > 2 else ''
+    want_method = a[3] if len(a) > 3 else ''
+    want_entry = a[4] if len(a) > 4 else ''
+    dry = (a[5] if len(a) > 5 else '1') == '1'
+    out = a[6] if len(a) > 6 else ''
+    apply = not dry
+
+    res = {'分析': [], '已改写': [], '问题': []}
+    if not src:
+        res['问题'].append('缺少 dex_dir')
+        print('LURESULT:' + json.dumps(res, ensure_ascii=False))
+        return 2
+    if not os.path.exists(src):
+        res['问题'].append('路径不存在：' + src)
+        print('LURESULT:' + json.dumps(res, ensure_ascii=False))
+        return 2
+
+    files = sorted(glob.glob(os.path.join(src, '*.dex'))) if os.path.isdir(src) else [src]
+    if not files:
+        res['问题'].append('目录下没有 .dex：' + src)
+        print('LURESULT:' + json.dumps(res, ensure_ascii=False))
+        return 2
+    if apply and out:
+        if os.path.isdir(out):
+            shutil.rmtree(out)
+        os.makedirs(out)
+
+    for f in files:
+        d = Dex(f)
+        infos = analyze(d, prefix, want_cls)
+        for info in infos:
+            if not info['carrier']:
+                res['问题'].append('%s: %s 没有可用的搭载方法（onResume/onStart/onRestart/onPostResume 都没真实体）'
+                                   % (d.name, info['cls']))
+                continue
+            if not info['entries']:
+                res['问题'].append('%s: %s 找不到可用入口候选' % (d.name, info['cls']))
+                continue
+            res['分析'].append({
+                'dex': d.name, '类': info['cls'], '父类': info['super'],
+                '被抽走': info['extracted'] or ['(已被 v9 删过，无证据)'],
+                '搭载方法': info['carrier'],
+                'invoke-super目标': info['ancestor'] or '(dex 里找不到，会省略)',
+                '首选入口': info['entries'][0][0],
+                '首选入口分数': info['entries'][0][1],
+                '入口候选': [x[0] + '(%d)' % x[1] for x in info['entries']],
+            })
+        if not apply or not want_cls:
+            continue
+        changed = False
+        for info in infos:
+            if info['cls'] != want_cls or not info['entries']:
+                continue
+            carrier = want_method or info['carrier']
+            entry_name = want_entry or info['entries'][0][0]
+            try:
+                r = patch(d, want_cls, carrier, entry_name, info['ancestor'])
+            except ValueError as e:
+                res['问题'].append('%s: %s' % (d.name, e))
+                continue
+            changed = True
+            res['已改写'].append({
+                'dex': d.name, '类': want_cls, '搭载方法': carrier, '入口': entry_name,
+                'code_off': r['code_off'], '原单元数': r['units'], '占用单元': r['need'],
+                '寄存器': 'regs=%d ins=%d outs=%d' % (r['regs'], r['ins'], r['outs']),
+                '新指令': r['notes'],
+            })
+        data = finalize(d) if changed else open(f, 'rb').read()
+        dst = os.path.join(out, d.name) if out else f
+        open(dst, 'wb').write(data)
+
+    if apply and out:
+        # 未命中的 dex 也必须复制过去（历史 bug：只写 changed 的，结果输出目录少一个 dex）
+        for f in files:
+            dst = os.path.join(out, os.path.basename(f))
+            if not os.path.exists(dst):
+                shutil.copy(f, dst)
+
+    res['扫到的dex数'] = len(files)
+    res['被抽过入口的类数'] = len(res['分析'])
+    res['实际改写的dex数'] = len(res['已改写'])
+    if dry:
+        res['下一步'] = ('以上是演练。确认「首选入口」确实是真正的业务入口后，'
+                         '带 cls（必要时带 entry）并把 dry_run 设为 false 再跑一次。')
+        res['提醒'] = ('★必须在 lu_v9_patch 之前跑：v9 会把被抽走的 onCreate 定义删掉，'
+                       '删完本工具就没有「哪个类被抽过」的证据了。'
+                       '另外 invoke-super 目标如果显示「找不到」，说明父类没在 method_ids 里，'
+                       '会自动省略 super 调用（多数情况仍可跑，但要实测确认）。')
+    else:
+        res['下一步'] = '改写已落盘，接下来跑 lu_v9_patch（dry_run=false）删其余抽取定义，再 lu_rebuild 出包。'
+    print('LURESULT:' + json.dumps(res, ensure_ascii=False))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+
+`;
+        return runPy(py, [q(dir), q(prefix), q(cls), q(method), q(entry),
+            dry ? '1' : '0', q(outDir)].join(' '), 600000)
+            .then(function (r) {
+                if (!r || r.raw) return r;
+                r['一句话'] = (dry ? '预演：' : '已改写：') + '扫到 '
+                    + (r['扫到的dex数'] || 0) + ' 个 dex，'
+                    + (r['被抽过入口的类数'] || 0) + ' 个类的入口被抽走，改写 '
+                    + (r['实际改写的dex数'] || 0) + ' 个 dex。';
+                if (dry && r['分析'] && r['分析'].length) {
+                    r['一句话'] += ' 首选入口：'
+                        + r['分析'][0]['类'] + ' -> ' + r['分析'][0]['首选入口']
+                        + '（' + r['分析'][0]['首选入口分数'] + ' 分）。';
+                }
+                return r;
+            });
+    }
     // ---------- 重打包 + 签名 ----------
     function lu_rebuild(params) {
         var dir = params.decoded_dir, outApk = params.output_apk;
@@ -5694,9 +7151,12 @@ print("LURESULT:" + json.dumps(res, ensure_ascii=False))
         lu_decode: wrap(lu_decode),
         lu_scan: wrap(lu_scan),
         lu_fill_oncreate: wrap(lu_fill_oncreate),
+        lu_splash_fix: wrap(lu_splash_fix),
         lu_stub_clean: wrap(lu_stub_clean),
         lu_manifest_fix: wrap(lu_manifest_fix),
         lu_dex_fix: wrap(lu_dex_fix),
+        lu_v9_patch: wrap(lu_v9_patch),
+        lu_code_patch: wrap(lu_code_patch),
         lu_codeitem_fill: wrap(lu_codeitem_fill),
         lu_fart_import: wrap(lu_fart_import),
         lu_rebuild: wrap(lu_rebuild),
@@ -5718,9 +7178,12 @@ exports.lu_dump = lu.lu_dump;
 exports.lu_decode = lu.lu_decode;
 exports.lu_scan = lu.lu_scan;
 exports.lu_fill_oncreate = lu.lu_fill_oncreate;
+exports.lu_splash_fix = lu.lu_splash_fix;
 exports.lu_stub_clean = lu.lu_stub_clean;
 exports.lu_manifest_fix = lu.lu_manifest_fix;
 exports.lu_dex_fix = lu.lu_dex_fix;
+exports.lu_v9_patch = lu.lu_v9_patch;
+exports.lu_code_patch = lu.lu_code_patch;
 exports.lu_codeitem_fill = lu.lu_codeitem_fill;
 exports.lu_fart_import = lu.lu_fart_import;
 exports.lu_rebuild = lu.lu_rebuild;

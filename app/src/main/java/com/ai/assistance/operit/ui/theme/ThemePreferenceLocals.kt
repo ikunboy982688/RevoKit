@@ -10,6 +10,7 @@ import com.ai.assistance.operit.data.preferences.ActivePromptManager
 import com.ai.assistance.operit.data.preferences.CharacterCardManager
 import com.ai.assistance.operit.data.preferences.ThemePreferenceSnapshot
 import com.ai.assistance.operit.data.preferences.ThemePreferenceValues
+import com.ai.assistance.operit.data.preferences.ThemeStartupCache
 
 val LocalThemePreferenceSnapshot =
     compositionLocalOf<ThemePreferenceSnapshot> {
@@ -20,13 +21,19 @@ val LocalThemePreferenceSnapshot =
 fun rememberActiveThemePreferenceSnapshot(): ThemePreferenceSnapshot {
     val context = LocalContext.current
     val activePromptManager = remember(context) { ActivePromptManager.getInstance(context) }
+    // RevoKit：冷启动时 DataStore 的第一帧是异步的，用上次落盘的缓存兜住第一帧，
+    // 否则清理后台重开会先闪一下默认主题（外面那层粉紫白）再跳回来。
+    val startupSnapshot =
+        remember(context) {
+            ThemeStartupCache.load(context)
+                ?: ThemePreferenceSnapshot(
+                    source = "character_card",
+                    sourceId = CharacterCardManager.DEFAULT_CHARACTER_CARD_ID,
+                    values = ThemePreferenceValues.defaultVisual(),
+                )
+        }
     val themeSnapshot by activePromptManager.activeThemePreferenceSnapshotFlow.collectAsState(
-        initial =
-            ThemePreferenceSnapshot(
-                source = "character_card",
-                sourceId = CharacterCardManager.DEFAULT_CHARACTER_CARD_ID,
-                values = ThemePreferenceValues.defaultVisual(),
-            ),
+        initial = startupSnapshot,
     )
     return themeSnapshot
 }

@@ -58,6 +58,14 @@ import com.ai.assistance.operit.ui.main.navigation.retainedRouteKeysOnContentAtt
 import com.ai.assistance.operit.ui.main.screens.Screen
 import com.ai.assistance.operit.ui.common.composedsl.ToolPkgComposeDslToolScreen
 import com.ai.assistance.operit.ui.theme.LocalThemePreferenceSnapshot
+import com.ai.assistance.operit.ui.theme.CHAT_SCRIM_RANGE
+import com.ai.assistance.operit.ui.theme.ContentScrim
+import com.ai.assistance.operit.ui.theme.PageBackgroundImage
+import com.ai.assistance.operit.ui.theme.SETTINGS_SCRIM_RANGE
+import com.ai.assistance.operit.ui.theme.rememberBackgroundLuminance
+import com.ai.assistance.operit.ui.theme.revokitIsDarkTheme
+import com.ai.assistance.operit.ui.theme.scrimAlphaFor
+import androidx.compose.foundation.isSystemInDarkTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -178,9 +186,48 @@ fun AppContent(
     val backgroundImageUri = themeSnapshot.backgroundImageUri
     val hasBackgroundImage = useBackgroundImage && backgroundImageUri != null
 
+    // 页面级背景图：某些页面（设置页、侧边栏）用美化包里的另一张图，盖住全局背景。
+    // 必须画在 Scaffold 外面，否则顶栏还是全局背景、内容区换成新图，两者交界处会有一条硬缝。
+    val pageBackgroundUri =
+        if (themeSnapshot.settingsBackgroundImageUri != null &&
+            currentScreen.navItem == NavItem.Settings
+        ) {
+            themeSnapshot.settingsBackgroundImageUri
+        } else {
+            null
+        }
+
+    // 当前页真正铺在底下的那张图：设置页优先用专属图，其余页面用全局背景图。
+    val activeBackgroundUri =
+        pageBackgroundUri
+            ?: if (themeSnapshot.useBackgroundImage) themeSnapshot.backgroundImageUri else null
+
+    // 雾面强度按「图有多暗」算：照片偏暗就多垫一层，本来就浅就少垫，尽量把图留住。
+    // 设置页是文字密集页，垫得厚；聊天页要看清背景，只垫薄薄一层。
+    val backgroundLuminance = rememberBackgroundLuminance(activeBackgroundUri)
+    val darkForScrim = revokitIsDarkTheme(themeSnapshot, isSystemInDarkTheme())
+    val contentScrimAlpha =
+        when {
+            !themeSnapshot.backgroundScrimEnabled || activeBackgroundUri == null -> 0f
+            currentScreen.navItem == NavItem.Settings ->
+                scrimAlphaFor(
+                    backgroundLuminance,
+                    darkForScrim,
+                    SETTINGS_SCRIM_RANGE.start,
+                    SETTINGS_SCRIM_RANGE.endInclusive,
+                )
+            currentScreen.navItem == NavItem.AiChat ->
+                scrimAlphaFor(
+                    backgroundLuminance,
+                    darkForScrim,
+                    CHAT_SCRIM_RANGE.start,
+                    CHAT_SCRIM_RANGE.endInclusive,
+                )
+            else -> 0f
+        }
+
     // Get toolbar transparency setting
     val toolbarTransparent = themeSnapshot.toolbarTransparent
-    
     // Get AppBar custom color settings
     val useCustomAppBarColor = themeSnapshot.useCustomAppBarColor
     val customAppBarColor = themeSnapshot.customAppBarColor
@@ -263,6 +310,16 @@ fun AppContent(
     CompositionLocalProvider(
         LocalAppBarContentColor provides appBarContentColor,
     ) {
+        // 页面级背景层：画在 Scaffold 之外，这样它能一路铺到状态栏底下，
+        // 和透明顶栏之间不会出现两种底图的分界线。
+        Box(modifier = Modifier.fillMaxSize()) {
+            PageBackgroundImage(uri = pageBackgroundUri)
+            // 设置页是文字密集页：背景图上的花纹会让说明文字和小标签糊掉，
+            // 垫一层主题底色把图压到「氛围」档。聊天页垫得更薄，背景还要当图看。
+            if (contentScrimAlpha > 0f) {
+                ContentScrim(alpha = contentScrimAlpha)
+            }
+
         // 使用Scaffold来正确处理顶部栏和内容的布局
         // contentWindowInsets = WindowInsets(0) 让内容可以延伸到系统栏下方，使背景能够完全填充
         Scaffold(
@@ -741,5 +798,6 @@ fun AppContent(
                 }
             }
         }
+        } // 关闭页面级背景层的 Box
     }
 }

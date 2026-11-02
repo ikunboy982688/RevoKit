@@ -1,0 +1,9 @@
+来源: apktool-cli-3.0.1.jar / META-INF/NOTICE.txt
+
+---------------------------------------------------------------------------
+
+Apache Commons CLI
+Copyright 2002-2025 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (https://www.apache.org/).

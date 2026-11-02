@@ -1228,6 +1228,32 @@ fun MCPConfigScreen(
                     }
 
                     
+                    // 有 MCP 没连上时的说明。
+                    // RevoKit：启动页不再因为「连不上」把人挡住，状态统一挪到这里长期可见。
+                    if (totalEnabledPlugins > 0 &&
+                        successfulToolRequests.value < totalEnabledPlugins
+                    ) {
+                        item {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor =
+                                        MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.35f)
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(
+                                        R.string.mcp_offline_hint,
+                                        totalEnabledPlugins - successfulToolRequests.value
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                                )
+                            }
+                        }
+                    }
+
                     // 插件列表标题
                     if (displayedPluginIds.isNotEmpty()) {
                         

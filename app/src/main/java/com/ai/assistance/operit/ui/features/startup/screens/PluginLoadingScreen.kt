@@ -1,6 +1,7 @@
 package com.ai.assistance.operit.ui.features.startup.screens
 
 import android.content.Context
+import android.widget.Toast
 import com.ai.assistance.operit.util.AppLogger
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -680,7 +681,7 @@ class PluginLoadingState {
     }
 
     // 启动超时检测
-    fun startTimeoutCheck(timeoutMillis: Long = 30000L, scope: kotlinx.coroutines.CoroutineScope) {
+    fun startTimeoutCheck(timeoutMillis: Long = 8000L, scope: kotlinx.coroutines.CoroutineScope) {
         timeoutJob?.cancel()
         timeoutJob =
                 scope.launch {
@@ -690,6 +691,24 @@ class PluginLoadingState {
                             appContext?.getString(R.string.plugin_loading_timeout)
                                     ?: "Loading timeout, you can click \"Skip\" in the top right corner to continue"
                     )
+                    // RevoKit：超时后自动放行，别让用户去找「跳过」按钮。
+                    // hide() 只隐藏界面，后台的插件启动协程还在继续跑；
+                    // 万一某个 MCP 真要更久，也不会因此中断，只是界面先让开。
+                    val pending =
+                            (_pluginsTotal.value - _pluginsStarted.value).coerceAtLeast(0)
+                    val ctx = appContext
+                    if (pending > 0 && ctx != null) {
+                        Toast.makeText(
+                                        ctx,
+                                        ctx.getString(R.string.plugin_pending_toast, pending),
+                                        Toast.LENGTH_SHORT
+                                )
+                                .show()
+                    }
+                    delay(900L)
+                    if (_isVisible.value) {
+                        hide()
+                    }
                 }
     }
 
@@ -804,6 +823,26 @@ class PluginLoadingState {
                     )
                     updateProgress(0.32f)
                     setPlugins(pluginsToStart)
+
+                    // RevoKit：如果这批插件全是「远程 MCP」（连的是本机/局域网端口上的外部服务），
+                    // 本机功能一点都不依赖它们，没必要让用户干等连接超时。
+                    // 界面 0.4 秒后就放行，连接在后台继续，连上了工具会自己注册。
+                    val allRemote =
+                            pluginsToStart.all { pluginId ->
+                                mcpRepository.getInstalledPluginInfo(pluginId)?.type == "remote"
+                            }
+                    if (allRemote) {
+                        AppLogger.d(
+                                "PluginLoadingState",
+                                "全部是远程 MCP，跳过阻塞等待，后台继续连接"
+                        )
+                        lifecycleScope.launch {
+                            delay(400)
+                            if (isVisible.value) {
+                                hide()
+                            }
+                        }
+                    }
 
                     // 有安装的插件，使用MCPStarter启动
                     updateMessage(context.getString(R.string.plugin_checking_env))
@@ -956,8 +995,32 @@ class PluginLoadingState {
                 updateProgress(1.0f)
 
                 val hasFailures = successCount < totalCount && totalCount > 0
+                val failedCount = (totalCount - successCount).coerceAtLeast(0)
                 if (status != MCPStarter.PluginInitStatus.SUCCESS || hasFailures) {
-                    forceExpanded()
+                    // RevoKit：连不上的 MCP（很常见，比如 PC 端服务没开）不再把用户挡在启动页。
+                    // 展开 1.5 秒让用户看清哪几个有问题，然后自动收起直接进 AI 对话页；
+                    // 详细状态在「插件包」页长期可见，随时能重连。
+                    //
+                    // 注意：这个回调是从 MCPStarter 的 IO 线程调进来的（不是主线程），
+                    // 直接 Toast 会抛 "Can't toast on a thread that has not called Looper.prepare()"，
+                    // 而且会中断后面的 hide()。所以统一丢回 lifecycleScope（主线程）里做。
+                    lifecycleScope.launch {
+                        delay(1500L)
+                        if (isVisible.value) {
+                            hide()
+                        }
+                        if (failedCount > 0) {
+                            Toast.makeText(
+                                            context,
+                                            context.getString(
+                                                    R.string.plugin_offline_toast,
+                                                    failedCount
+                                            ),
+                                            Toast.LENGTH_LONG
+                                    )
+                                    .show()
+                        }
+                    }
                 } else {
                     lifecycleScope.launch {
                         delay(100L)

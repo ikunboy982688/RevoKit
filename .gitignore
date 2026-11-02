@@ -90,3 +90,6 @@ tmp
 temp
 .tmp
 .temp
+
+# JVM crash logs (OOM etc.) - never commit
+hs_err_pid*.log

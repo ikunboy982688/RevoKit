@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
@@ -101,6 +102,12 @@ class UserPreferencesManager private constructor(private val context: Context) {
         private val BACKGROUND_IMAGE_URI = stringPreferencesKey("background_image_uri")
         private val BACKGROUND_IMAGE_OPACITY = floatPreferencesKey("background_image_opacity")
 
+        // RevoKit：分页面背景图（设置页 / 侧边栏各用各的，留空则沿用全局背景）
+        private val SETTINGS_BACKGROUND_IMAGE_URI =
+            stringPreferencesKey("settings_background_image_uri")
+        private val SIDEBAR_BACKGROUND_IMAGE_URI =
+            stringPreferencesKey("sidebar_background_image_uri")
+
         // 背景媒体类型和视频设置
         private val BACKGROUND_MEDIA_TYPE = stringPreferencesKey("background_media_type")
         private val VIDEO_BACKGROUND_MUTED = booleanPreferencesKey("video_background_muted")
@@ -154,6 +161,13 @@ class UserPreferencesManager private constructor(private val context: Context) {
         // 背景模糊设置
         private val USE_BACKGROUND_BLUR = booleanPreferencesKey("use_background_blur")
         private val BACKGROUND_BLUR_RADIUS = floatPreferencesKey("background_blur_radius")
+        // RevoKit：全局噪点/纸张质感
+        private val USE_NOISE_TEXTURE = booleanPreferencesKey("use_noise_texture")
+        // RevoKit：叠加在背景图上的两档观感开关——卡片半透明、设置页扁平分组
+        private val TRANSLUCENT_SURFACES = booleanPreferencesKey("translucent_surfaces")
+        private val FLAT_SETTINGS_SECTIONS = booleanPreferencesKey("flat_settings_sections")
+        // RevoKit：背景图上的雾面保护。默认开，美化包可以关掉换取更艳的背景
+        private val BACKGROUND_SCRIM_ENABLED = booleanPreferencesKey("background_scrim_enabled")
 
         // 字体设置
         private val USE_CUSTOM_FONT = booleanPreferencesKey("use_custom_font")
@@ -803,6 +817,7 @@ class UserPreferencesManager private constructor(private val context: Context) {
     private fun getAllStringThemeKeys(): List<Preferences.Key<String>> {
         return listOf(
             THEME_MODE, BACKGROUND_IMAGE_URI, BACKGROUND_MEDIA_TYPE, APP_BAR_CONTENT_COLOR_MODE,
+            SETTINGS_BACKGROUND_IMAGE_URI, SIDEBAR_BACKGROUND_IMAGE_URI,
             CHAT_STYLE, KEY_CUSTOM_USER_AVATAR_URI, KEY_CUSTOM_AI_AVATAR_URI, KEY_AVATAR_SHAPE,
             KEY_ON_COLOR_MODE, KEY_CUSTOM_CHAT_TITLE, INPUT_STYLE, FONT_TYPE, SYSTEM_FONT_NAME,
             CUSTOM_FONT_PATH, BUBBLE_USER_FONT_TYPE, BUBBLE_USER_SYSTEM_FONT_NAME,
@@ -824,6 +839,8 @@ class UserPreferencesManager private constructor(private val context: Context) {
             CHAT_INPUT_LIQUID_GLASS,
             CHAT_INPUT_WATER_GLASS,
             FORCE_APP_BAR_CONTENT_COLOR_ENABLED, CHAT_HEADER_OVERLAY_MODE, USE_BACKGROUND_BLUR,
+            USE_NOISE_TEXTURE,
+            TRANSLUCENT_SURFACES, FLAT_SETTINGS_SECTIONS, BACKGROUND_SCRIM_ENABLED,
             BUBBLE_SHOW_AVATAR, BUBBLE_WIDE_LAYOUT_ENABLED, CURSOR_USER_BUBBLE_FOLLOW_THEME, CURSOR_USER_BUBBLE_LIQUID_GLASS,
             CURSOR_USER_BUBBLE_WATER_GLASS, BUBBLE_USER_BUBBLE_LIQUID_GLASS, BUBBLE_USER_BUBBLE_WATER_GLASS,
             BUBBLE_AI_BUBBLE_LIQUID_GLASS, BUBBLE_AI_BUBBLE_WATER_GLASS, BUBBLE_USER_USE_IMAGE,
@@ -1233,6 +1250,8 @@ class UserPreferencesManager private constructor(private val context: Context) {
                 )
             }
             .distinctUntilChanged()
+            // RevoKit：顺手把当前生效的主题写进启动缓存，供下次冷启动第一帧使用（消除闪默认主题）
+            .onEach { snapshot -> ThemeStartupCache.store(context, snapshot) }
     }
 
     suspend fun resolveThemePreferenceSnapshot(

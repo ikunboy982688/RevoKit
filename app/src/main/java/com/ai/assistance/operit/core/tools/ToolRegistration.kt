@@ -6,6 +6,8 @@ import com.ai.assistance.operit.api.chat.enhance.ToolExecutionManager
 import com.ai.assistance.operit.core.tools.climode.CliToolModeSupport
 import com.ai.assistance.operit.core.tools.climode.ToolExposureMode
 import com.ai.assistance.operit.core.tools.defaultTool.ToolGetter
+import com.ai.assistance.operit.core.revokit.DexDumper
+import com.ai.assistance.operit.core.revokit.DexRepair
 import com.ai.assistance.operit.core.revokit.PackerIdentifier
 import com.ai.assistance.operit.data.model.AITool
 import com.ai.assistance.operit.data.model.ToolParameter
@@ -2772,6 +2774,167 @@ fun registerAllTools(handler: AIToolHandler, context: Context) {
                             success = false,
                             result = StringResultData(""),
                             error = t.message ?: "识别失败"
+                    )
+                }
+            }
+    )
+
+    // RevoKit 内存脱壳：对加固 App 直接扫 /proc/<pid>/mem 捞 dex。
+    // 两件事必须由返回值告诉模型，否则它会把正常现象当成失败：
+    // 1. 目标必须先停在主界面 —— 壳在 Application 里解密，冷启动那一刻内存里只有壳代码
+    // 2. 捞出来的块头部多半被改坏 —— 这是加固的正常产物，要接着调 revokit_dexrepair
+    handler.registerTool(
+            name = "revokit_memdump",
+            executor = { tool ->
+                val pkg = tool.parameters.find { it.name == "package_name" }?.value ?: ""
+                try {
+                    if (pkg.isBlank()) throw IllegalArgumentException("缺少 package_name")
+                    val json =
+                            runBlocking(Dispatchers.IO) {
+                                val procs = DexDumper.listProcesses(context)
+                                val target =
+                                        procs.firstOrNull { it.name == pkg }
+                                                ?: procs.firstOrNull { it.name.endsWith(pkg) }
+                                                ?: procs.firstOrNull { it.name.contains(pkg) }
+                                                ?: run {
+                                                    // 必须把 root 的真实状态一起带出来。
+                                                    // 只报「没找到进程」时，调用方（和 AI）会一口咬定
+                                                    // 「目标 App 没开」，然后反复重启目标 App —— 方向全错。
+                                                    // 真正常见的原因是 RootAuthorizer 还没初始化，
+                                                    // executeRootCommand 秒返回 false，退化成普通 ps，
+                                                    // 只看得见本应用自己的进程。
+                                                    val rs = DexDumper.checkRoot(context)
+                                                    throw IllegalArgumentException(
+                                                            "没找到 $pkg 的进程。" +
+                                                                    "当前列出的进程数=${procs.size}" +
+                                                                    "（只有 1~2 个说明 root 没生效，" +
+                                                                    "此时只看得见本应用自己）。" +
+                                                                    "root 状态：${rs.detail}。" +
+                                                                    "如果 root 正常，说明目标 App 确实没在跑 —— " +
+                                                                    "脱壳前必须先把目标 App 打开、停在主界面，" +
+                                                                    "壳是在 Application 里解密的，" +
+                                                                    "冷启动那一瞬间内存里还只是壳代码。"
+                                                    )
+                                                }
+                                val base =
+                                        context.getExternalFilesDir("revokit_export")
+                                                ?: java.io.File(context.filesDir, "revokit_export")
+                                val dir =
+                                        java.io.File(
+                                                        base,
+                                                        "dump_" +
+                                                                pkg.replace(
+                                                                        Regex("[^A-Za-z0-9._-]"),
+                                                                        "_"
+                                                                )
+                                                )
+                                                .apply { mkdirs() }
+                                val r = DexDumper.dump(context, target.pid, target.name, dir) {}
+                                val root = JSONObject()
+                                root.put("package", pkg)
+                                root.put("pid", target.pid)
+                                root.put("outDir", dir.absolutePath)
+                                root.put("regionsScanned", r.regionsScanned)
+                                root.put("bytesScanned", r.bytesScanned)
+                                root.put("dexCount", r.dumped.size)
+                                val arr = JSONArray()
+                                r.dumped.forEach { d ->
+                                    arr.put(
+                                            JSONObject().apply {
+                                                put("file", d.file.absolutePath)
+                                                put("sizeBytes", d.size)
+                                                put("dexVersion", d.version)
+                                                put("classCount", d.classCount)
+                                                put("methodCount", d.methodCount)
+                                                put("kind", d.kind)
+                                                put("region", d.region)
+                                                put("checksumOk", d.checksumOk)
+                                                put("signatureOk", d.signatureOk)
+                                            }
+                                    )
+                                }
+                                root.put("dexes", arr)
+                                // 类数少的多半是壳的加载器，不是业务 dex，单独点出来
+                                root.put(
+                                        "businessDexCount",
+                                        r.dumped.count { it.classCount >= 2000 }
+                                )
+                                val needFix = r.dumped.count { !it.checksumOk || !it.signatureOk }
+                                root.put("needRepairCount", needFix)
+                                if (needFix > 0) {
+                                    root.put(
+                                            "nextStep",
+                                            "有 $needFix 个 dex 头部校验不符，这是加固的正常结果、不是失败。" +
+                                                    "对每个文件调用 revokit_dexrepair 修头，再反编译。"
+                                    )
+                                }
+                                if (r.dumped.isEmpty()) {
+                                    root.put(
+                                            "hint",
+                                            "没捞到 dex。先确认目标 App 已经停在主界面（不是启动闪屏），" +
+                                                    "在目标里点几下让业务 dex 加载完，再重试。"
+                                    )
+                                }
+                                root.put("logTail", r.log.takeLast(10).joinToString("\n"))
+                                root.toString()
+                            }
+                    ToolResult(toolName = tool.name, success = true, result = StringResultData(json))
+                } catch (t: Throwable) {
+                    ToolResult(
+                            toolName = tool.name,
+                            success = false,
+                            result = StringResultData(""),
+                            error = t.message ?: "内存 dump 失败"
+                    )
+                }
+            }
+    )
+
+    // RevoKit dex 修头：重算 file_size -> signature -> checksum（顺序不可换）。
+    // dump 出来的块头部大多被壳改过，不修就用不了；修完还能顺手报出「方法体是否被抽走」。
+    handler.registerTool(
+            name = "revokit_dexrepair",
+            executor = { tool ->
+                val path = tool.parameters.find { it.name == "dex_path" }?.value ?: ""
+                try {
+                    if (path.isBlank()) throw IllegalArgumentException("缺少 dex_path")
+                    val json =
+                            runBlocking(Dispatchers.IO) {
+                                val f = java.io.File(path)
+                                if (!f.exists() || !f.isFile) {
+                                    throw IllegalArgumentException("文件不存在：$path")
+                                }
+                                val buf = f.readBytes()
+                                val before = DexRepair.inspect(buf)
+                                DexRepair.fixHeader(buf)
+                                val after = DexRepair.inspect(buf)
+                                f.writeBytes(buf)
+                                JSONObject().apply {
+                                    put("file", f.absolutePath)
+                                    put("sizeBytes", buf.size.toLong())
+                                    put("beforeHealthy", before.healthy)
+                                    put("afterHealthy", after.healthy)
+                                    put("classCount", after.classCount)
+                                    put("methodCount", after.methodCount)
+                                    // 方法体被抽走（VMP）的典型特征，有就说明这批 dex 还要回填
+                                    put("looksExtracted", after.looksExtracted)
+                                    put("emptyCodeCount", after.emptyCodeCount)
+                                    put("nativeMethodCount", after.nativeMethodCount)
+                                    put("parseError", after.parseError ?: "")
+                                    val issues = DexRepair.validateTables(buf)
+                                    put(
+                                            "tableIssues",
+                                            JSONArray().apply { issues.take(6).forEach { put(it) } }
+                                    )
+                                }.toString()
+                            }
+                    ToolResult(toolName = tool.name, success = true, result = StringResultData(json))
+                } catch (t: Throwable) {
+                    ToolResult(
+                            toolName = tool.name,
+                            success = false,
+                            result = StringResultData(""),
+                            error = t.message ?: "修头失败"
                     )
                 }
             }

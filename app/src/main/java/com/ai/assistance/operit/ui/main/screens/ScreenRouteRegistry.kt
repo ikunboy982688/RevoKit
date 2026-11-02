@@ -111,6 +111,28 @@ object ScreenRouteRegistry {
     // `launchNavItem != null` means the nav item can use this screen as its default entry.
     private val hostEntryDefinitions: List<HostNavigationEntryDefinition> =
         listOf(
+            // RevoKit 逆向工作台：侧栏第二项（排在对话之后），非默认落地页
+            hostEntryDefinition(
+                entryId = "main.workbench",
+                screen = Screen.Workbench,
+                surface = NavigationSurface.MAIN_SIDEBAR_AI,
+                launchNavItem = NavItem.Workbench,
+                titleResId = R.string.tool_workbench,
+                descriptionResId = R.string.tool_workbench_desc,
+                icon = NavItem.Workbench.icon,
+                order = 20
+            ),
+            // RevoKit 音乐播放器：侧栏第三项
+            hostEntryDefinition(
+                entryId = "main.music",
+                screen = Screen.Music,
+                surface = NavigationSurface.MAIN_SIDEBAR_AI,
+                launchNavItem = NavItem.Music,
+                titleResId = R.string.tool_music,
+                descriptionResId = R.string.tool_music_desc,
+                icon = NavItem.Music.icon,
+                order = 25
+            ),
             hostEntryDefinition(
                 entryId = "main.ai_chat",
                 screen = Screen.AiChat,

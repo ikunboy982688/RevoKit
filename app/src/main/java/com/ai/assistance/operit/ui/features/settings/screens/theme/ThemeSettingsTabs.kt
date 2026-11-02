@@ -74,6 +74,10 @@ internal fun ThemeSettingsTabbedContent(
                 Tab(
                     selected = selectedTab == tab,
                     onClick = { onSelectedTabChange(tab) },
+                    // RevoKit：未选中标签原来用 onSurfaceVariant，压在花纹背景上会发虚，
+                    // 改用 onSurface 的 80% —— 色相跟着主题，但深浅是确定的。
+                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                     text = { Text(text = stringResource(id = tab.titleRes)) },
                 )
             }

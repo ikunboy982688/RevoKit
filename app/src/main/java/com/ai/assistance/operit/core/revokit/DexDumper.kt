@@ -128,7 +128,28 @@ object DexDumper {
 
     // -------------------------------------------------------------- 进程列表
 
+    /**
+     * 保证 RootAuthorizer 已经完成初始化。
+     *
+     * 这一步不能省。RootAuthorizer 是单例，_hasRootAccess 的初值是 false，只有
+     * initialize() / checkRootStatus() 被调用过才会变成真实状态。首次进对话就让 AI
+     * 调本工具时，前面没有任何界面碰过 RootAuthorizer，executeRootCommand 会直接走
+     * `!_hasRootAccess.value` 分支返回 false —— 整条命令 1 毫秒就"完成"，ps 输出为空，
+     * listProcesses 落到 fallback 的普通 ps（只看得到自己 uid 的进程），
+     * 最终表现成「没找到进程」，很容易被误判成 SELinux 拦截。
+     * 实测 360 加固（com.juyingfun.mqjz，PID 11175）首次调用就是这个现象。
+     */
+    private fun ensureRoot(context: Context) {
+        if (RootAuthorizer.hasRootAccess.value) return
+        try {
+            RootAuthorizer.checkRootStatus(context)
+        } catch (t: Throwable) {
+            AppLogger.e(TAG, "ensureRoot 检测失败", t)
+        }
+    }
+
     suspend fun listProcesses(context: Context): List<AppProcess> = withContext(Dispatchers.IO) {
+        ensureRoot(context)
         val (ok, out) = RootAuthorizer.executeRootCommand("ps -A -o PID,NAME", context)
         val text =
                 if (ok && out.isNotBlank()) out
@@ -152,6 +173,7 @@ object DexDumper {
     // ------------------------------------------------------------------ maps
 
     suspend fun readMaps(context: Context, pid: Int): List<Region> = withContext(Dispatchers.IO) {
+        ensureRoot(context)
         val (ok, out) = RootAuthorizer.executeRootCommand("cat /proc/$pid/maps", context)
         if (!ok || out.isBlank()) return@withContext emptyList<Region>()
         val regions = ArrayList<Region>()
@@ -193,6 +215,12 @@ object DexDumper {
             val n = r.name
             // 纯噪音：栈、TLS、vdso
             if (n.startsWith("[anon:stack") || n.startsWith("[anon:thread") || n.startsWith("[vdso")) continue
+            // ART 自己的内部结构。实测（360 加固 com.juyingfun.mqjz）这些段加起来
+            // 能吃掉整个 384MB 预算，里面一个 dex 都没有，把真正装着 dex 的段挤到了队尾。
+            if (n.contains("mark stack") || n.contains("bitmap") ||
+                            n.contains("live stack") || n.contains("allocation stack") ||
+                            n.contains("zygote space") || n.contains("boot-")
+            ) continue
             // 系统分区里的东西不是我们的目标（但 /data 下的 dex 缓存要留）
             if (n.startsWith("/system/") || n.startsWith("/vendor/") ||
                             n.startsWith("/apex/") || n.startsWith("/proc/") ||
@@ -226,14 +254,19 @@ object DexDumper {
     private fun score(r: Region): Int {
         var s = 0
         val n = r.name
-        if (n.contains("ashmem")) s += 60
+        // 空名的匿名段是壳解密 dex 的主战场，必须排最前。
+        // 实测 360 加固（com.juyingfun.mqjz）的 3 个业务 dex 就躺在 19MB 的空名 rwxp 段里，
+        // 而 dalvik 的 GC 栈 / bitmap / jit-cache 段加起来一个 dex 都没有。
+        // 这里原来只给 +15 分，排序后落到 291 个候选的末尾，
+        // 还没轮到 384MB 预算就耗尽了 —— 最终只拿到 1 个误判的 dex。
+        if (n.isEmpty()) s += 90
         if (n.contains("InMemoryDex")) s += 55
         if (n.contains("dalvik")) s += 45
         if (n.contains("memfd")) s += 35
         if (n.contains("jit-cache")) s += 25
         if (n.endsWith(".dex")) s += 30
         if (n.endsWith(".vdex") || n.endsWith(".odex") || n.endsWith(".oat")) s += 20
-        if (n.isEmpty()) s += 15
+        if (n.contains("ashmem")) s += 60
         if (n.startsWith("[anon")) s += 10
         if (r.perms.contains("w")) s += 5
         if (r.size > 1024 * 1024) s += 5
@@ -257,6 +290,7 @@ object DexDumper {
         }
 
         outDir.mkdirs()
+        ensureRoot(context)
         RootAuthorizer.executeRootCommand("mkdir -p $TMP_DIR", context)
         RootAuthorizer.executeRootCommand("chmod 777 $TMP_DIR", context)
 
@@ -288,8 +322,16 @@ object DexDumper {
             val count = r.size / PAGE
             if (count <= 0) continue
 
+            // conv=noerror,sync 不能省。
+            // 内存段中间经常夹着尚未分配的页，不带它时 dd 读到第一个空洞就 EIO 退出，
+            // 整段被下面的 ok=false 判成「读不通」扔掉。
+            // 实测 360 加固（com.juyingfun.mqjz）那个 19MB 匿名段里有 3 个完整 dex，
+            // 不带 noerror 一个都拿不到，带上就完整读出来了。
+            // 末尾用 ; 而不是 &&：dd 中途报错也要把已读到的部分 chmod 出来，
+            // 真正「完全没读到」的情况由后面的 local.length() <= 0 兜住。
             val ddCmd =
-                    "dd if=/proc/$pid/mem of=$tmp bs=$PAGE skip=$skip count=$count 2>/dev/null && chmod 666 $tmp"
+                    "dd if=/proc/$pid/mem of=$tmp bs=$PAGE skip=$skip count=$count " +
+                            "conv=noerror,sync 2>/dev/null; chmod 666 $tmp"
             val (ok, _) = RootAuthorizer.executeRootCommand(ddCmd, context)
             val local = File(tmp)
             if (!ok || !local.exists() || local.length() <= 0L) {

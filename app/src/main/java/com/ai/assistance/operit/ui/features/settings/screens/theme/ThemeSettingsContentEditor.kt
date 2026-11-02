@@ -59,6 +59,7 @@ import com.ai.assistance.operit.data.preferences.ActivePromptManager
 import com.ai.assistance.operit.data.preferences.CharacterCardManager
 import com.ai.assistance.operit.data.preferences.CharacterGroupCardManager
 import com.ai.assistance.operit.data.preferences.DisplayPreferencesManager
+import com.ai.assistance.operit.data.preferences.ThemePreferenceValues
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
 import com.ai.assistance.operit.ui.main.navigation.RegisterRouteBackGuard
 import com.ai.assistance.operit.util.AppLogger
@@ -69,11 +70,31 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
+/**
+ * 让子区块（如主题包）能主动触发「保存当前草稿」。
+ * 保存逻辑本身仍由 ThemeSettingsContentEditor 持有，这里只做转发，避免复制一套落盘路径。
+ */
+internal class ThemeSaveInvoker {
+    var action: (() -> Unit)? = null
+
+    fun invoke() {
+        action?.invoke()
+    }
+}
+
 internal data class ThemeSettingsShared(
     val context: android.content.Context,
     val editorSession: ThemeEditorSession,
     val displayPreferencesManager: DisplayPreferencesManager,
     val scope: CoroutineScope,
+    val saveInvoker: ThemeSaveInvoker,
+    /**
+     * 把一套主题写到「所有」作用域（默认角色 + 每张角色卡 + 每个群组）。
+     *
+     * 导入的主题包要「导入一次整个软件都变」，而主题本身是按角色卡各存一份的，
+     * 只写当前这一个作用域的话，换个角色卡就又变回去了。
+     */
+    val applyGlobally: suspend (ThemePreferenceValues) -> Unit,
 )
 
 private data class ThemeEditorState(
@@ -280,9 +301,16 @@ internal fun ThemeSettingsContentEditor(
     fun saveCurrentDraft() {
         val state = editorState ?: return
         val draft = state.session
-        if (isSaving) return
+        if (isSaving) {
+            AppLogger.d("RevoKitNoise", "保存被跳过：上一次保存还没结束（isSaving=true）")
+            return
+        }
         val target = state.target
         val savedValues = draft.currentValues
+        AppLogger.d(
+            "RevoKitNoise",
+            "保存草稿：noise=${savedValues.boolean("use_noise_texture")} isSaving=$isSaving"
+        )
         val resetRequested = draft.isResetRequested
         isSaving = true
         draft.beginSave(savedValues)
@@ -366,11 +394,33 @@ internal fun ThemeSettingsContentEditor(
             DisposableEffect(draft) {
                 onDispose(draft::dispose)
             }
+            val themeSaveInvoker = remember { ThemeSaveInvoker() }
+            themeSaveInvoker.action = ::saveCurrentDraft
+            val applyGlobally: suspend (ThemePreferenceValues) -> Unit = { values ->
+                val targets =
+                    buildList {
+                        add(
+                            ActivePrompt.CharacterCard(
+                                CharacterCardManager.DEFAULT_CHARACTER_CARD_ID
+                            )
+                        )
+                        characterCards.forEach { add(ActivePrompt.CharacterCard(it.id)) }
+                        characterGroups.forEach { add(ActivePrompt.CharacterGroup(it.id)) }
+                    }
+                targets.distinct().forEach { target ->
+                    runCatching { activePromptManager.commitThemeDraft(target, values) }
+                        .onFailure {
+                            AppLogger.e("ThemeSettings", "写主题到作用域失败: $target", it)
+                        }
+                }
+            }
             val shared = ThemeSettingsShared(
                 context = context,
                 editorSession = draft,
                 displayPreferencesManager = displayPreferencesManager,
                 scope = scope,
+                saveInvoker = themeSaveInvoker,
+                applyGlobally = applyGlobally,
             )
 
             // External picker callbacks retain this exact draft, even after another target is selected.

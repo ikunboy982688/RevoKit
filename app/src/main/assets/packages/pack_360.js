@@ -462,6 +462,19 @@ print("P360:" + json.dumps(r, ensure_ascii=False))
                     说明: '把 onCreate 的 smali 抄回被抽空的方法，约 30% 命中'
                 });
                 steps.push({
+                    序: steps.length, 动作: '★启动页接回（预演）', 包: 'local_unpack', 工具: 'lu_splash_fix',
+                    参数: { decoded_dir: decoded, dry_run: 'true' },
+                    说明: '专治「邪修回填后装上去不崩、但界面死在启动页不动」。'
+                        + 'lu_fill_oncreate 的前提是「父类那份 onCreate 够用」，'
+                        + '但幕布那种父类只设横竖屏和状态栏、一次业务方法调用都没有的情况，'
+                        + '继承它等于什么都不发生。本工具自动判定哪些类属于这种「父类只做半套」，'
+                        + '列出同类里还活着的候选入口（360 只抽生命周期那个方法，'
+                        + '它内部调的私有入口方法全都还在），并在 onCreate 里补一句调用把流程接回去。'
+                        + '判定依据是「父类调的方法里有没有一个被子类重写」——'
+                        + '有就能虚分派到子类（mqjz 的 initView 就是这样），没有就得接回',
+                    判定: '自动选的入口不对 → 用 entry 参数指定正确方法名再跑一次'
+                });
+                steps.push({
                     序: steps.length, 动作: '清桩调用（预演）', 包: 'local_unpack', 工具: 'lu_stub_clean',
                     参数: { decoded_dir: decoded, dry_run: 'true' },
                     说明: '删 StubApp/DtcLoader/frezrik/qihoo 调用，连带删 move-result-*'
@@ -486,6 +499,53 @@ print("P360:" + json.dumps(r, ensure_ascii=False))
                     兜底: '找不到桩 smali → 说明这个包没有 StubApp 兼容需求，跳过即可'
                 });
                 steps.push({
+                    序: steps.length, 动作: '★dex 层启动页接回（预演）', 包: 'local_unpack', 工具: 'lu_code_patch',
+                    参数: {
+                        dex_dir: decoded,
+                        prefix: (pkg && pkg !== '-') ? ('L' + pkg.replace(/\./g, '/') + '/') : '-',
+                        dry_run: 'true'
+                    },
+                    说明: '这一步是幕布 com.mubu.app 真机补出来的，专门治「不崩了但永远卡在启动页」。'
+                        + '★必须跑在 lu_v9_patch 之前：v9 会把被抽走的 onCreate 定义删掉，'
+                        + '删完本工具就没有「哪个类被抽过」的证据了。'
+                        + '根因：删定义后子类继承父类实现，但父类往往「只做了一半」——'
+                        + '幕布 BaseSplashActivity.onCreate 只有 37 条指令，设横竖屏和状态栏颜色，一次虚分派都没有，'
+                        + '真正的跳转全在被抽走的 MubuSplashActivity.onCreate 里。'
+                        + '而 360 通常只抽生命周期那一个，同类里真正的业务入口还活着、只是没人调用。'
+                        + '本工具找一个必定会被框架调用的存活方法（onResume 优先）做「搭载」，'
+                        + '原地等长改写成 invoke-super 父类同名方法 + 调用业务入口 + return-void。'
+                        + '等长 = 新指令不超过原 unit 数就整段覆盖、余下填 nop → 偏移全不变 → 不碰 map_list',
+                    判定: '第一次跑一定别带 cls，只看「分析」列表：找启动/闪屏那个 Activity，'
+                        + '确认它的「首选入口」确实是真正的业务入口（幕布实测自动选中 checkAndShowMubuTerm，80 分，'
+                        + '与 PC 端手工选定的完全一致）。确认后带 cls、dry_run 改 false 再跑一次。'
+                        + '★只改启动入口那一个类，别的 Activity 交给 v9 继承父类就够了',
+                    兜底: '① 如果 lu_repack_assemble 把 dex 输出到别的目录而不是解包目录，dex_dir 要跟着改；'
+                        + '② 自动选的入口不对 → 用 entry 参数指定正确方法名；'
+                        + '③ 已经跑过 v9 了才发现卡启动页 → 直接带 cls + entry 手动跑，不再依赖自动判定'
+                });
+                steps.push({
+                    序: steps.length, 动作: '★dex 层删抽取定义（预演）', 包: 'local_unpack', 工具: 'lu_v9_patch',
+                    参数: {
+                        dex_dir: decoded,
+                        prefix: (pkg && pkg !== '-') ? ('L' + pkg.replace(/\./g, '/') + '/') : '-',
+                        dry_run: 'true'
+                    },
+                    说明: '这一步在岛风真机上补出来的，缺了它前面全白干。'
+                        + '手机端链路是「apktool 解包原包 + 把脱壳 dump 出来的 dex 直接塞进解包目录」，'
+                        + '而 apktool 只反编译得动**壳 dex** —— 岛风那次整个解包目录里业务包的 smali 数是 0，'
+                        + '全目录只有 1 个 com/stub/StubApp.smali。于是走 smali 路线的 lu_fill_oncreate 和 '
+                        + 'lu_splash_fix 一个业务类都覆盖不到，出包后主界面能进、一点「立即登录」就崩：'
+                        + 'UnsatisfiedLinkError: No implementation found for ...LoginActivity.onCreate。'
+                        + '本工具直接在 dex 字节上动手，不依赖 smali。'
+                        + '原理是删掉那条「ACC_NATIVE + code_off=0」的定义让子类继承父类真实实现，'
+                        + '再用非最短 uleb128 把省下的字节填回 4 个 size 字段，长度分毫不差、偏移全不变、不碰 map_list。'
+                        + 'PC 端妙钱记账/幕布/岛风三样本都是这么跑通的',
+                    判定: '看「改动明细」里的类是不是主程序自己的类；「其它native无体」那批绝大多数是真 JNI'
+                        + '（sqlcipher / 百度OCR / 有道翻译 / OcrEngine —— 岛风 138 个里 132 个是真的），千万别删。'
+                        + '确认后 dry_run 改 false 再跑一次',
+                    兜底: '如果 lu_repack_assemble 把 dex 输出到别的目录而不是解包目录，dex_dir 要跟着改成那个目录'
+                });
+                steps.push({
                     序: steps.length, 动作: '重打包+签名', 包: 'local_unpack', 工具: 'lu_rebuild',
                     参数: { decoded_dir: decoded, output_apk: rebuilt },
                     兜底: '签名失败（无 apksigner）→ apk_reverse:apk_reverse_build_and_sign'
@@ -495,14 +555,25 @@ print("P360:" + json.dumps(r, ensure_ascii=False))
                 steps.push({
                     序: steps.length, 动作: '验证启动', 包: 'logfox_toolkit', 工具: 'apk_launch_test',
                     参数: { apk_path: rebuilt, package: pkgArg },
-                    说明: '崩了抓 logcat(*:V)，把栈贴给 AI 定位缺失类，循环修'
+                    说明: '崩了抓 logcat(*:V)，把栈贴给 AI 定位缺失类，循环修',
+                    禁令: '**绝对不要用 monkey 启动 App** —— monkey 一跑就会把系统「自动旋转」开关打开'
+                        + '（实测：跑之前 accelerometer_rotation=0，跑完变 1），用户每次跑完任务都发现自动旋转被开了。'
+                        + '一律用 `am start -n <包名>/<主Activity>`，或 `cmd package resolve-activity --brief <包名> | tail -1` 取到主 Activity 再 start。'
+                        + '同理，任何 `settings put system/secure/global` 都不许碰跟本任务无关的用户偏好（自动旋转 / 亮度 / 音量 / 字体 / 壁纸）'
                 });
 
                 return {
                     归本包管: true, 代次: gen, 包名: pkg, 桩类: det.桩类 || '', 应用类: det.应用类 || '',
                     解包目录: decoded, 脱壳产物目录: dexDir, 步骤: steps,
                     包名提示: pkgHint,
-                    提醒: '前两步（脱壳 + 体检）没做完，后面修的都是空壳。dry_run 步骤确认无误后改 false 再跑一遍'
+                    提醒: '前两步（脱壳 + 体检）没做完，后面修的都是空壳。dry_run 步骤确认无误后改 false 再跑一遍',
+                    两条硬纪律: [
+                        '**禁用 monkey 启动 App**：monkey 会把系统「自动旋转」开关打开（实测 0→1），'
+                        + '用户每次跑完任务都发现自动旋转被开了。一律用 am start。',
+                        '**不许乱动系统设置**：除任务必需的项（如 adb 调试、未知来源安装）外，'
+                        + '自动旋转 / 亮度 / 音量 / 字体 / 壁纸这类用户偏好一个都不许碰。'
+                        + '真要临时改，改之前告知、用完恢复原值。'
+                    ]
                 };
             });
     }

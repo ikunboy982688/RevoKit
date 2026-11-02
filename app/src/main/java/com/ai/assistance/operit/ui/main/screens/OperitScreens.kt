@@ -34,6 +34,8 @@ import com.ai.assistance.operit.ui.features.packages.screens.MarketHomeTab
 import com.ai.assistance.operit.ui.features.packages.screens.PackageManagerScreen
 import com.ai.assistance.operit.ui.features.packages.screens.ArtifactPublishScreen
 import com.ai.assistance.operit.ui.features.revokit.PackerIdentifyScreen
+import com.ai.assistance.operit.ui.features.music.MusicScreen
+import com.ai.assistance.operit.ui.features.revokit.WorkbenchScreen
 import com.ai.assistance.operit.ui.features.revokit.ApkBrowserScreen
 import com.ai.assistance.operit.ui.features.revokit.CleanupScreen
 import com.ai.assistance.operit.ui.features.revokit.ShellWorkbenchScreen
@@ -186,6 +188,51 @@ sealed class Screen(
                 onGestureConsumed: (Boolean) -> Unit
         ) {
             MemoryScreen()
+        }
+    }
+
+    /**
+     * RevoKit 逆向工作台（主入口）。
+     * 只读骨架：文件一览 + 工具快捷入口 + 最近工程，不含任何写盘动作。
+     */
+    data object Workbench :
+            Screen(navItem = NavItem.Workbench, titleRes = R.string.tool_workbench) {
+        @Composable
+        override fun Content(
+                navController: NavController,
+                navigateTo: ScreenNavigationHandler,
+                onGoBack: () -> Unit,
+                hasBackgroundImage: Boolean,
+                onLoading: (Boolean) -> Unit,
+                onError: (String) -> Unit,
+                onGestureConsumed: (Boolean) -> Unit
+        ) {
+            WorkbenchScreen(
+                    onOpenPackerIdentify = { navigateTo(PackerIdentify) },
+                    onOpenApkBrowser = { navigateTo(ApkBrowser) },
+                    onOpenShellWorkbench = { navigateTo(ShellWorkbench) },
+                    onOpenCleanup = { navigateTo(Cleanup) }
+            )
+        }
+    }
+
+    /**
+     * RevoKit 音乐播放器页。
+     * 侧栏「音乐」进入；页内可开悬浮小窗并让播放服务常驻。
+     */
+    data object Music :
+            Screen(navItem = NavItem.Music, titleRes = R.string.tool_music) {
+        @Composable
+        override fun Content(
+                navController: NavController,
+                navigateTo: ScreenNavigationHandler,
+                onGoBack: () -> Unit,
+                hasBackgroundImage: Boolean,
+                onLoading: (Boolean) -> Unit,
+                onError: (String) -> Unit,
+                onGestureConsumed: (Boolean) -> Unit
+        ) {
+            MusicScreen()
         }
     }
 

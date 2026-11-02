@@ -74,6 +74,7 @@ data class ThemePreferenceValues(
                     "video_background_muted" to true,
                     "video_background_loop" to true,
                     "toolbar_transparent" to false,
+                    // 保持与上游 Operit 一致：玻璃质感默认关闭，由主题包/用户开启
                     "navigation_drawer_water_glass" to false,
                     "navigation_drawer_button_liquid_glass" to false,
                     "use_custom_navigation_drawer_background_color" to false,
@@ -90,6 +91,8 @@ data class ThemePreferenceValues(
                     "force_app_bar_content_color_enabled" to false,
                     "chat_header_overlay_mode" to false,
                     "use_background_blur" to false,
+                    // 纸张质感是 RevoKit 独有的附加效果，上游没有；默认关闭，靠主题包开启
+                    "use_noise_texture" to false,
                     "bubble_show_avatar" to true,
                     "bubble_wide_layout_enabled" to false,
                     "cursor_user_bubble_follow_theme" to true,
@@ -113,7 +116,8 @@ data class ThemePreferenceValues(
                     "show_message_timing_stats" to false,
                     "show_message_token_speed" to false,
                     "show_message_timestamp" to false,
-                    "show_input_processing_status" to true,
+                    // RevoKit：输入处理状态那一行属于「调试信息」，默认不显示，别抢对话的视觉焦点
+                    "show_input_processing_status" to false,
                     "show_chat_floating_dots_animation" to true,
                     "use_custom_font" to false,
                     "bubble_user_use_custom_font" to false,
@@ -166,6 +170,34 @@ data class ThemePreferenceSnapshot(
     val backgroundImageUri: String? get() = values.string("background_image_uri")
     val backgroundMediaType: String get() = values.requiredString("background_media_type")
     val backgroundImageOpacity: Float get() = values.requiredFloat("background_image_opacity")
+
+    /** 设置页专属背景图。为空则沿用全局背景。 */
+    val settingsBackgroundImageUri: String? get() = values.string("settings_background_image_uri")
+
+    /** 侧边栏（抽屉）专属背景图。为空则沿用全局背景。 */
+    val sidebarBackgroundImageUri: String? get() = values.string("sidebar_background_image_uri")
+
+    /**
+     * 扁平分组样式：设置页的分组卡片改成透明、无阴影，让背景图直接透出来。
+     * QQ 美化包的设置页就是「纯文字浮在背景图上」，没有卡片。默认关闭，保持原有观感。
+     */
+    val flatSettingsSections: Boolean
+        get() = values.boolean("flat_settings_sections") ?: false
+
+    /**
+     * 背景图雾面保护：开启后会在背景图上垫一层主题底色，并按图片明暗自动调厚度，
+     * 保证文字落在可预测的底色上。默认开启；美化包想要更艳的背景可以显式关掉。
+     */
+    val backgroundScrimEnabled: Boolean
+        get() = values.boolean("background_scrim_enabled") ?: true
+
+    /**
+     * 半透明卡片：开启后列表/分组卡片的底色会带上约 70% 透明度，让背景图透出来。
+     * 弹窗等可读性敏感的面板不受影响。默认关闭，保持原版 Operit 的观感。
+     */
+    val translucentSurfaces: Boolean
+        get() = values.boolean("translucent_surfaces") ?: false
+
     val videoBackgroundMuted: Boolean get() = values.requiredBoolean("video_background_muted")
     val videoBackgroundLoop: Boolean get() = values.requiredBoolean("video_background_loop")
     val toolbarTransparent: Boolean get() = values.requiredBoolean("toolbar_transparent")
@@ -201,6 +233,8 @@ data class ThemePreferenceSnapshot(
     val appBarContentColorMode: String get() = values.requiredString("app_bar_content_color_mode")
     val useBackgroundBlur: Boolean get() = values.requiredBoolean("use_background_blur")
     val backgroundBlurRadius: Float get() = values.requiredFloat("background_blur_radius")
+    /** RevoKit：全局噪点/纸张质感（3.8KB 平铺图，不影响包体） */
+    val useNoiseTexture: Boolean get() = values.requiredBoolean("use_noise_texture")
     val chatStyle: String get() = values.requiredString("chat_style")
     val inputStyle: String get() = values.requiredString("input_style")
     val bubbleShowAvatar: Boolean get() = values.requiredBoolean("bubble_show_avatar")

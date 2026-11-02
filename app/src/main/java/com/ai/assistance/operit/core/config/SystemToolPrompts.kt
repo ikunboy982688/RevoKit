@@ -72,6 +72,30 @@ object SystemToolPrompts {
                         required = true
                     )
                 )
+            ),
+            ToolPrompt(
+                name = "revokit_memdump",
+                description = "Native memory dumper for hardened/packed APKs. Reads /proc/<pid>/mem of a RUNNING app, finds dex magic inside anonymous memory regions and carves each dex out. Works on any shell that decrypts dex into memory at runtime (360 jiagu, Bangcle, Dingxiang, Legu) because ART can only execute real dex. CRITICAL: the target app must already be open and showing its main screen — the shell decrypts inside Application.onCreate, so dumping during cold start returns only the shell loader. Returns the carved dex list with class/method counts (classCount >= 2000 usually means real business dex; a few hundred means a shell loader). Carved files normally fail header checksum — that is expected, call revokit_dexrepair on them next.",
+                parametersStructured = listOf(
+                    ToolParameterSchema(
+                        name = "package_name",
+                        type = "string",
+                        description = "package name of the running target app, e.g. com.mubu.app",
+                        required = true
+                    )
+                )
+            ),
+            ToolPrompt(
+                name = "revokit_dexrepair",
+                description = "Recompute a dex header in place: file_size -> sha1 signature -> adler32 checksum (this exact order is mandatory, because the checksum covers the signature bytes). Dexes carved from memory almost always carry a scrubbed header; this makes them loadable and decompilable without touching any bytecode. Returns before/after validity, class and method counts, and looksExtracted — when that is true the shell stripped method bodies (function extraction / VMP) and the dex still needs body backfilling, which this tool does NOT do.",
+                parametersStructured = listOf(
+                    ToolParameterSchema(
+                        name = "dex_path",
+                        type = "string",
+                        description = "absolute path of the dex file to repair, overwritten in place",
+                        required = true
+                    )
+                )
             )
         )
     )
@@ -98,6 +122,30 @@ object SystemToolPrompts {
                 description = "原生加固识别：毫秒级、纯本地、不执行目标 APK。读 ZIP 目录 + dex 字符串 + Manifest 入口类，跟内置的 49 家加固特征库打分匹配。返回是否加壳、哪家壳、厂商、置信度、脱壳建议、dex/so 数量、签名方案（v1/v2/v3）。要判壳就调这个，不要自己去 grep 包里的 so 名。",
                 parametersStructured = listOf(
                     ToolParameterSchema(name = "apk_path", type = "string", description = "APK 文件绝对路径", required = true)
+                )
+            ),
+            ToolPrompt(
+                name = "revokit_memdump",
+                description = "原生内存脱壳：读运行中 App 的 /proc/<pid>/mem，在匿名内存段里找 dex 魔数并原样切出来。360 加固（libjiagu）、梆梆（libshella）、顶象（libDexHelper）、乐固都能用 —— 因为加固最终必须把真 dex 放回内存，ART 只认真 dex。关键前提：目标 App 必须已经打开、停在主界面，壳是在 Application.onCreate 里解密的，冷启动那一瞬间内存里只有壳加载器。返回切出的 dex 列表和类数/方法数：类数 ≥2000 一般是真实业务 dex，只有几百个的是壳加载器。切出来的 dex 头部校验通常不符（这是加固的正常产物，不是失败），接着调 revokit_dexrepair 修头。",
+                parametersStructured = listOf(
+                    ToolParameterSchema(
+                        name = "package_name",
+                        type = "string",
+                        description = "运行中的目标 App 包名，例如 com.mubu.app",
+                        required = true
+                    )
+                )
+            ),
+            ToolPrompt(
+                name = "revokit_dexrepair",
+                description = "dex 修头：原地重算 file_size → sha1 signature → adler32 checksum，顺序不可换（checksum 覆盖 signature 那 20 字节，先算 checksum 会把头算坏）。内存 dump 出来的 dex 头部基本都被壳改过，不修就用不了；这个工具只动头，不碰任何字节码，修完即可反编译。返回修复前后的有效性、类数、方法数，以及 looksExtracted —— 它为 true 说明壳把方法体抽走了（函数抽取/VMP），这种 dex 还需要回填方法体，本工具不做这件事。",
+                parametersStructured = listOf(
+                    ToolParameterSchema(
+                        name = "dex_path",
+                        type = "string",
+                        description = "要修的 dex 文件绝对路径，原地覆盖",
+                        required = true
+                    )
                 )
             )
         )

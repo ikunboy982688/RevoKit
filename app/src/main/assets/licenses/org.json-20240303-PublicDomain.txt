@@ -1,0 +1,21 @@
+来源: org.json:json:20240303
+许可: Public Domain
+
+依据（两处互相印证，均为上游原样内容）:
+
+1. jar 内 META-INF/maven/org.json/json/pom.xml 的 <licenses> 段:
+       <name>Public Domain</name>
+       <url>https://github.com/stleary/JSON-java/blob/master/LICENSE</url>
+
+2. 该 URL 指向的 LICENSE 文件全文（2026-10-27 实取）:
+
+---------------------------------------------------------------------------
+
+Public Domain.
+
+---------------------------------------------------------------------------
+
+历史说明（仅供追溯，不影响本版义务）:
+    org.json 的早期版本曾附带 "The Software shall be used for Good, not Evil" 条款，
+    该条款在部分开源合规政策中被视为非自由许可。本项目使用的 20240303 版已不再包含该条款，
+    上游 LICENSE 现声明为 Public Domain，对本项目无附加义务。

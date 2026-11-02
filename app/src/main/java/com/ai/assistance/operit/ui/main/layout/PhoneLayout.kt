@@ -48,6 +48,7 @@ import com.ai.assistance.operit.ui.main.components.rememberNavigationDrawerAppea
 import com.ai.assistance.operit.ui.main.screens.GestureStateHolder
 import com.ai.assistance.operit.ui.main.screens.Screen
 import com.ai.assistance.operit.ui.theme.waterGlass
+import androidx.compose.ui.draw.clip
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -144,6 +145,10 @@ fun PhoneLayout(
         val dragThreshold = 40f
 
         val drawerAppearance = rememberNavigationDrawerAppearance()
+        // 侧边栏专属背景图（美化包导入时写入）。为空则维持原来的纯色/玻璃效果。
+        val sidebarBackgroundUri =
+                com.ai.assistance.operit.ui.theme.LocalThemePreferenceSnapshot.current
+                        .sidebarBackgroundImageUri
         val drawerShape =
                 MaterialTheme.shapes.medium.copy(
                         topEnd = CornerSize(16.dp),
@@ -285,10 +290,18 @@ fun PhoneLayout(
                                         .zIndex(2f),
                         shape = drawerShape,
                         color =
-                                if (drawerAppearance.waterGlassEnabled) Color.Transparent
+                                if (drawerAppearance.waterGlassEnabled ||
+                                        !sidebarBackgroundUri.isNullOrBlank()) Color.Transparent
                                 else drawerAppearance.containerColor,
                         shadowElevation = if (drawerAppearance.waterGlassEnabled) 0.dp else sidebarElevation
                 ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                                // 背景图铺满整个侧栏，并按侧栏的圆角裁切
+                                com.ai.assistance.operit.ui.theme.PageBackgroundImage(
+                                        uri = sidebarBackgroundUri,
+                                        modifier = Modifier.matchParentSize()
+                                                .clip(drawerShape)
+                                )
                         DrawerContent(
                                 navItems = navItems,
                                 pluginEntries = pluginSidebarEntries,
@@ -303,6 +316,7 @@ fun PhoneLayout(
                                 onScreenSelected = onDrawerItemSelected,
                                 onNavigationEntrySelected = onNavigationEntrySelected
                         )
+                        }
                 }
 
                 // 在主内容上方放置遮罩层，阻止右侧内容继续响应点击

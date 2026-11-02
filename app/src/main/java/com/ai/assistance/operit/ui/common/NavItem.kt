@@ -4,12 +4,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
@@ -21,7 +23,11 @@ import com.ai.assistance.operit.R
 
 // 应用导航项
 sealed class NavItem(val route: String, val titleResId: Int, val icon: ImageVector) {
+        // 逆向工作台：当前主入口，默认落地页
+        object Workbench : NavItem("workbench", R.string.nav_workbench, Icons.Default.Dashboard)
         object AiChat : NavItem("ai_chat", R.string.nav_ai_chat, Icons.Default.Email)
+        // RevoKit 音乐播放器：本地曲库 + 悬浮小窗
+        object Music : NavItem("music", R.string.nav_music, Icons.Default.MusicNote)
         object ShizukuCommands :
                 NavItem("shizuku_commands", R.string.shizuku_commands, Icons.Default.Build)
         object Settings : NavItem("settings", R.string.nav_settings, Icons.Default.Settings)

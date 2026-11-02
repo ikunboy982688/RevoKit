@@ -40,6 +40,8 @@ internal fun ThemeSettingsBasicTab(
         shared = shared,
     )
 
+    ThemePackSection(shared = shared)
+
     ThemeSettingsThemeModeSection(
         cardColors = cardColors,
         editorSession = editorSession,
