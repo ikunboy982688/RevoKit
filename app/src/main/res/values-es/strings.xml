@@ -1708,17 +1708,11 @@
     <string name="github_source">Enlace original de GitHub</string>
     <string name="github_source_desc">Descargar directamente desde el servidor oficial de GitHub, puede ser más lento</string>
     <string name="no_mirrors_found">No se encontraron espejos disponibles</string>
-    <string name="beta_plan">Plan Beta</string>
-    <string name="beta_plan_desc">Al unirse, cuando haya una versión de prueba actualizada, se descargará automáticamente un parche de unos 30 MB por WiFi.</string>
     <string name="main_github_login_success">Inicio de sesión exitoso, ¡bienvenido %1$s!</string>
     <string name="main_github_get_user_failed">Error al obtener información del usuario: %1$s</string>
     <string name="main_github_login_failed">Error al iniciar sesión: %1$s</string>
     <string name="main_github_login_error">Error durante el inicio de sesión: %1$s</string>
     <string name="main_update_available_toast">Nueva versión %1$s encontrada, vaya a la página "Acerca de" para más detalles</string>
-    <string name="beta_plan_enabled">Plan Beta activado</string>
-    <string name="beta_plan_disabled">Plan Beta desactivado</string>
-    <string name="beta_plan_join">Unirse</string>
-    <string name="beta_plan_leave">Salir</string>
     <string name="patch_update">Actualización de parche</string>
     <string name="patch_update_desc">Descargar parche y combinar APK localmente para instalar</string>
     <string name="prepare_patch_update">Preparando actualización de parche...</string>

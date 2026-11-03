@@ -1347,17 +1347,11 @@
     <string name="github_source">Link original do GitHub</string>
     <string name="github_source_desc">Baixe diretamente do servidor oficial do GitHub, a velocidade pode ser mais lenta</string>
     <string name="no_mirrors_found">Nenhuma fonte de espelho disponível encontrada</string>
-    <string name="beta_plan">Programa beta</string>
-    <string name="beta_plan_desc">Após a adesão, quando uma versão de teste atualizada estiver disponível, uma atualização de patch de cerca de 30 MB será baixada automaticamente em WiFi.</string>
     <string name="main_github_login_success">Login bem-sucedido. Bem-vindo %1$s!</string>
     <string name="main_github_get_user_failed">Falha ao obter informações do usuário: %1$s</string>
     <string name="main_github_login_failed">Falha no login: %1$s</string>
     <string name="main_github_login_error">Ocorreu um erro durante o login: %1$s</string>
     <string name="main_update_available_toast">Nova versão %1$s encontrada, vá para a página "Sobre" para ver os detalhes</string>
-    <string name="beta_plan_enabled">Já aderiu ao programa beta</string>
-    <string name="beta_plan_disabled">Não está no programa beta</string>
-    <string name="beta_plan_join">junte-se</string>
-    <string name="beta_plan_leave">desistir</string>
     <string name="patch_update">Atualização de patches</string>
     <string name="patch_update_desc">Baixe o patch e instale-o após sintetizar o APK nativamente</string>
     <string name="prepare_patch_update">Preparando para atualizações de patch...</string>

@@ -42,7 +42,6 @@ import com.ai.assistance.operit.R
 import com.ai.assistance.operit.data.updates.FullUpdateInstaller
 import com.ai.assistance.operit.data.updates.UpdateManager
 import com.ai.assistance.operit.data.updates.UpdateStatus
-import com.ai.assistance.operit.data.preferences.UserPreferencesManager
 import com.ai.assistance.operit.data.updates.PatchUpdateInstaller
 import com.ai.assistance.operit.core.application.ActivityLifecycleManager
 import com.ai.assistance.operit.util.GithubReleaseUtil
@@ -464,9 +463,6 @@ fun AboutScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
-    val preferences = remember { UserPreferencesManager.getInstance(context) }
-    val betaEnabled = preferences.betaPlanEnabled.collectAsState(initial = false).value
 
     // 获取UpdateManager实例
     val updateManager = remember { UpdateManager.getInstance(context) }
@@ -929,22 +925,6 @@ fun AboutScreen(
                         }
                     )
 
-                    HorizontalDivider(modifier = Modifier.padding(start = 66.dp))
-
-                    SettingsRow(
-                        icon = Icons.Default.NewReleases,
-                        iconTint = MaterialTheme.colorScheme.tertiary,
-                        title = stringResource(id = R.string.beta_plan),
-                        subtitleText = stringResource(id = R.string.beta_plan_desc),
-                        trailing = {
-                            Switch(
-                                checked = betaEnabled,
-                                onCheckedChange = { enabled ->
-                                    scope.launch { preferences.saveBetaPlanEnabled(enabled) }
-                                }
-                            )
-                        }
-                    )
                 }
             }
 

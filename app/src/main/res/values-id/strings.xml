@@ -1165,18 +1165,12 @@
     <string name="github_source">Tautan asli GitHub</string>
     <string name="github_source_desc">Unduh langsung dari server resmi GitHub, kecepatan mungkin lambat</string>
     <string name="no_mirrors_found">Tidak ditemukan sumber mirror yang tersedia</string>
-    <string name="beta_plan">Rencana Beta</string>
-    <string name="beta_plan_desc">Setelah bergabung, pembaruan patch sekitar 30MB akan otomatis diunduh saat ada versi uji coba baru di jaringan wifi.</string>
     <string name="main_github_login_success">Login berhasil, selamat datang %1$s!</string>
     <string name="main_github_get_user_failed">Gagal mendapatkan informasi pengguna: %1$s</string>
     <string name="main_github_login_failed">Login gagal: %1$s</string>
     <string name="main_github_login_error">Terjadi kesalahan selama proses login: %1$s</string>
     <string name="main_update_available_toast">Versi baru %1$s ditemukan, silakan buka halaman "Tentang" untuk detail</string>
-    <string name="beta_plan_enabled">Telah bergabung dengan Rencana Beta</string>
-    <string name="beta_plan_disabled">Belum bergabung dengan Rencana Beta</string>
 
-    <string name="beta_plan_join">Gabung</string>
-    <string name="beta_plan_leave">Keluar</string>
     <string name="patch_update">Pembaruan Patch</string>
     <string name="patch_update_desc">Unduh patch dan instal setelah menggabungkan APK secara lokal</string>
     <string name="prepare_patch_update">Mempersiapkan pembaruan patch...</string>

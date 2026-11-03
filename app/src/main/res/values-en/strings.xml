@@ -5914,12 +5914,6 @@
 
     <!-- Skill Market -->
     <string name="available_skills_market">Available Skills</string>
-    <string name="beta_plan">Beta Program</string>
-    <string name="beta_plan_desc">After joining, when there are updated test versions, patch updates of about 30MB will be automatically downloaded over WiFi.</string>
-    <string name="beta_plan_enabled">Joined Beta Program</string>
-    <string name="beta_plan_disabled">Not in Beta Program</string>
-    <string name="beta_plan_join">Join</string>
-    <string name="beta_plan_leave">Leave</string>
     <string name="click_button_publish_first_skill">Click the button above to publish your first Skill</string>
     <string name="confirm_remove_skill_from_market">Are you sure you want to remove Skill "%1$s" from the market? This will close the corresponding Issue but will not delete your code repository.</string>
     <string name="confirm_skill_git_import_deployment">I confirm that this Skill can be properly installed and used through the app\'s Git repository import method</string>

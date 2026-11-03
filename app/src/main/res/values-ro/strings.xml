@@ -1552,17 +1552,11 @@
     <string name="github_source">GitHubLinkul original</string>
     <string name="github_source_desc">Direct de laGitHubDescărcare de pe serverul oficial; viteza poate fi mai redusă</string>
     <string name="no_mirrors_found">Nu s-au găsit surse de oglindă disponibile</string>
-    <string name="beta_plan">Beta Plan</string>
-    <string name="beta_plan_desc">După înscriere, atunci când vor apărea versiuni de testare actualizate,wifiDescărcare automată30MBActualizări ale patch-urilor de aproximativ.</string>
     <string name="main_github_login_success">Autentificare reușită, bine ați venit %1$s!</string>
     <string name="main_github_get_user_failed">Eroare la preluarea informațiilor utilizatorului: %1$s</string>
     <string name="main_github_login_failed">Autentificare eșuată: %1$s</string>
     <string name="main_github_login_error">A apărut o eroare în timpul procesului de autentificare: %1$s</string>
     <string name="main_update_available_toast">Descoperă noua versiune %1$s, accesați pagina „Despre” pentru detalii</string>
-    <string name="beta_plan_enabled">S-a alăturat Beta Plan</string>
-    <string name="beta_plan_disabled">Nu s-a alăturat Beta Plan</string>
-    <string name="beta_plan_join">Alătură-te</string>
-    <string name="beta_plan_leave">Ieșire</string>
     <string name="patch_update">Actualizare patch</string>
     <string name="patch_update_desc">Descărcați patch-ul și compilați-l pe computerul dvs. APK După instalare</string>
     <string name="prepare_patch_update">Pregătirea actualizării prin patch-uri...</string>

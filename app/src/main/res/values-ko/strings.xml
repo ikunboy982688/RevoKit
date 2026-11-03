@@ -1382,17 +1382,11 @@
     <string name="github_source">GitHub 원본 링크</string>
     <string name="github_source_desc">GitHub 공식 서버에서 다운로드</string>
     <string name="no_mirrors_found">사용 가능한 미러 소스를 찾을 수 없습니다</string>
-    <string name="beta_plan">베타 프로그램</string>
-    <string name="beta_plan_desc">가입 후 업데이트된 테스트 버전이 있을 때 약 30MB의 패치 업데이트가 WiFi를 통해 자동으로 다운로드됩니다.</string>
     <string name="main_github_login_success">로그인에 성공했습니다. %1$s를 환영합니다!</string>
     <string name="main_github_get_user_failed">사용자 정보 가져오기 실패: %1$s</string>
     <string name="main_github_login_failed">로그인 실패: %1$s</string>
     <string name="main_github_login_error">로그인 중 오류: %1$s</string>
     <string name="main_update_available_toast">새 버전 %1$s가 발견되었습니다. 자세한 내용은 "정보" 페이지에서 확인하시기 바랍니다.</string>
-    <string name="beta_plan_enabled">베타 프로그램 가입</string>
-    <string name="beta_plan_disabled">베타 프로그램에 포함되지 않음</string>
-    <string name="beta_plan_join">가입</string>
-    <string name="beta_plan_leave">나가기</string>
     <string name="patch_update">패치 업데이트</string>
     <string name="patch_update_desc">패치를 다운로드하고 로컬에서 APK를 생성한 후 설치</string>
     <string name="prepare_patch_update">패치 업데이트 준비 중...</string>

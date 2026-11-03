@@ -1246,17 +1246,11 @@
     <string name="permission_guide_intro_page_indicator">Pengenalan fungsi %1$d/%2$d</string>
 
     <string name="no_mirrors_found">Tiada sumber cermin tersedia</string>
-    <string name="beta_plan">Pelan Beta</string>
-    <string name="beta_plan_desc">Selepas menyertai, tambahan kira-kira 30MB akan dimuat turun secara automatik melalui Wi-Fi apabila terdapat versi ujian yang dikemas kini.</string>
     <string name="main_github_login_success">Log masuk berjaya, selamat datang %1$s!</string>
     <string name="main_github_get_user_failed">Gagal mendapatkan maklumat pengguna: %1$s</string>
     <string name="main_github_login_failed">Log masuk gagal: %1$s</string>
     <string name="main_github_login_error">Ralat berlaku semasa log masuk: %1$s</string>
     <string name="main_update_available_toast">Versi baru %1$s ditemui, sila pergi ke halaman "Tentang" untuk butiran</string>
-    <string name="beta_plan_enabled">Telah menyertai Pelan Beta</string>
-    <string name="beta_plan_disabled">Belum menyertai Pelan Beta</string>
-    <string name="beta_plan_join">Sertai</string>
-    <string name="beta_plan_leave">Keluar</string>
     <string name="patch_update">Kemas kini tambahan</string>
     <string name="patch_update_desc">Muat turun tambahan dan pasang selepas menggabungkan APK pada peranti ini</string>
     <string name="prepare_patch_update">Menyediakan kemas kini tambahan...</string>
