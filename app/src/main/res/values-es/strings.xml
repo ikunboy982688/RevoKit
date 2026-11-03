@@ -487,7 +487,7 @@
     <string name="agreement_subtitle">Por favor lea cuidadosamente y acepte los siguientes términos antes de usar.</string>
     <string name="agreement_version">Versión del acuerdo: %1$s</string>
     <string name="agreement_human_readable_title">Acuerdo en lenguaje simple (versión no legal)</string>
-    <string name="agreement_human_readable_content">Límite del servicio: Operit no proporciona servicios públicos de interacción emocional antropomórfica. Operit es un cliente de código abierto que se ejecuta localmente en el dispositivo del usuario. No opera servicios de inferencia de modelos, no aloja sesiones de chat ni datos de interacción, y no distribuye credenciales de modelo compartidas. Las solicitudes a modelos en la nube se envían directamente desde su dispositivo al proveedor de modelos que configure con sus propias credenciales; los datos relacionados se rigen por las reglas de ese proveedor. Los modelos locales infieren en su dispositivo.\n\nEsta aplicación puede llamar archivos, terminales, automatización, Root, ADB, extensiones y capacidades similares. Revise las operaciones antes de ejecutarlas, haga copias de seguridad de los datos importantes y otorgue permisos con cuidado. Las pérdidas relacionadas con dispositivos, datos, cuentas u otros intereses causadas por acciones del usuario, configuración del usuario, servicios de terceros o extensiones de terceros deben ser gestionadas por el operador real según la ley aplicable.\n\nLos plugins, scripts, Skills, kits de herramientas y otros contenidos de terceros del mercado pertenecen a sus autores o titulares de derechos indicados, junto con la responsabilidad correspondiente. La publicación o instalación desde el mercado no significa que Operit garantice, respalde u obtenga derechos sobre ese contenido. Confirme la licencia y el estado de los derechos antes de usarlo, modificarlo, publicarlo o redistribuirlo.</string>
+    <string name="agreement_human_readable_content">Límite del servicio: GOOG no proporciona servicios públicos de interacción emocional antropomórfica. GOOG es un cliente de código abierto que se ejecuta localmente en el dispositivo del usuario. No opera servicios de inferencia de modelos, no aloja sesiones de chat ni datos de interacción, y no distribuye credenciales de modelo compartidas. Las solicitudes a modelos en la nube se envían directamente desde su dispositivo al proveedor de modelos que configure con sus propias credenciales; los datos relacionados se rigen por las reglas de ese proveedor. Los modelos locales infieren en su dispositivo.\n\nEsta aplicación puede llamar archivos, terminales, automatización, Root, ADB, extensiones y capacidades similares. Revise las operaciones antes de ejecutarlas, haga copias de seguridad de los datos importantes y otorgue permisos con cuidado. Las pérdidas relacionadas con dispositivos, datos, cuentas u otros intereses causadas por acciones del usuario, configuración del usuario, servicios de terceros o extensiones de terceros deben ser gestionadas por el operador real según la ley aplicable.\n\nLos plugins, scripts, Skills, kits de herramientas y otros contenidos de terceros del mercado pertenecen a sus autores o titulares de derechos indicados, junto con la responsabilidad correspondiente. La publicación o instalación desde el mercado no significa que GOOG garantice, respalde u obtenga derechos sobre ese contenido. Confirme la licencia y el estado de los derechos antes de usarlo, modificarlo, publicarlo o redistribuirlo.</string>
     <string name="agreement_serious_title">Acuerdo legal riguroso</string>
     <string name="agreement_serious_content"><![CDATA[
         <p><b>Acuerdo de usuario y política de privacidad de Operit</b><br>Versión: 2026-07-15; fecha efectiva prevista: 15 de julio de 2026.</p>
@@ -2045,7 +2045,7 @@
     <string name="permission_guide_intro_2_title">Potente caja de herramientas para geeks y desarrolladores</string>
     <string name="permission_guide_intro_2_desc">Incluye más de 40 herramientas profesionales que abarcan gestión de archivos, solicitudes de red, ejecución de scripts y control del sistema. Combinado con un potente sistema de complementos, puede automatizar tareas y tener un control profundo de su dispositivo.</string>
     <string name="permission_guide_intro_3_title">Libere su creatividad, siempre disponible</string>
-    <string name="permission_guide_intro_3_desc">Ya sea diseñando páginas web, procesando archivos multimedia o despertando a la IA en cualquier momento a través de una ventana flotante, Operit le ofrece un entorno de creación y asistencia potente, flexible y seguro. Sus datos, bajo su control.</string>
+    <string name="permission_guide_intro_3_desc">Ya sea diseñando páginas web, procesando archivos multimedia o despertando a la IA en cualquier momento a través de una ventana flotante, GOOG le ofrece un entorno de creación y asistencia potente, flexible y seguro. Sus datos, bajo su control.</string>
     <string name="permission_guide_intro_page_indicator">Introducción de funciones %1$d/%2$d</string>
     <string name="debugger_accessibility_fallback_title">Plan de aceleración de accesibilidad (alto riesgo)</string>
     <string name="debugger_accessibility_fallback_description">El modo de depuración ejecuta operaciones de UI a través de Shell de forma predeterminada. Habilitar el servicio de accesibilidad puede acelerar significativamente la automatización de la UI, pero aumenta considerablemente el riesgo de ser detectado por algunas aplicaciones y de que la cuenta sea suspendida. A menos que busque la máxima velocidad de operación, no se recomienda activarlo.</string>
@@ -2692,7 +2692,7 @@
     <string name="tts_debug_params_with_service">Parámetros de solicitud: texto=\'%1$s\', velocidad=%2$sx, tono=%3$sx\nTipo de servicio: %4$s</string>
     <string name="tts_usage_instructions_content">1. Ingrese el texto a convertir en voz en el cuadro de entrada\n2. Ajuste la velocidad y el tono\n3. Haga clic en «Reproducir voz» para iniciar la reproducción\n4. Haga clic en «Detener reproducción» para detener\n5. Si ocurre un error, consulte los detalles del error y la información de depuración\n6. Use el botón «Limpiar mensaje de error» para borrar la visualización de errores</string>
     <string name="tool_default_assistant_guide">Configuración del asistente predeterminado</string>
-    <string name="tool_default_assistant_guide_desc">Establecer el flotante de voz de Operit como asistente predeterminado del sistema</string>
+    <string name="tool_default_assistant_guide_desc">Establecer el flotante de voz de GOOG como asistente predeterminado del sistema</string>
     <string name="tool_terminal_auto_config_under_construction">La función de configuración automática del terminal está siendo reestructurada...</string>
     <string name="ui_debugger_title">Herramienta de depuración de UI</string>
     <string name="ui_debugger_description">Haga clic en el botón en la esquina inferior derecha para iniciar la ventana flotante y depurar la UI</string>
@@ -4238,7 +4238,7 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="emoji_preview">Vista previa del emoji</string>
     <string name="create_group">Crear grupo</string>
     <string name="custom">Personalizado</string>
-    <string name="voice_assistant_widget_description">Inicio rápido del asistente de voz Operit</string>
+    <string name="voice_assistant_widget_description">Inicio rápido del asistente de voz GOOG</string>
     <string name="voice_assistant_widget_title">Asistente de voz</string>
     <string name="screen_title_mnn_model_download">Descarga de modelo MNN</string>
     <string name="mnn_model_download">Descargar modelo MNN</string>
@@ -4545,15 +4545,15 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="default_assistant_guide_step2_note">Nota: los gestos pueden variar según la marca del teléfono. Consulte las opciones disponibles en la configuración del sistema.</string>
     <string name="default_assistant_guide_step4_title">Probar el asistente de voz</string>
     <string name="default_assistant_guide_step4_desc">Una vez configurado, compruebe si se inicia correctamente.</string>
-    <string name="default_assistant_guide_step4_detail1">• Mantener presionado el botón de inicio debería abrir el asistente de voz Operit.</string>
-    <string name="default_assistant_guide_step4_detail2">• Si el dispositivo admite activación por voz, decir "Hey Google" o la palabra de activación especificada también puede activar Operit.</string>
+    <string name="default_assistant_guide_step4_detail1">• Mantener presionado el botón de inicio debería abrir el asistente de voz GOOG.</string>
+    <string name="default_assistant_guide_step4_detail2">• Si el dispositivo admite activación por voz, decir "Hey Google" o la palabra de activación especificada también puede activar GOOG.</string>
     <string name="default_assistant_guide_step3_title">Probar la función del asistente</string>
-    <string name="default_assistant_guide_step3_desc">Una vez configurado, compruebe si Operit se activa correctamente.</string>
+    <string name="default_assistant_guide_step3_desc">Una vez configurado, compruebe si GOOG se activa correctamente.</string>
     <string name="default_assistant_guide_step3_detail1">• Use el gesto configurado (como mantener presionado el botón de inicio) para activar el asistente.</string>
-    <string name="default_assistant_guide_step3_detail2">• Si tiene éxito, debería ver la interfaz del asistente de voz de Operit.</string>
+    <string name="default_assistant_guide_step3_detail2">• Si tiene éxito, debería ver la interfaz del asistente de voz de GOOG.</string>
     <string name="default_assistant_guide_step3_detail3">• Puede intentar hablar o escribir texto para interactuar con el asistente.</string>
     <string name="default_assistant_guide_troubleshooting_title">¿Problemas?</string>
-    <string name="default_assistant_guide_troubleshooting_content">Si no encuentra Operit en la lista, asegúrese de que:\n\n• La aplicación esté instalada correctamente y no esté deshabilitada.\n• Se hayan concedido los permisos necesarios (micrófono, ventana flotante, etc.).\n• Intente reiniciar el dispositivo y configurarlo de nuevo.\n\nAlgunos sistemas personalizados pueden restringir aplicaciones de terceros como asistente predeterminado. En ese caso, aún puede usar Operit mediante la función de ventana flotante dentro de la aplicación.</string>
+    <string name="default_assistant_guide_troubleshooting_content">Si no encuentra GOOG en la lista, asegúrese de que:\n\n• La aplicación esté instalada correctamente y no esté deshabilitada.\n• Se hayan concedido los permisos necesarios (micrófono, ventana flotante, etc.).\n• Intente reiniciar el dispositivo y configurarlo de nuevo.\n\nAlgunos sistemas personalizados pueden restringir aplicaciones de terceros como asistente predeterminado. En ese caso, aún puede usar GOOG mediante la función de ventana flotante dentro de la aplicación.</string>
     <string name="voice_interaction_service_name">Asistente GOOG</string>
     <string name="voice_interaction_service_summary">Servicio de asistente de voz inteligente</string>
     <string name="tool_permissions_title">Permisos de herramientas</string>
@@ -4767,18 +4767,18 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="time_hours_ago">Hace %1$d horas</string>
     <string name="time_days_ago">Hace %1$d días</string>
     <string name="default_assistant_guide_title">Configurar asistente de voz predeterminado</string>
-    <string name="default_assistant_guide_subtitle">Haz de Operit tu asistente inteligente</string>
-    <string name="default_assistant_guide_intro">Al configurar Operit como asistente predeterminado del sistema, puedes iniciar rápidamente el asistente de voz de Operit manteniendo presionado el botón de inicio o usando activación por voz, obteniendo una experiencia de interacción con IA más conveniente.</string>
+    <string name="default_assistant_guide_subtitle">Haz de GOOG tu asistente inteligente</string>
+    <string name="default_assistant_guide_intro">Al configurar GOOG como asistente predeterminado del sistema, puedes iniciar rápidamente el asistente de voz de GOOG manteniendo presionado el botón de inicio o usando activación por voz, obteniendo una experiencia de interacción con IA más conveniente.</string>
     <string name="default_assistant_guide_steps_title">Pasos de configuración</string>
     <string name="default_assistant_guide_step1_title">Configurar como asistente predeterminado</string>
-    <string name="default_assistant_guide_step1_desc">Configurar Operit como la aplicación de asistente digital predeterminada del sistema</string>
+    <string name="default_assistant_guide_step1_desc">Configurar GOOG como la aplicación de asistente digital predeterminada del sistema</string>
     <string name="default_assistant_guide_step1_detail1">• Abre Configuración del sistema → Aplicaciones → Aplicaciones predeterminadas → Aplicación de asistente digital</string>
     <string name="default_assistant_guide_step1_detail2">• En la lista de aplicaciones de asistente, busca y selecciona "GOOG"</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: Configuración → Aplicaciones → Aplicaciones predeterminadas → Aplicación de asistente digital → Aplicación de asistente digital predeterminada</string>
     <string name="default_assistant_guide_open_settings">Abrir configuración del asistente</string>
     <string name="default_assistant_guide_open_gesture_settings">Abrir configuración de gestos</string>
     <string name="default_assistant_guide_step2_title">Configurar gesto de activación</string>
-    <string name="default_assistant_guide_step2_desc">Configurar cómo invocar rápidamente al asistente Operit</string>
+    <string name="default_assistant_guide_step2_desc">Configurar cómo invocar rápidamente al asistente GOOG</string>
     <string name="default_assistant_guide_step2_detail1">• Mantener presionado el botón de inicio: la forma más común, disponible en la mayoría de dispositivos</string>
     <string name="default_assistant_guide_step2_detail2">• Deslizar hacia arriba desde la parte inferior de la pantalla: en algunos dispositivos con gestos de pantalla completa</string>
     <string name="default_assistant_guide_step2_detail_android12">Android 12+: Configuración → Aplicaciones → Aplicaciones predeterminadas → Aplicación de asistente digital → Aplicación de asistente digital predeterminada</string>
@@ -4885,7 +4885,7 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="software_identity_title">Identidad del software</string>
     <string name="software_identity_description">Cambiar la identidad del software que se muestra en la parte superior de la barra lateral.</string>
     <string name="software_identity_option_operit">GOOG</string>
-    <string name="software_identity_option_lingshu">Lingshu AI</string>
+    <string name="software_identity_option_lingshu">GG工坊</string>
     <string name="reset_all_display_settings">Restablecer toda la configuración de pantalla</string>
     <string name="ui_accessibility_mode">Modo de accesibilidad</string>
     <string name="ui_accessibility_mode_description">Optimizar el comportamiento de automatización de la interfaz de usuario para usuarios de accesibilidad como TalkBack, priorizando pasos legibles y evitando clics automáticos.</string>
@@ -5043,7 +5043,7 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="backup_select_export_format">Seleccionar formato de exportación</string>
     <string name="backup_select_format_hint">Seleccione el formato del historial de chat a exportar:</string>
     <string name="backup_format_json">JSON (recomendado)</string>
-    <string name="backup_format_json_desc">Formato nativo de Operit, conserva todos los datos como el cambio de mensajes.</string>
+    <string name="backup_format_json_desc">Formato nativo de GOOG, conserva todos los datos como el cambio de mensajes.</string>
     <string name="backup_format_markdown">Markdown</string>
     <string name="backup_format_markdown_desc">Formato de marcado ligero, fácil de leer y editar.</string>
     <string name="backup_format_html">HTML</string>
@@ -5052,7 +5052,7 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="backup_format_txt_desc">Formato de texto simple, fácil de compartir.</string>
     <string name="backup_select_import_format">Seleccionar formato de importación</string>
     <string name="backup_import_format_hint">Seleccione el formato del historial de chat a importar:</string>
-    <string name="backup_format_operit">Operit JSON (recomendado)</string>
+    <string name="backup_format_operit">GOOG JSON (recomendado)</string>
     <string name="backup_format_operit_desc">Formato nativo de esta aplicación, conserva todos los datos como el cambio de mensajes.</string>
     <string name="backup_format_chatgpt">ChatGPT</string>
     <string name="backup_format_chatgpt_desc">Formato de exportación conversations.json de OpenAI ChatGPT.</string>
@@ -5147,7 +5147,7 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="uidebugger_element_info_package_name">nombre del paquete: %1$s</string>
     <string name="uidebugger_element_info_size_px">tamaño: %1$d×%2$dpx</string>
     <string name="logcat_no_logs_to_save">no hay registros para guardar</string>
-    <string name="logcat_header">=== Registros de Operit ===</string>
+    <string name="logcat_header">=== Registros de GOOG ===</string>
     <string name="logcat_date">fecha: %1$s</string>
     <string name="logcat_total_count">total: %1$d</string>
     <string name="logcat_save_failed">error al guardar: %1$s</string>
@@ -6201,15 +6201,15 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="chat_ai_service_unavailable_summarize">El servicio de IA no está disponible, no se puede resumir</string>
     <string name="chat_summarize_failed_no_valid_summary">Error al resumir: no se pudo generar un resumen válido</string>
     <string name="chat_summarize_generation_failed">Error al generar el resumen: %1$s</string>
-    <string name="service_operit_running">Operit está en ejecución</string>
+    <string name="service_operit_running">GOOG está en ejecución</string>
     <string name="service_chat_complete_reminder">Recordatorio de conversación completada</string>
     <string name="service_chat_complete_reminder_sound">Recordatorio de conversación completada (sonido)</string>
     <string name="service_chat_complete_reminder_vibration">Recordatorio de conversación completada (vibración)</string>
     <string name="service_chat_complete_reminder_sound_vibration">Recordatorio de conversación completada (sonido y vibración)</string>
-    <string name="service_keep_background">Mantener Operit ejecutándose en segundo plano.</string>
+    <string name="service_keep_background">Mantener GOOG ejecutándose en segundo plano.</string>
     <string name="service_notify_when_complete">Notificarle cuando la conversación esté completa.</string>
-    <string name="service_running_wake_pause">Operit está en ejecución (pausa de activación)</string>
-    <string name="service_running_wake_listening">Operit está en ejecución (escuchando activación)</string>
+    <string name="service_running_wake_pause">GOOG está en ejecución (pausa de activación)</string>
+    <string name="service_running_wake_listening">GOOG está en ejecución (escuchando activación)</string>
     <string name="service_running_stats">Ejecutando conversaciones %1$d · herramientas invocadas %2$d</string>
     <string name="service_running_http_listening">HTTP externo escuchando en el puerto %1$d</string>
     <string name="service_running_with_http">%1$s · HTTP externo %2$d</string>
@@ -7344,11 +7344,11 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="artifact_project_node_view_title">Vista de nodo</string>
     <string name="artifact_project_nodes_loading">Cargando nodos del proyecto...</string>
     <string name="artifact_project_node_selection_hint">Haz clic para seleccionar un nodo; vuelve a hacer clic para deseleccionarlo.</string>
-    <string name="plugin_creation_fresh_task_line">Activa el editor Operit y usa el kit de desarrollo sandbox para desarrollar un nuevo kit sandbox.</string>
+    <string name="plugin_creation_fresh_task_line">Activa el editor GOOG y usa el kit de desarrollo sandbox para desarrollar un nuevo kit sandbox.</string>
     <string name="plugin_creation_fresh_package_rule_line">Primero determina el ID del nuevo kit sandbox; no lo renombres después.</string>
     <string name="plugin_creation_fresh_dev_directory_line">El directorio de desarrollo se fija en Descargas/Operit/dev_package/el ID que determinaste. El desarrollo, la instalación y las pruebas se realizan solo aquí.</string>
-    <string name="plugin_creation_continue_task_line">Activa el editor Operit, busca la ubicación del kit sandbox %1$s y continúa desarrollando y probando sobre esta versión.</string>
-    <string name="plugin_creation_merge_task_line">Activa el editor Operit, busca la ubicación del kit sandbox %1$s y realiza desarrollo de fusión y pruebas sobre esta versión.</string>
+    <string name="plugin_creation_continue_task_line">Activa el editor GOOG, busca la ubicación del kit sandbox %1$s y continúa desarrollando y probando sobre esta versión.</string>
+    <string name="plugin_creation_merge_task_line">Activa el editor GOOG, busca la ubicación del kit sandbox %1$s y realiza desarrollo de fusión y pruebas sobre esta versión.</string>
     <string name="plugin_creation_existing_package_rule_line">El ID actual del kit sandbox es %1$s. Tanto el ID del kit como el nombre del plugin deben mantenerse; no los renombres ni crees un nuevo kit.</string>
     <string name="plugin_creation_existing_dev_directory_line">El directorio de desarrollo se fija en Descargas/Operit/dev_package/%1$s. El desarrollo, la instalación y las pruebas se realizan solo aquí.</string>
     <string name="plugin_creation_update_sandbox_package_dev">Primero actualiza SandboxPackage_DEV.</string>
@@ -7377,8 +7377,8 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="market_review_step_scheduled">Pendiente de publicación</string>
     <string name="market_review_step_unlisted">No listado</string>
     <string name="artifact_publish_stage_resolving_release_asset">Verificando activos de GitHub Release</string>
-    <string name="operit2_version_warning_title">¿Confirmar compatibilidad con Operit 2?</string>
-    <string name="operit2_version_warning_message">Esto permitirá que Operit 2 use este complemento. Asegúrate de que el complemento funcione correctamente en Operit 2.</string>
+    <string name="operit2_version_warning_title">¿Confirmar compatibilidad con GOOG 2?</string>
+    <string name="operit2_version_warning_message">Esto permitirá que GOOG 2 use este complemento. Asegúrate de que el complemento funcione correctamente en GOOG 2.</string>
     <string name="market_filter_featured_only">Destacados</string>
     <string name="market_detail_deleting_comment">Eliminando comentario</string>
     <string name="market_detail_deleting_comment_message">Espera, sincronizando con el servidor…</string>

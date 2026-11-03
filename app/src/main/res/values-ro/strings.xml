@@ -1113,7 +1113,7 @@
     <string name="agreement_subtitle">Vă rugăm să citiți cu atenție și să acceptați următoarele condiții înainte de utilizare.</string>
     <string name="agreement_version">Versiunea acordului:%1$s</string>
     <string name="agreement_human_readable_title">Versiunea simplificată a acordului (nu este versiunea juridică)</string>
-    <string name="agreement_human_readable_content">Descrierea limitelor serviciului:Operit Nu se oferă servicii de interacțiune emoțională antropomorfă destinate publicului larg.Operit Este un client open-source care rulează local pe dispozitivul utilizatorului; nu operează servicii de inferență a modelelor, nu găzduiește sesiuni de chat sau date de interacțiune și nu distribuie utilizatorilor datele de autentificare ale modelelor partajate. Solicitările către modelele din cloud sunt trimise direct de pe dispozitiv către furnizorul de modele selectat, utilizând datele de autentificare configurate de utilizator, iar datele relevante sunt supuse regulilor respectivului furnizor; modelele locale efectuează inferența în interiorul dispozitivului.\n\nAceastă aplicație poate accesa fișiere, terminalul, funcțiile de automatizare,Root,ADB și capacități precum extensiile. Vă rugăm să verificați conținutul înainte de a efectua operațiunile, să faceți o copie de rezervă a datelor importante și să acordați permisiunile cu prudență; orice pierderi legate de dispozitiv, date, conturi sau de altă natură, cauzate de acțiunile utilizatorului, configurația utilizatorului, serviciile terțe sau extensiile terțe, vor fi gestionate de către persoana care a efectuat operațiunea, în conformitate cu legislația aplicabilă.\n\nPlugin-uri, scripturi și alte elemente de la terți disponibile pe piața de plugin-uri,Skill, kiturile de instrumente și alte conținuturi, ale căror drepturi de autor și responsabilități aferente aparțin autorilor sau titularilor de drepturi menționați. Prezentarea sau instalarea pe piață nu implică Operit Nu oferim nicio garanție, aviz de conformitate sau drepturi asupra acestui conținut. Vă rugăm să verificați personal statutul licenței și al drepturilor înainte de utilizare, modificare, publicare sau redistribuire.</string>
+    <string name="agreement_human_readable_content">Descrierea limitelor serviciului:GOOG Nu se oferă servicii de interacțiune emoțională antropomorfă destinate publicului larg.GOOG Este un client open-source care rulează local pe dispozitivul utilizatorului; nu operează servicii de inferență a modelelor, nu găzduiește sesiuni de chat sau date de interacțiune și nu distribuie utilizatorilor datele de autentificare ale modelelor partajate. Solicitările către modelele din cloud sunt trimise direct de pe dispozitiv către furnizorul de modele selectat, utilizând datele de autentificare configurate de utilizator, iar datele relevante sunt supuse regulilor respectivului furnizor; modelele locale efectuează inferența în interiorul dispozitivului.\n\nAceastă aplicație poate accesa fișiere, terminalul, funcțiile de automatizare,Root,ADB și capacități precum extensiile. Vă rugăm să verificați conținutul înainte de a efectua operațiunile, să faceți o copie de rezervă a datelor importante și să acordați permisiunile cu prudență; orice pierderi legate de dispozitiv, date, conturi sau de altă natură, cauzate de acțiunile utilizatorului, configurația utilizatorului, serviciile terțe sau extensiile terțe, vor fi gestionate de către persoana care a efectuat operațiunea, în conformitate cu legislația aplicabilă.\n\nPlugin-uri, scripturi și alte elemente de la terți disponibile pe piața de plugin-uri,Skill, kiturile de instrumente și alte conținuturi, ale căror drepturi de autor și responsabilități aferente aparțin autorilor sau titularilor de drepturi menționați. Prezentarea sau instalarea pe piață nu implică GOOG Nu oferim nicio garanție, aviz de conformitate sau drepturi asupra acestui conținut. Vă rugăm să verificați personal statutul licenței și al drepturilor înainte de utilizare, modificare, publicare sau redistribuire.</string>
     <string name="agreement_serious_title">Versiunea riguroasă a acordului juridic</string>
     <string name="agreement_serious_content">
         &lt;p&gt;&lt;b&gt;Operit Termenii și condițiile de utilizare și politica de confidențialitate&lt;/b&gt;&lt;br&gt;Versiune:2026-07-15; Data prevăzută pentru intrarea în vigoare:2026 an 7 Luna 15 Zi.&lt;/p&gt;
@@ -1705,7 +1705,7 @@
     <string name="permission_guide_intro_2_title">O trusă de instrumente puternică concepută pentru pasionații de tehnologie și dezvoltatori</string>
     <string name="permission_guide_intro_2_desc">Cu peste40O serie de instrumente profesionale, care acoperă gestionarea fișierelor, solicitările de rețea, executarea scripturilor și controlul sistemului. Împreună cu un sistem puternic de pluginuri, puteți automatiza sarcinile și obține un control complet asupra dispozitivului dumneavoastră.</string>
     <string name="permission_guide_intro_3_title">Dă frâu liber creativității, fii mereu pregătit</string>
-    <string name="permission_guide_intro_3_desc">Fie că este vorba de proiectarea paginilor web, gestionarea fișierelor media sau activarea oricând prin fereastra flotantăAI,OperitToate acestea vă oferă un mediu de creație și asistență puternic, flexibil și sigur. Datele dvs. sunt sub controlul dvs.</string>
+    <string name="permission_guide_intro_3_desc">Fie că este vorba de proiectarea paginilor web, gestionarea fișierelor media sau activarea oricând prin fereastra flotantăAI,GOOGToate acestea vă oferă un mediu de creație și asistență puternic, flexibil și sigur. Datele dvs. sunt sub controlul dvs.</string>
     <string name="permission_guide_intro_page_indicator">Prezentarea funcțiilor %1$d/%2$d</string>
 
     <!-- 调试模式 -->
@@ -2102,7 +2102,7 @@
     <string name="tool_user_agreement">Acordul de utilizare</string>
     <string name="tool_user_agreement_desc">Consultați Termenii și condițiile de utilizare și Politica de confidențialitate ale aplicației</string>
     <string name="tool_default_assistant_guide">Setările implicite ale Asistentului</string>
-    <string name="tool_default_assistant_guide_desc">SetăriOperitAsistența vocală este setată ca asistență implicită a sistemului</string>
+    <string name="tool_default_assistant_guide_desc">SetăriGOOGAsistența vocală este setată ca asistență implicită a sistemului</string>
     <string name="tool_terminal">Terminalul de comenzi</string>
     <string name="tool_terminal_desc">Un terminal de linie de comandă puternic, care execută comenzi de sistem</string>
     <string name="tool_terminal_auto_config">Configurarea automată a terminalelor</string>
@@ -4675,9 +4675,9 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="min_supported_app_version">Versiunea minimă acceptată a software-ului</string>
     <string name="max_supported_app_version">Versiunea maximă acceptată a software-ului</string>
     <string name="min_supported_version_input_hint">Câmp obligatoriu. Vă rugăm să introduceți `1.10.0` sau `1.10.0+5` Un astfel de număr de versiune</string>
-    <string name="max_supported_version_input_hint">Opțional, dacă se lasă necompletat, se utilizează valoarea implicită 1.99.99. Completați 2.0.0 Și cele de mai sus vor fi permise Operit 2 Utilizare</string>
-    <string name="operit2_version_warning_title">Confirmare acceptare Operit 2?</string>
-    <string name="operit2_version_warning_message">Acest lucru va permite Operit 2 Utilizați acest plugin. Asigurați-vă că pluginul este compatibil cu Operit 2 Funcționează normal.</string>
+    <string name="max_supported_version_input_hint">Opțional, dacă se lasă necompletat, se utilizează valoarea implicită 1.99.99. Completați 2.0.0 Și cele de mai sus vor fi permise GOOG 2 Utilizare</string>
+    <string name="operit2_version_warning_title">Confirmare acceptare GOOG 2?</string>
+    <string name="operit2_version_warning_message">Acest lucru va permite GOOG 2 Utilizați acest plugin. Asigurați-vă că pluginul este compatibil cu GOOG 2 Funcționează normal.</string>
     <string name="publish_failed_title">Eșec la publicare</string>
     <string name="retry_market_registration">Reîncercarea înregistrării pe piață</string>
     <string name="update_to_market">Actualizare în magazin</string>
@@ -5059,7 +5059,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="custom">Personalizare</string>
 
     <!-- Voice Assistant Widget -->
-    <string name="voice_assistant_widget_description">Pornire rapidă Operit Asistent vocal</string>
+    <string name="voice_assistant_widget_description">Pornire rapidă GOOG Asistent vocal</string>
     <string name="voice_assistant_widget_title">Asistent vocal</string>
     <string name="toolpkg_widget_host_label">Widgeturi personalizate</string>
     <string name="toolpkg_widget_host_description">După adăugare, poate fi asociat cu pagina unui widget înregistrat de un anumit plugin</string>
@@ -5210,13 +5210,13 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
 
     <!-- 默认助手设置引导 -->
     <string name="default_assistant_guide_title">Setarea asistentului vocal implicit</string>
-    <string name="default_assistant_guide_subtitle">SăOperitSă fiu asistentul tău inteligent</string>
-    <string name="default_assistant_guide_intro">VaOperitDupă ce l-ați setat ca asistent implicit al sistemului, puteți, prin apăsarea îndelungatăHomeApăsați tasta sau folosiți activarea vocală pentru pornire rapidăOperitAsistentul vocal, pentru o experiență mai comodăAIExperiența interactivă.</string>
+    <string name="default_assistant_guide_subtitle">SăGOOGSă fiu asistentul tău inteligent</string>
+    <string name="default_assistant_guide_intro">VaGOOGDupă ce l-ați setat ca asistent implicit al sistemului, puteți, prin apăsarea îndelungatăHomeApăsați tasta sau folosiți activarea vocală pentru pornire rapidăGOOGAsistentul vocal, pentru o experiență mai comodăAIExperiența interactivă.</string>
     <string name="default_assistant_guide_steps_title">Pași de configurare</string>
 
     <!-- 步骤1: 设置为默认助理 -->
     <string name="default_assistant_guide_step1_title">Setează ca asistent implicit</string>
-    <string name="default_assistant_guide_step1_desc">Va Operit Setați ca aplicație implicită de asistență digitală a sistemului</string>
+    <string name="default_assistant_guide_step1_desc">Va GOOG Setați ca aplicație implicită de asistență digitală a sistemului</string>
     <string name="default_assistant_guide_step1_detail1">• Deschideți Setări sistem → Aplicații → Aplicații implicite → Aplicația Asistent digital</string>
     <string name="default_assistant_guide_step1_detail2">• Găsiți și selectați „” din lista de aplicații a asistentuluiGOOG"</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: Setări → Aplicații → Aplicații implicite → Aplicația Asistent digital → Aplicația implicită pentru Asistentul digital</string>
@@ -5225,7 +5225,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <!-- 步骤2: 配置启动手势 -->
     <string name="default_assistant_guide_open_gesture_settings">Deschide setările pentru gesturi</string>
     <string name="default_assistant_guide_step2_title">Configurarea gesturilor de pornire</string>
-    <string name="default_assistant_guide_step2_desc">Setări pentru activare rapidă Operit asistent</string>
+    <string name="default_assistant_guide_step2_desc">Setări pentru activare rapidă GOOG asistent</string>
     <string name="default_assistant_guide_step2_detail1">• Apăsați și țineți apăsatHomeTastă: cea mai utilizată metodă, disponibilă pe majoritatea dispozitivelor</string>
     <string name="default_assistant_guide_step2_detail2">• Glisați în sus din partea de jos a ecranului: anumite dispozitive care acceptă gesturile pentru ecranul integral</string>
     <string name="default_assistant_guide_step2_detail_android12">Android 12+: Setări → Aplicații → Aplicații implicite → Aplicația Asistent digital → Aplicația implicită pentru Asistentul digital</string>
@@ -5235,19 +5235,19 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <!-- 步骤4: 测试语音助手 -->
     <string name="default_assistant_guide_step4_title">Testarea asistentului vocal</string>
     <string name="default_assistant_guide_step4_desc">După finalizarea configurării, verificați dacă sistemul pornește corect</string>
-    <string name="default_assistant_guide_step4_detail1">• Apăsați și țineți apăsatHomeTasta (butonul de pe ecranul principal) ar trebui să activeze Operit Asistent vocal</string>
-    <string name="default_assistant_guide_step4_detail2">• Dacă dispozitivul acceptă activarea prin comandă vocală, spuneți „Hey Google„Este posibil ca și cuvintele de activare specificate de dispozitiv să declanșeze această funcție” Operit</string>
+    <string name="default_assistant_guide_step4_detail1">• Apăsați și țineți apăsatHomeTasta (butonul de pe ecranul principal) ar trebui să activeze GOOG Asistent vocal</string>
+    <string name="default_assistant_guide_step4_detail2">• Dacă dispozitivul acceptă activarea prin comandă vocală, spuneți „Hey Google„Este posibil ca și cuvintele de activare specificate de dispozitiv să declanșeze această funcție” GOOG</string>
 
     <!-- 步骤3: 测试助手功能 -->
     <string name="default_assistant_guide_step3_title">Funcția Asistent de testare</string>
-    <string name="default_assistant_guide_step3_desc">După finalizarea configurării, efectuați un test Operit Se poate activa în mod normal?</string>
+    <string name="default_assistant_guide_step3_desc">După finalizarea configurării, efectuați un test GOOG Se poate activa în mod normal?</string>
     <string name="default_assistant_guide_step3_detail1">• Folosiți gesturile pe care le-ați configurat (de exemplu, apăsarea îndelungatăHome(Tastă) Activare asistent</string>
-    <string name="default_assistant_guide_step3_detail2">• Dacă operațiunea are succes, ar trebui să vedeți Operit Interfața asistentului vocal</string>
+    <string name="default_assistant_guide_step3_detail2">• Dacă operațiunea are succes, ar trebui să vedeți GOOG Interfața asistentului vocal</string>
     <string name="default_assistant_guide_step3_detail3">• Puteți încerca să interacționați cu asistentul vorbind sau introducând text</string>
 
     <!-- 疑难解答 -->
     <string name="default_assistant_guide_troubleshooting_title">Ai vreo problemă?</string>
-    <string name="default_assistant_guide_troubleshooting_content">Dacă nu îl găsiți în listăOperit, vă rugăm să vă asigurați că:\n\n• Aplicația a fost instalată corect și nu a fost dezactivată\n• Au fost acordate permisiunile necesare (microfon, fereastră flotantă etc.)\n• Încercați să reconfigurați dispozitivul după ce îl reporniți\n\nAnumite sisteme personalizate pot restricționa utilizarea aplicațiilor terțe ca asistenți impliciți; în acest caz, puteți utiliza în continuare aplicația prin intermediul funcției de fereastră plutitoare din cadrul acesteiaOperit.</string>
+    <string name="default_assistant_guide_troubleshooting_content">Dacă nu îl găsiți în listăGOOG, vă rugăm să vă asigurați că:\n\n• Aplicația a fost instalată corect și nu a fost dezactivată\n• Au fost acordate permisiunile necesare (microfon, fereastră flotantă etc.)\n• Încercați să reconfigurați dispozitivul după ce îl reporniți\n\nAnumite sisteme personalizate pot restricționa utilizarea aplicațiilor terțe ca asistenți impliciți; în acest caz, puteți utiliza în continuare aplicația prin intermediul funcției de fereastră plutitoare din cadrul acesteiaGOOG.</string>
 
     <!-- Voice Interaction Service -->
     <string name="voice_interaction_service_name">GOOG asistent</string>
@@ -5542,7 +5542,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="software_identity_title">Logo-ul software-ului</string>
     <string name="software_identity_description">Modificați sigla aplicației afișată în partea de sus a barei laterale.</string>
     <string name="software_identity_option_operit">GOOG</string>
-    <string name="software_identity_option_lingshu">Ling Shu AI</string>
+    <string name="software_identity_option_lingshu">GG工坊</string>
     <string name="reset_all_display_settings">Resetează toate setările de afișare</string>
     <string name="ui_accessibility_mode">Modul de adaptare pentru accesibilitate</string>
     <string name="ui_accessibility_mode_description">Pentru TalkBack Optimizări pentru utilizatorii cu dizabilități etc. UI În cazul operațiunilor automate, se vor prezenta în primul rând pașii de operare care pot fi citiți cu voce tare, iar clicurile automate se vor efectua cu prudență.</string>
@@ -5734,7 +5734,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="backup_select_export_format">Alegeți formatul de export</string>
     <string name="backup_select_format_hint">Vă rugăm să selectați formatul în care doriți să exportați istoricul conversațiilor:</string>
     <string name="backup_format_json">JSON(Recomandat)</string>
-    <string name="backup_format_json_desc">Operit Format nativ, care păstrează integral toate datele, inclusiv comutarea mesajelor</string>
+    <string name="backup_format_json_desc">GOOG Format nativ, care păstrează integral toate datele, inclusiv comutarea mesajelor</string>
     <string name="backup_format_markdown">Markdown</string>
     <string name="backup_format_markdown_desc">Un format de marcare ușor, ușor de citit și de editat</string>
     <string name="backup_format_html">HTML</string>
@@ -5745,7 +5745,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <!-- 导入格式选择 -->
     <string name="backup_select_import_format">Alegeți formatul de import</string>
     <string name="backup_import_format_hint">Vă rugăm să selectați formatul în care doriți să importați istoricul conversațiilor:</string>
-    <string name="backup_format_operit">Operit JSON(Recomandat)</string>
+    <string name="backup_format_operit">GOOG JSON(Recomandat)</string>
     <string name="backup_format_operit_desc">Formatul nativ al acestei aplicații, care păstrează integral toate datele, inclusiv comutarea mesajelor</string>
     <string name="backup_format_chatgpt">ChatGPT</string>
     <string name="backup_format_chatgpt_desc">OpenAI ChatGPT conversations.json Formate de export</string>
@@ -5855,7 +5855,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
 
     <!-- Logcat -->
     <string name="logcat_no_logs_to_save">Nu există jurnale care pot fi salvate</string>
-    <string name="logcat_header">=== Operit Jurnal ===</string>
+    <string name="logcat_header">=== GOOG Jurnal ===</string>
     <string name="logcat_date">Data: %1$s</string>
     <string name="logcat_total_count">Numărul total de articole: %1$d</string>
     <string name="logcat_save_failed">Eroare la salvare:%1$s</string>
@@ -7381,15 +7381,15 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="chat_summarize_generation_failed">Eșecul generării rezumatului: %1$s</string>
 
     <!-- AIForegroundService (新增) -->
-    <string name="service_operit_running">Operit În curs de execuție</string>
+    <string name="service_operit_running">GOOG În curs de execuție</string>
     <string name="service_chat_complete_reminder">Notificare privind finalizarea conversației</string>
     <string name="service_chat_complete_reminder_sound">Notificare privind finalizarea conversației (semnal sonor)</string>
     <string name="service_chat_complete_reminder_vibration">Notificare privind finalizarea conversației (vibrație)</string>
     <string name="service_chat_complete_reminder_sound_vibration">Notificare la finalizarea conversației (sunet și vibrație)</string>
-    <string name="service_keep_background">Menținere Operit Se execută în fundal.</string>
+    <string name="service_keep_background">Menținere GOOG Se execută în fundal.</string>
     <string name="service_notify_when_complete">Te va avertiza după finalizarea conversației.</string>
-    <string name="service_running_wake_pause">Operit În curs de execuție (în așteptare)</string>
-    <string name="service_running_wake_listening">Operit În execuție (în așteptare de activare)</string>
+    <string name="service_running_wake_pause">GOOG În curs de execuție (în așteptare)</string>
+    <string name="service_running_wake_listening">GOOG În execuție (în așteptare de activare)</string>
     <string name="service_running_stats">Fereastra de dialog de execuție %1$d · Instrumente de apelare %2$d</string>
     <string name="service_running_http_listening">Extern HTTP Se monitorizează portul %1$d</string>
     <string name="service_running_with_http">%1$s · Extern HTTP %2$d</string>

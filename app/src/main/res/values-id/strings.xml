@@ -1488,7 +1488,7 @@
     <string name="agreement_subtitle">Harap baca dan setujui ketentuan berikut sebelum menggunakan.</string>
     <string name="agreement_version">Versi perjanjian: %1$s</string>
     <string name="agreement_human_readable_title">Versi Perjanjian Mudah Dipahami (Bukan Versi Hukum)</string>
-    <string name="agreement_human_readable_content">Batas layanan: Operit tidak menyediakan layanan interaksi emosional antropomorfik untuk publik. Operit adalah klien sumber terbuka yang berjalan secara lokal di perangkat pengguna. Operit tidak mengoperasikan layanan inferensi model, tidak menghosting sesi chat atau data interaksi, dan tidak membagikan kredensial model bersama. Permintaan model cloud dikirim langsung dari perangkat Anda ke penyedia model yang Anda konfigurasi dengan kredensial Anda sendiri; data terkait tunduk pada aturan penyedia tersebut. Model lokal melakukan inferensi di perangkat Anda.\n\nAplikasi ini dapat memanggil file, terminal, otomatisasi, Root, ADB, ekstensi, dan kemampuan serupa. Periksa operasi sebelum menjalankannya, cadangkan data penting, dan berikan izin dengan hati-hati. Kerugian atas perangkat, data, akun, atau kepentingan lain yang disebabkan oleh tindakan pengguna, konfigurasi pengguna, layanan pihak ketiga, atau ekstensi pihak ketiga harus ditangani oleh operator sebenarnya menurut hukum yang berlaku.\n\nPlugin, skrip, Skill, toolkit, dan konten pihak ketiga lain di marketplace adalah milik penulis atau pemegang hak yang tercantum, beserta tanggung jawab terkait. Penayangan atau pemasangan dari marketplace tidak berarti Operit menjamin, mendukung, atau memperoleh hak atas konten tersebut. Pastikan lisensi dan status hak sebelum menggunakan, memodifikasi, menerbitkan, atau mendistribusikannya kembali.</string>
+    <string name="agreement_human_readable_content">Batas layanan: GOOG tidak menyediakan layanan interaksi emosional antropomorfik untuk publik. GOOG adalah klien sumber terbuka yang berjalan secara lokal di perangkat pengguna. GOOG tidak mengoperasikan layanan inferensi model, tidak menghosting sesi chat atau data interaksi, dan tidak membagikan kredensial model bersama. Permintaan model cloud dikirim langsung dari perangkat Anda ke penyedia model yang Anda konfigurasi dengan kredensial Anda sendiri; data terkait tunduk pada aturan penyedia tersebut. Model lokal melakukan inferensi di perangkat Anda.\n\nAplikasi ini dapat memanggil file, terminal, otomatisasi, Root, ADB, ekstensi, dan kemampuan serupa. Periksa operasi sebelum menjalankannya, cadangkan data penting, dan berikan izin dengan hati-hati. Kerugian atas perangkat, data, akun, atau kepentingan lain yang disebabkan oleh tindakan pengguna, konfigurasi pengguna, layanan pihak ketiga, atau ekstensi pihak ketiga harus ditangani oleh operator sebenarnya menurut hukum yang berlaku.\n\nPlugin, skrip, Skill, toolkit, dan konten pihak ketiga lain di marketplace adalah milik penulis atau pemegang hak yang tercantum, beserta tanggung jawab terkait. Penayangan atau pemasangan dari marketplace tidak berarti GOOG menjamin, mendukung, atau memperoleh hak atas konten tersebut. Pastikan lisensi dan status hak sebelum menggunakan, memodifikasi, menerbitkan, atau mendistribusikannya kembali.</string>
     <string name="agreement_serious_title">Perjanjian Hukum Versi Ketat</string>
     <string name="agreement_serious_content"><![CDATA[
         <p><b>Perjanjian Pengguna dan Kebijakan Privasi Operit</b><br>Versi: 2026-07-15; tanggal berlaku yang direncanakan: 15 Juli 2026.</p>
@@ -1832,7 +1832,7 @@
     <string name="permission_guide_intro_2_title">Kotak Peralatan Kuat untuk Geek dan Pengembang</string>
     <string name="permission_guide_intro_2_desc">Dilengkapi lebih dari 40 alat profesional, mencakup manajemen file, permintaan jaringan, eksekusi skrip, dan kontrol sistem. Dikombinasikan dengan sistem plugin yang kuat, Anda dapat mengotomatisasi tugas dan mengendalikan perangkat Anda secara mendalam.</string>
     <string name="permission_guide_intro_3_title">Lepaskan Kreativitas, Siap Kapan Saja</string>
-    <string name="permission_guide_intro_3_desc">Baik merancang halaman web, memproses file media, atau membangunkan AI kapan saja melalui jendela mengambang, Operit menyediakan lingkungan kreasi dan bantuan yang kuat, fleksibel, dan aman. Data Anda, di bawah kendali Anda.</string>
+    <string name="permission_guide_intro_3_desc">Baik merancang halaman web, memproses file media, atau membangunkan AI kapan saja melalui jendela mengambang, GOOG menyediakan lingkungan kreasi dan bantuan yang kuat, fleksibel, dan aman. Data Anda, di bawah kendali Anda.</string>
     <string name="permission_guide_intro_page_indicator">Fitur %1$d/%2$d</string>
     <string name="debugger_accessibility_fallback_title">Skema Akselerasi Aksesibilitas (Risiko Tinggi)</string>
     <string name="debugger_accessibility_fallback_description">Mode debug secara default menjalankan operasi UI melalui Shell. Mengaktifkan layanan aksesibilitas dapat mempercepat otomatisasi UI secara signifikan, tetapi akan meningkatkan risiko terdeteksi oleh beberapa aplikasi dan menyebabkan pemblokiran akun. Kecuali Anda mengejar kecepatan operasi tertinggi, tidak disarankan untuk mengaktifkannya.</string>
@@ -1915,7 +1915,7 @@
     <string name="tool_user_agreement">Perjanjian Pengguna</string>
     <string name="tool_user_agreement_desc">Lihat perjanjian pengguna dan kebijakan privasi aplikasi</string>
     <string name="tool_default_assistant_guide">Pengaturan Asisten Bawaan</string>
-    <string name="tool_default_assistant_guide_desc">Atur Operit Voice Floating sebagai asisten bawaan sistem</string>
+    <string name="tool_default_assistant_guide_desc">Atur GOOG Voice Floating sebagai asisten bawaan sistem</string>
     <string name="tool_terminal">Terminal Perintah</string>
     <string name="tool_terminal_desc">Terminal baris perintah yang kuat, jalankan instruksi sistem</string>
     <string name="tool_terminal_auto_config">Konfigurasi Otomatis Terminal</string>
@@ -4306,7 +4306,7 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="emoji_preview">Pratinjau Emoji</string>
     <string name="create_group">Buat Grup</string>
     <string name="custom">Kustom</string>
-    <string name="voice_assistant_widget_description">Luncurkan cepat asisten suara Operit</string>
+    <string name="voice_assistant_widget_description">Luncurkan cepat asisten suara GOOG</string>
 
     <string name="global_permission_switch_description">Pengaturan ini berfungsi sebagai kontrol utama dan dapat menggantikan izin alat individual.</string>
     <string name="permission_level_allow">Izinkan</string>
@@ -4606,18 +4606,18 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="time_hours_ago">%1$d jam yang lalu</string>
     <string name="time_days_ago">%1$d hari yang lalu</string>
     <string name="default_assistant_guide_title">Atur Asisten Suara Default</string>
-    <string name="default_assistant_guide_subtitle">Jadikan Operit sebagai asisten pintar Anda</string>
-    <string name="default_assistant_guide_intro">Setelah mengatur Operit sebagai asisten default sistem, Anda dapat meluncurkan asisten suara Operit dengan cepat dengan menekan lama tombol Home atau menggunakan pemicu suara, untuk mendapatkan pengalaman interaksi AI yang lebih nyaman.</string>
+    <string name="default_assistant_guide_subtitle">Jadikan GOOG sebagai asisten pintar Anda</string>
+    <string name="default_assistant_guide_intro">Setelah mengatur GOOG sebagai asisten default sistem, Anda dapat meluncurkan asisten suara GOOG dengan cepat dengan menekan lama tombol Home atau menggunakan pemicu suara, untuk mendapatkan pengalaman interaksi AI yang lebih nyaman.</string>
     <string name="default_assistant_guide_steps_title">Langkah Pengaturan</string>
     <string name="default_assistant_guide_step1_title">Atur sebagai Asisten Default</string>
-    <string name="default_assistant_guide_step1_desc">Atur Operit sebagai aplikasi asisten digital default sistem</string>
+    <string name="default_assistant_guide_step1_desc">Atur GOOG sebagai aplikasi asisten digital default sistem</string>
     <string name="default_assistant_guide_step1_detail1">• Buka Pengaturan sistem → Aplikasi → Aplikasi default → Aplikasi asisten digital</string>
     <string name="default_assistant_guide_step1_detail2">• Temukan dan pilih "GOOG" dalam daftar aplikasi asisten</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: Pengaturan → Aplikasi → Aplikasi default → Aplikasi asisten digital → Aplikasi asisten digital default</string>
     <string name="default_assistant_guide_open_settings">Buka pengaturan asisten</string>
     <string name="default_assistant_guide_open_gesture_settings">Buka pengaturan gestur</string>
     <string name="default_assistant_guide_step2_title">Konfigurasi Gestur Peluncuran</string>
-    <string name="default_assistant_guide_step2_desc">Atur cara memanggil asisten Operit dengan cepat</string>
+    <string name="default_assistant_guide_step2_desc">Atur cara memanggil asisten GOOG dengan cepat</string>
     <string name="default_assistant_guide_step2_detail1">• Tekan lama tombol Home: Cara paling umum, tersedia di sebagian besar perangkat</string>
     <string name="default_assistant_guide_step2_detail2">• Geser ke atas dari bagian bawah layar: Untuk beberapa perangkat yang mendukung gestur layar penuh</string>
     <string name="default_assistant_guide_step2_detail_android12">Android 12+: Pengaturan → Aplikasi → Aplikasi default → Aplikasi asisten digital → Aplikasi asisten digital default</string>
@@ -4625,15 +4625,15 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="default_assistant_guide_step2_note">Catatan: Pengaturan gestur dapat berbeda di ponsel merek yang berbeda, periksa opsi yang tersedia di pengaturan sistem</string>
     <string name="default_assistant_guide_step4_title">Uji Asisten Suara</string>
     <string name="default_assistant_guide_step4_desc">Setelah pengaturan selesai, uji apakah dapat diluncurkan dengan normal</string>
-    <string name="default_assistant_guide_step4_detail1">• Menekan lama tombol Home (tombol layar utama) seharusnya memunculkan asisten suara Operit</string>
-    <string name="default_assistant_guide_step4_detail2">• Jika perangkat mendukung pemicu suara, mengucapkan "Hey Google" atau kata pemicu yang ditentukan perangkat juga dapat memicu Operit</string>
+    <string name="default_assistant_guide_step4_detail1">• Menekan lama tombol Home (tombol layar utama) seharusnya memunculkan asisten suara GOOG</string>
+    <string name="default_assistant_guide_step4_detail2">• Jika perangkat mendukung pemicu suara, mengucapkan "Hey Google" atau kata pemicu yang ditentukan perangkat juga dapat memicu GOOG</string>
     <string name="default_assistant_guide_step3_title">Uji Fungsi Asisten</string>
-    <string name="default_assistant_guide_step3_desc">Setelah pengaturan selesai, uji apakah Operit dapat dipanggil dengan normal</string>
+    <string name="default_assistant_guide_step3_desc">Setelah pengaturan selesai, uji apakah GOOG dapat dipanggil dengan normal</string>
     <string name="default_assistant_guide_step3_detail1">• Gunakan gestur yang Anda atur (seperti menekan lama tombol Home) untuk memanggil asisten</string>
-    <string name="default_assistant_guide_step3_detail2">• Jika berhasil, Anda akan melihat antarmuka asisten suara Operit</string>
+    <string name="default_assistant_guide_step3_detail2">• Jika berhasil, Anda akan melihat antarmuka asisten suara GOOG</string>
     <string name="default_assistant_guide_step3_detail3">• Anda dapat mencoba berbicara atau mengetik teks untuk berinteraksi dengan asisten</string>
     <string name="default_assistant_guide_troubleshooting_title">Mengalami masalah?</string>
-    <string name="default_assistant_guide_troubleshooting_content">Jika tidak dapat menemukan Operit dalam daftar, pastikan:\n\n• Aplikasi telah diinstal dengan benar dan tidak dinonaktifkan\n• Izin yang diperlukan telah diberikan (mikrofon, jendela mengambang, dll.)\n• Coba restart perangkat dan atur ulang\n\nBeberapa sistem kustom mungkin membatasi aplikasi pihak ketiga sebagai asisten default. Jika mengalami hal ini, Anda masih dapat menggunakan Operit melalui fungsi jendela mengambang dalam aplikasi.</string>
+    <string name="default_assistant_guide_troubleshooting_content">Jika tidak dapat menemukan GOOG dalam daftar, pastikan:\n\n• Aplikasi telah diinstal dengan benar dan tidak dinonaktifkan\n• Izin yang diperlukan telah diberikan (mikrofon, jendela mengambang, dll.)\n• Coba restart perangkat dan atur ulang\n\nBeberapa sistem kustom mungkin membatasi aplikasi pihak ketiga sebagai asisten default. Jika mengalami hal ini, Anda masih dapat menggunakan GOOG melalui fungsi jendela mengambang dalam aplikasi.</string>
     <string name="voice_interaction_service_name">Asisten GOOG</string>
     <string name="voice_interaction_service_summary">Layanan asisten suara pintar</string>
     <string name="tool_permissions_title">Izin Alat</string>
@@ -4826,7 +4826,7 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="uidebugger_element_info_package_name">Nama paket: %1$s</string>
     <string name="uidebugger_element_info_size_px">Ukuran: %1$d×%2$dpx</string>
     <string name="logcat_no_logs_to_save">Tidak ada log yang dapat disimpan</string>
-    <string name="logcat_header">=== Log Operit ===</string>
+    <string name="logcat_header">=== Log GOOG ===</string>
     <string name="logcat_date">Tanggal: %1$s</string>
     <string name="logcat_total_count">Jumlah total: %1$d</string>
     <string name="logcat_save_failed">Gagal menyimpan: %1$s</string>
@@ -4926,7 +4926,7 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="backup_select_export_format">Pilih format ekspor</string>
     <string name="backup_select_format_hint">Silakan pilih format riwayat percakapan yang akan diekspor:</string>
     <string name="backup_format_json">JSON (Direkomendasikan)</string>
-    <string name="backup_format_json_desc">Format asli Operit, mempertahankan semua data secara lengkap</string>
+    <string name="backup_format_json_desc">Format asli GOOG, mempertahankan semua data secara lengkap</string>
     <string name="backup_format_markdown">Markdown</string>
     <string name="backup_format_markdown_desc">Format markup ringan, mudah dibaca dan diedit</string>
     <string name="backup_format_html">HTML</string>
@@ -4935,7 +4935,7 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="backup_format_txt_desc">Format teks sederhana, mudah dibagikan</string>
     <string name="backup_select_import_format">Pilih format impor</string>
     <string name="backup_import_format_hint">Silakan pilih format riwayat percakapan yang akan diimpor:</string>
-    <string name="backup_format_operit">Operit JSON (Direkomendasikan)</string>
+    <string name="backup_format_operit">GOOG JSON (Direkomendasikan)</string>
     <string name="backup_format_operit_desc">Format asli aplikasi ini, mempertahankan semua data secara lengkap</string>
     <string name="backup_format_chatgpt">ChatGPT</string>
     <string name="backup_format_chatgpt_desc">Format ekspor conversations.json OpenAI ChatGPT</string>
@@ -6364,15 +6364,15 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
 
     <string name="chat_summarize_failed_no_valid_summary">Ringkasan gagal: Tidak dapat menghasilkan ringkasan yang valid</string>
     <string name="chat_summarize_generation_failed">Pembuatan ringkasan gagal: %1$s</string>
-    <string name="service_operit_running">Operit sedang berjalan</string>
+    <string name="service_operit_running">GOOG sedang berjalan</string>
     <string name="service_chat_complete_reminder">Pengingat percakapan selesai</string>
     <string name="service_chat_complete_reminder_sound">Pengingat percakapan selesai (suara)</string>
     <string name="service_chat_complete_reminder_vibration">Pengingat percakapan selesai (getaran)</string>
     <string name="service_chat_complete_reminder_sound_vibration">Pengingat percakapan selesai (suara dan getaran)</string>
-    <string name="service_keep_background">Jaga Operit tetap berjalan di latar belakang.</string>
+    <string name="service_keep_background">Jaga GOOG tetap berjalan di latar belakang.</string>
     <string name="service_notify_when_complete">Ingatkan Anda setelah percakapan selesai.</string>
-    <string name="service_running_wake_pause">Operit sedang berjalan (bangun dijeda)</string>
-    <string name="service_running_wake_listening">Operit sedang berjalan (bangun sedang mendengarkan)</string>
+    <string name="service_running_wake_pause">GOOG sedang berjalan (bangun dijeda)</string>
+    <string name="service_running_wake_listening">GOOG sedang berjalan (bangun sedang mendengarkan)</string>
     <string name="service_running_stats">Percakapan berjalan %1$d · Alat dipanggil %2$d</string>
     <string name="service_running_http_listening">HTTP eksternal sedang mendengarkan port %1$d</string>
     <string name="service_running_with_http">%1$s · HTTP eksternal %2$d</string>
@@ -6929,7 +6929,7 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="software_identity_title">Identitas Perangkat Lunak</string>
     <string name="software_identity_description">Ubah identitas perangkat lunak yang ditampilkan di bagian atas sidebar.</string>
     <string name="software_identity_option_operit">GOOG</string>
-    <string name="software_identity_option_lingshu">Lingshu AI</string>
+    <string name="software_identity_option_lingshu">GG工坊</string>
     <string name="chat_auto_update_memory_failed">Gagal memperbarui memori otomatis: %1$s</string>
 
     <string name="nav_group_plugins">Plugin</string>
@@ -7309,8 +7309,8 @@ Sekarang Anda dapat menggunakan mode AutoGLM di antarmuka percakapan.</string>
     <string name="market_review_step_scheduled">Menunggu rilis</string>
     <string name="market_review_step_unlisted">Tidak terdaftar</string>
     <string name="artifact_publish_stage_resolving_release_asset">Sedang memverifikasi aset rilis GitHub</string>
-    <string name="operit2_version_warning_title">Konfirmasi dukungan Operit 2?</string>
-    <string name="operit2_version_warning_message">Ini akan mengizinkan Operit 2 menggunakan plugin ini. Pastikan plugin berfungsi dengan baik di Operit 2.</string>
+    <string name="operit2_version_warning_title">Konfirmasi dukungan GOOG 2?</string>
+    <string name="operit2_version_warning_message">Ini akan mengizinkan GOOG 2 menggunakan plugin ini. Pastikan plugin berfungsi dengan baik di GOOG 2.</string>
     <string name="market_filter_featured_only">Pilihan</string>
     <string name="market_detail_deleting_comment">Menghapus komentar</string>
     <string name="market_detail_deleting_comment_message">Harap tunggu, sedang menyinkronkan ke server…</string>
