@@ -278,7 +278,7 @@
 
     <!-- Keys not yet present in the English resource set -->
     <string name="package_market_origin_title">外部パッケージの入手元</string>
-    <string name="package_market_origin_message">このパッケージはOperitマーケットから入手しました。\nパッケージ名：%1$s\nバージョン：%2$s\n作者：%3$s\n原作者を支援し、第三者による不正な再販売に注意してください。</string>
+    <string name="package_market_origin_message">このパッケージはGOOGマーケットから入手しました。\nパッケージ名：%1$s\nバージョン：%2$s\n作者：%3$s\n原作者を支援し、第三者による不正な再販売に注意してください。</string>
     <string name="token_stats_model_show_all">すべて表示（%1$d）</string>
     <string name="token_stats_model_collapse">折りたたむ</string>
     <string name="market_manage_submit_revision">修正版を新しいバージョンとして提出</string>

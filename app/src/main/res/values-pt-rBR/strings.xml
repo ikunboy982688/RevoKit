@@ -971,10 +971,10 @@
     <string name="agreement_human_readable_content">Limite do serviço: GOOG não fornece serviços públicos de interação emocional antropomórfica. GOOG é um cliente de código aberto que roda localmente no dispositivo do usuário. Não opera serviços de inferência de modelos, não hospeda sessões de chat ou dados de interação, e não distribui credenciais de modelo compartilhadas. Solicitações a modelos em nuvem são enviadas diretamente do seu dispositivo ao provedor de modelos que você configurar com suas próprias credenciais; os dados relacionados seguem as regras desse provedor. Modelos locais executam inferência no seu dispositivo.\n\nEste app pode chamar arquivos, terminais, automação, Root, ADB, extensões e recursos semelhantes. Verifique as operações antes de executá-las, faça backup de dados importantes e conceda permissões com cuidado. Perdas envolvendo dispositivos, dados, contas ou outros interesses causadas por ações do usuário, configuração do usuário, serviços de terceiros ou extensões de terceiros devem ser tratadas pelo operador real conforme a lei aplicável.\n\nPlugins, scripts, Skills, kits de ferramentas e outros conteúdos de terceiros no marketplace pertencem aos autores ou titulares de direitos indicados, junto com a responsabilidade relacionada. A listagem ou instalação pelo marketplace não significa que GOOG garanta, endosse ou obtenha direitos sobre esse conteúdo. Confirme a licença e o status dos direitos antes de usar, modificar, publicar ou redistribuir.</string>
     <string name="agreement_serious_title">Versão estrita do acordo legal</string>
     <string name="agreement_serious_content"><![CDATA[
-        <p><b>Contrato do Usuário e Política de Privacidade do Operit</b><br>Versão: 2026-07-15; data efetiva pretendida: 15 de julho de 2026.</p>
-        <p><b>1. Escopo e versão do contrato</b><br>Este contrato se aplica ao cliente Android lançado oficialmente pelo Operit e aos seus recursos online opcionais. Ao usar este app, você confirma que leu e aceitou a versão atual. O app registra, na inicialização, a versão do contrato que você aceitou; quando o contrato tiver atualização substancial, o app exigirá que você confirme a nova versão antes de continuar. O código aberto no repositório é licenciado sob a GNU Lesser General Public License version 3 (LGPLv3), conforme o arquivo <code>LICENSE</code> na raiz. Este contrato não exclui nem reduz direitos concedidos pela lei aplicável ou por licenças de código aberto.</p>
-        <p><b>2. Posicionamento do produto e serviços de terceiros</b><br>Operit é software cliente de código aberto. Não fornece inferência de grandes modelos de linguagem, API Keys compartilhadas, retransmissão de solicitações de chat ou hospedagem em nuvem de registros de chat. Modelos em nuvem, voz em nuvem, busca, geração de imagens, MCP e outros recursos de rede são escolhidos, configurados e ativados por você. Ao usar esses serviços, os dados são enviados diretamente ao provedor correspondente e regidos pelos termos de serviço e política de privacidade desse provedor. Você deve avaliar a segurança, legalidade e adequação de provedores, modelos, endpoints e extensões, e proteger suas credenciais.</p>
-        <p><b>3. Processamento de dados e privacidade</b><br>Registros de chat, cartões de personagem, memórias, configuração de modelos e API Keys normalmente ficam armazenados nos dados do app no seu dispositivo. Quando você exporta, faz backup, envia arquivos, usa recursos de rede de terceiros ou envia solicitações para um serviço HTTP externo, os dados relacionados serão copiados, transmitidos ou divulgados conforme suas ações. Marketplace, anúncios, verificações de atualização, login do GitHub e recursos de publicação podem acessar recursos do Operit, GitHub ou terceiros relacionados; esses recursos não retransmitem solicitações de modelos de chat. Gerencie seus dados e credenciais junto com as configurações de segurança do dispositivo, termos de terceiros e este contrato.</p>
+        <p><b>Contrato do Usuário e Política de Privacidade do GOOG</b><br>Versão: 2026-07-15; data efetiva pretendida: 15 de julho de 2026.</p>
+        <p><b>1. Escopo e versão do contrato</b><br>Este contrato se aplica ao cliente Android lançado oficialmente pelo GOOG e aos seus recursos online opcionais. Ao usar este app, você confirma que leu e aceitou a versão atual. O app registra, na inicialização, a versão do contrato que você aceitou; quando o contrato tiver atualização substancial, o app exigirá que você confirme a nova versão antes de continuar. O código aberto no repositório é licenciado sob a GNU Lesser General Public License version 3 (LGPLv3), conforme o arquivo <code>LICENSE</code> na raiz. Este contrato não exclui nem reduz direitos concedidos pela lei aplicável ou por licenças de código aberto.</p>
+        <p><b>2. Posicionamento do produto e serviços de terceiros</b><br>GOOG é software cliente de código aberto. Não fornece inferência de grandes modelos de linguagem, API Keys compartilhadas, retransmissão de solicitações de chat ou hospedagem em nuvem de registros de chat. Modelos em nuvem, voz em nuvem, busca, geração de imagens, MCP e outros recursos de rede são escolhidos, configurados e ativados por você. Ao usar esses serviços, os dados são enviados diretamente ao provedor correspondente e regidos pelos termos de serviço e política de privacidade desse provedor. Você deve avaliar a segurança, legalidade e adequação de provedores, modelos, endpoints e extensões, e proteger suas credenciais.</p>
+        <p><b>3. Processamento de dados e privacidade</b><br>Registros de chat, cartões de personagem, memórias, configuração de modelos e API Keys normalmente ficam armazenados nos dados do app no seu dispositivo. Quando você exporta, faz backup, envia arquivos, usa recursos de rede de terceiros ou envia solicitações para um serviço HTTP externo, os dados relacionados serão copiados, transmitidos ou divulgados conforme suas ações. Marketplace, anúncios, verificações de atualização, login do GitHub e recursos de publicação podem acessar recursos do GOOG, GitHub ou terceiros relacionados; esses recursos não retransmitem solicitações de modelos de chat. Gerencie seus dados e credenciais junto com as configurações de segurança do dispositivo, termos de terceiros e este contrato.</p>
         <p><b>4. Implantação externa e responsabilidade do operador</b><br>Serviços HTTP externos, QQ Bot, resposta automática e recursos semelhantes são ativados por sua escolha. Se você os disponibilizar a outras pessoas ou ao público, você atua como implantador ou operador real e é responsável por controle de acesso, autorização de usuários, segurança de conteúdo, proteção de dados, proteção de menores, avisos necessários e outras obrigações aplicáveis. Se você fornecer continuamente ao público na China continental serviços de interação emocional que simulem traços de personalidade, padrões de pensamento ou estilos de comunicação de pessoas naturais, deve avaliar e cumprir as Medidas Provisórias para a Administração de Serviços de Interação Antropomórfica de Inteligência Artificial (《人工智能拟人化互动服务管理暂行办法》) e outras regras aplicáveis. Você não deve usar este app para fornecer a menores parentes virtuais, companheiros virtuais ou outros serviços de relacionamento íntimo virtual, induzir dependência emocional ou vício, realizar manipulação emocional ou infringir direitos e interesses legítimos de terceiros.</p>
         <p><b>5. Uso legal e responsabilidade pelo conteúdo</b><br>Você deve cumprir leis e regulamentos aplicáveis, regras de serviços de terceiros e regras de plataforma. Você não deve usar este app, extensões ou configuração para realizar atividades ilegais, infringir direitos de terceiros, acessar sistemas ou dados sem autorização, ou disseminar conteúdo ilegal ou prejudicial. Você é responsável pelo conteúdo e pela conduta que inserir, configurar, gerar, publicar, encaminhar ou operar. Saídas de IA podem conter erros, omissões ou vieses e não constituem aconselhamento médico, de crise de saúde mental, jurídico, financeiro ou outro aconselhamento profissional. Em situações urgentes de perigo, contate imediatamente serviços de emergência locais, instituições médicas ou pessoas de confiança.</p>
         <p><b>6. Software fornecido no estado em que se encontra</b><br>Na medida permitida pela lei aplicável, este software é fornecido "no estado em que se encontra" e "conforme disponível". Contribuidores não oferecem garantias expressas ou implícitas quanto à disponibilidade contínua, exatidão, segurança, comercialização, adequação a finalidade específica ou não violação do software ou de serviços de terceiros. Perdas causadas pelo uso deste software, serviços de terceiros, extensões, configuração do usuário ou modificações próprias devem ser tratadas conforme a lei aplicável e os contratos de serviço relevantes.</p>
@@ -3899,14 +3899,14 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="mcp_issue_body_title_install_info">## Informações de instalação</string>
     <string name="mcp_issue_body_repo_address">**Endereço do armazém:** %1$s</string>
     <string name="mcp_issue_body_title_install_method">### Método de instalação</string>
-    <string name="mcp_issue_body_install_step1">1. Clique em "Importar" na página de configuração do Operit MCP</string>
+    <string name="mcp_issue_body_install_step1">1. Clique em "Importar" na página de configuração do GOOG MCP</string>
     <string name="mcp_issue_body_install_step2">2. Selecione "Importar do armazém"</string>
     <string name="mcp_issue_body_install_step3">3. Insira o endereço do armazém: `%1$s`</string>
     <string name="mcp_issue_body_install_step4">4. Defina o nome do plug-in e clique em Importar</string>
     <string name="mcp_issue_body_title_tech_info">## Informações Técnicas</string>
-    <string name="mcp_issue_body_tech_platform">- **Plataforma de publicação:** Operit MCP Market</string>
+    <string name="mcp_issue_body_tech_platform">- **Plataforma de publicação:** GOOG MCP Market</string>
     <string name="mcp_issue_body_tech_publish_time">- **Tempo de lançamento:** %1$s</string>
-    <string name="mcp_issue_body_footer_note">*Este Issue é gerado automaticamente pela Operit*</string>
+    <string name="mcp_issue_body_footer_note">*Este Issue é gerado automaticamente pela GOOG*</string>
     <string name="mcp_publish_body_section_plugin_info">## 📋 Informações do plug-in</string>
     <string name="mcp_publish_body_label_description">**Descrição:** %1$s</string>
     <string name="mcp_publish_body_section_repo_info">## 🔗 Informações do armazém</string>
@@ -3914,12 +3914,12 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="mcp_publish_body_section_quick_install">## ⚡ Instalação rápida</string>
     <string name="mcp_publish_body_section_install_method">## 📦 Método de instalação</string>
     <string name="mcp_publish_body_method_repo_import_title">### Método 1: Importar do armazém</string>
-    <string name="mcp_publish_body_method_repo_import_step1">1. Abra a página de configuração do Operit MCP</string>
+    <string name="mcp_publish_body_method_repo_import_step1">1. Abra a página de configuração do GOOG MCP</string>
     <string name="mcp_publish_body_method_repo_import_step2">2. Clique em "Importar" → "Importar do armazém"</string>
     <string name="mcp_publish_body_method_repo_import_step3">3. Insira o endereço do armazém: `%1$s`</string>
     <string name="mcp_publish_body_method_repo_import_step4">4. Configure o nome do plug-in e importe-o</string>
     <string name="mcp_publish_body_method_config_import_title">### Método 2: importação de configuração</string>
-    <string name="mcp_publish_body_method_config_import_step1">1. Abra a página de configuração do Operit MCP</string>
+    <string name="mcp_publish_body_method_config_import_step1">1. Abra a página de configuração do GOOG MCP</string>
     <string name="mcp_publish_body_method_config_import_step2">2. Clique em "Importar" → "Importar configuração"</string>
     <string name="mcp_publish_body_method_config_import_step3">3. Cole a seguinte configuração:</string>
     <string name="mcp_publish_body_section_tech_info">## 🛠️Informações Técnicas</string>
@@ -5096,14 +5096,14 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="skill_publish_body_section_repo_info">## 🔗 Informações do armazém</string>
     <string name="skill_publish_body_label_repo_url">**Endereço do armazém:** %1$s</string>
     <string name="skill_publish_body_section_install_method">## 📦 Método de instalação</string>
-    <string name="skill_publish_body_install_step1">1. Abra Operit → Gerenciamento de Pacotes → Habilidades</string>
+    <string name="skill_publish_body_install_step1">1. Abra GOOG → Gerenciamento de Pacotes → Habilidades</string>
     <string name="skill_publish_body_install_step2">2. Clique em "Importar Habilidade" → "Importar do Armazém"</string>
     <string name="skill_publish_body_install_step3">3. Insira o endereço do armazém: `%1$s`</string>
     <string name="skill_publish_body_install_step4">4. Confirme a importação</string>
     <string name="skill_publish_body_section_tech_info">## 🛠️Informações Técnicas</string>
     <string name="skill_publish_body_table_header">| item | valor |</string>
     <string name="skill_publish_body_table_separator" />
-    <string name="skill_publish_body_table_row_platform">| Plataforma de publicação | Mercado de habilidades Operit |</string>
+    <string name="skill_publish_body_table_row_platform">| Plataforma de publicação | Mercado de habilidades GOOG |</string>
     <string name="skill_publish_body_table_row_parser_version">| Versão de análise | 1,0 |</string>
     <string name="skill_publish_body_table_row_publish_time">| Tempo de lançamento | %1$s |</string>
     <string name="model_param_max_tokens">Número máximo de tokens gerados</string>
@@ -6027,7 +6027,7 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="chat_ai_service_unavailable_summarize">O serviço de IA está indisponível e não pode ser resumido</string>
     <string name="chat_summarize_failed_no_valid_summary">Falha no resumo: falha ao gerar um resumo válido</string>
     <string name="chat_summarize_generation_failed">Falha na geração do resumo: %1$s</string>
-    <string name="service_operit_running">Operat está em execução</string>
+    <string name="service_operit_running">GOOG está em execução</string>
     <string name="service_chat_complete_reminder">Lembrete de conclusão de conversa</string>
     <string name="service_chat_complete_reminder_sound">Lembrete de conclusão de conversa (som de bipe)</string>
     <string name="service_chat_complete_reminder_vibration">Lembrete de conclusão de conversa (vibração)</string>
@@ -6565,7 +6565,7 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="retry_market_registration">Tentar novamente o registro no mercado</string>
     <string name="update_to_market">Atualizar no mercado</string>
     <string name="create_operit_forge_title">Criar OperitForge?</string>
-    <string name="create_operit_forge_message">Esta é a sua primeira publicação direta. O Operit precisa criar o repositório público `OperitForge` na sua conta do GitHub.</string>
+    <string name="create_operit_forge_message">Esta é a sua primeira publicação direta. O GOOG precisa criar o repositório público `OperitForge` na sua conta do GitHub.</string>
     <string name="confirm_create_public_forge_title">Confirmar criação do repositório público</string>
     <string name="confirm_create_public_forge_message">Confirme novamente: agora será criado o repositório público `OperitForge`. Publicações futuras reutilizarão este repositório.</string>
     <string name="create_and_publish">Criar e publicar</string>
