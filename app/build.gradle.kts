@@ -55,6 +55,31 @@ fun requiredLocalProperty(name: String): String {
     return value
 }
 
+/**
+ * 轮换签名（proof-of-rotation / V3 lineage）需要的键是否齐了。
+ *
+ * 本地开发和不走 Google Play 的自签分发都不需要这套配置，缺了就该跳过，
+ * 不该让 assembleRelease 报成失败 —— APK 本身由 signingConfigs 里的 RELEASE_*
+ * 正常签过，已经是能装能用的。
+ */
+fun apkRotationConfigured(): Boolean {
+    val keys = listOf(
+        "APK_ROTATION_NEW_STORE_FILE",
+        "APK_ROTATION_NEW_STORE_PASSWORD",
+        "APK_ROTATION_NEW_KEY_ALIAS",
+        "APK_ROTATION_NEW_KEY_PASSWORD",
+        "APK_ROTATION_LINEAGE_FILE",
+    )
+    val missing = keys.filter { localProperties.getProperty(it)?.trim().isNullOrEmpty() }
+    if (missing.isNotEmpty()) {
+        logger.lifecycle(
+            "[apk-rotation] 跳过轮换签名，local.properties 未配置：${missing.joinToString()}",
+        )
+        return false
+    }
+    return true
+}
+
 fun configuredFileProperty(name: String): File {
     val configuredPath = File(requiredLocalProperty(name))
     val resolvedPath = if (configuredPath.isAbsolute) configuredPath else rootProject.file(configuredPath)
@@ -489,6 +514,12 @@ android {
         
         jniLibs {
             useLegacyPackaging = true
+            // GG工坊瘦身：本地语音识别/合成引擎按需求移除（用户明确不需要语音）。
+            // 只从打包产物里剔除 .so，源码与 CMake 构建保持原样 —— 这样构建链路不受影响，
+            // 语音入口真正被调用时才会失败（按需加载，不影响启动与逆向功能）。
+            // 配合 config/stt-model-assets.properties 已清空的模型清单，省 7.9MB + 128MB。
+            excludes += "**/libsherpa-ncnn-jni.so"
+            excludes += "**/libsherpa-mnn-jni.so"
         }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -529,6 +560,11 @@ val signRotatedReleaseApk by tasks.registering {
     description = "Signs the Release APK with the legacy V2 signer and rotated V3 signer."
     group = "distribution"
     dependsOn("packageRelease")
+    // 没配轮换签名（本地开发/自签分发）就整个跳过。
+    // 注意必须在这里判、不要等 doLast 里 loadApkRotationSigningConfig() 抛：
+    // 那会让 assembleRelease 以一个红叉收尾，看起来像编译失败，
+    // 实际 packageRelease 已经成功、APK 也是好的，白白误导。
+    onlyIf { apkRotationConfigured() }
     doLast {
         signApkWithRotation(
             project.layout.buildDirectory
@@ -543,6 +579,7 @@ val signRotatedNightlyApk by tasks.registering {
     description = "Signs the Nightly APK with the legacy V2 signer and rotated V3 signer."
     group = "distribution"
     dependsOn("packageNightly")
+    onlyIf { apkRotationConfigured() }
     doLast {
         signApkWithRotation(
             project.layout.buildDirectory
